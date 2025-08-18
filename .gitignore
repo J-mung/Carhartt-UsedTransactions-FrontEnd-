@@ -1,24 +1,39 @@
-# Logs
-logs
-*.log
+# --- OS / IDE ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# --- Node / Package managers ---
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
+.pnpm-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# --- Vite / Build outputs ---
+dist/
+.vite/
+.eslintcache
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# --- Tests / Coverage (필요 시 사용) ---
+coverage/
+test-results/
+playwright-report/
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+
+# --- Env files ---
+.env
+.env.local
+.env.*.local
+!.env.example   # 예시 파일은 추적 유지
+
+# --- Misc / Tools ---
+*.log
+*.swp
+*.swo
