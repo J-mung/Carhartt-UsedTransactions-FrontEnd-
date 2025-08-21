@@ -25,21 +25,20 @@ export default defineConfig([
         sourceType: 'module',
       },
     },
+    plugins: { prettier },
     rules: {
       // React Hooks 규칙
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
 
       // React Fast Refresh (Vite)
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
 
       // 기본 문법 규칙
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
       'no-undef': 'error',
-      'quotes': ['error', 'single']
+      quotes: ['error', 'single'],
+      'prettier/prettier': 'warn',
     },
   },
 ]);

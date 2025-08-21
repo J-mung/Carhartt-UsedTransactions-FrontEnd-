@@ -2,12 +2,16 @@
   "singleQuote": true,
   "semi": true,
   "trailingComma": "es5",
-  "printWidth": 100,
+  "printWidth": 80,
   "tabWidth": 2,
   "bracketSpacing": true,
   "arrowParens": "always",
-  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+
+  // import문 자동 생성
   "importOrder": ["^react", "<THIRD_PARTY_MODULES>", "^@/(.*)$", "^[.]"],
   "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true
+  "importOrderSortSpecifiers": true,
+
+  // JSX 관련 옵션
+  "bracketSameLine": false // 닫는 태그는 새 줄로
 }
