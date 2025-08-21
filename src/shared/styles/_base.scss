@@ -1,0 +1,58 @@
+// 베이스
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font:
+    0.875rem/1.5 system-ui,
+    -apple-system,
+    'Noto Sans KR',
+    sans-serif; // 14px
+}
+
+// 기본 버튼
+button {
+  font: inherit;
+  border: 0.0625rem solid var(--color-border); // 1px
+  background: var(--color-surface);
+  color: var(--color-text);
+  padding: var(--space-2) var(--space-3); // 8px 12px
+  border-radius: 0.625rem; // 10px
+  cursor: pointer;
+}
+
+// ThemeToggle 최소 스타일
+.theme-toggle {
+  display: inline-flex;
+  gap: var(--space-1-5); // 6px
+  padding: var(--space-1); // 4px
+  border-radius: 999px;
+  border: 0.0625rem solid var(--color-border); // 1px
+
+  &__item {
+    position: relative;
+  }
+
+  input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  &__text {
+    padding: var(--space-1-5) var(--space-2-5); // 6px 10px
+    border-radius: 999px;
+  }
+
+  .is-active &__text {
+    outline: 0.125rem solid var(--color-focus); // 2px
+    outline-offset: -0.125rem; // -2px
+  }
+}
