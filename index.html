@@ -1,10 +1,36 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <title>Carhartt-UsedTransactions</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+
+    <!-- 초기 FOUC 방지: 저장된 theme 반영 -->
+    <script>
+      (function () {
+        try {
+          var mode = localStorage.getItem('theme-mode');
+          if (mode !== 'light' && mode !== 'dark' && mode !== 'system') {
+            localStorage.removeItem('theme-mode');
+            mode = null;
+          }
+          if (mode === 'light')
+            document.documentElement.setAttribute('data-theme', 'light');
+          else if (mode === 'dark')
+            document.documentElement.setAttribute('data-theme', 'dark');
+          else document.documentElement.removeAttribute('data-theme');
+        } catch (e) {}
+      })();
+    </script>
+
+    <title>My App</title>
   </head>
   <body>
-    <p>Hello strainger?</p>
+    <div id="root"></div>
+
+    <!-- 엔트리: app.jsx -->
+    <script type="module" src="/src/index.jsx"></script>
   </body>
 </html>
