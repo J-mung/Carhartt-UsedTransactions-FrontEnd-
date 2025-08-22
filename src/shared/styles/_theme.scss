@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 // 테마 팔레트 맵
 $theme-light: (
   bg: #f7f7f8,
@@ -16,12 +18,12 @@ $theme-dark: (
 );
 
 // CSS 변수로 내보내기
-@mixin export-theme($t) {
-  --color-bg: #{map-get($t, bg)};
-  --color-surface: #{map-get($t, surface)};
-  --color-text: #{map-get($t, text)};
-  --color-border: #{map-get($t, border)};
-  --color-focus: #{map-get($t, focus)};
+@mixin export-theme($theme) {
+  --color-bg: #{map.get($theme, bg)};
+  --color-surface: #{map.get($theme, surface)};
+  --color-text: #{map.get($theme, text)};
+  --color-border: #{map.get($theme, border)};
+  --color-focus: #{map.get($theme, focus)};
 }
 
 // 적용 규칙
