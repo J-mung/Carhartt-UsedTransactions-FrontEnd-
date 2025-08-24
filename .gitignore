@@ -31,7 +31,8 @@ cypress/downloads/
 .env
 .env.local
 .env.*.local
-!.env.example   # 예시 파일은 추적 유지
+.env.development
+!.env.example   # 각종 환경 변수
 
 # --- Misc / Tools ---
 *.log
