@@ -1,5 +1,6 @@
 import Footer from '@/widgets/footer/Footer';
 import Header from '@/widgets/header/Header';
+import { Outlet } from 'react-router-dom';
 import './layout.scss';
 /**
  * 앱 공통 레이아웃
@@ -24,7 +25,9 @@ export default function MainLayout({
       </header>
 
       <main id="main" className="app__main" role="main">
-        <div className="container">{children}</div>
+        <div className="container">
+          {children ?? <Outlet />} {/* children이 없으면 Outlet으로 대체 */}
+        </div>
       </main>
 
       <footer
