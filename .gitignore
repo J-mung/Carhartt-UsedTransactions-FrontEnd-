@@ -1,0 +1,40 @@
+# --- OS / IDE ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# --- Node / Package managers ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-debug.log*
+
+# --- Vite / Build outputs ---
+dist/
+.vite/
+.eslintcache
+
+# --- Tests / Coverage (필요 시 사용) ---
+coverage/
+test-results/
+playwright-report/
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+
+# --- Env files ---
+.env
+.env.local
+.env.*.local
+.env.development
+!.env.example   # 각종 환경 변수
+
+# --- Misc / Tools ---
+*.log
+*.swp
+*.swo
