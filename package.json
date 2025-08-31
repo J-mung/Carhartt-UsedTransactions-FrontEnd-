@@ -3,12 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://j-mung.github.io/Carhartt-UsedTransactions-FrontEnd-/",
   "scripts": {
     "start": "vite",
     "build": "vite build",
     "predeploy": "npm run build",
-    "deploy": "cf-pages -d dist",
     "lint": "eslint .",
     "preview": "vite preview"
   },
