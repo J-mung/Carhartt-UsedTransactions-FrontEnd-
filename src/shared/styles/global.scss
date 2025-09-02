@@ -1,3 +1,14 @@
+// util - 실제 스타일 X, 다른 폴더의 스타일을 돕는 유틸성, 함수, mixin 등
+@use './image';
+
+// base - 사이트 전반에 사용되는 스타일, 폰트 등
+// colro, font 등 추가 필요
 @use './variables';
-@use './theme';
 @use './base';
+@use './icon';
+
+// components
+@use './button';
+
+// theme
+@use './theme';

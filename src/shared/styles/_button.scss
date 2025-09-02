@@ -1,0 +1,18 @@
+$button-fill: (
+  'primary': (
+    'default': (
+      'font': '#ffffff',
+      'background': '#1890ff',
+      'border': '#1890ff',
+    ),
+  ),
+  'secondary': (
+    'default': (
+      'font': '#000000',
+      'background': '#ffffff',
+      'border': '#D9D9D9',
+    ),
+  ),
+);
+
+$button-size-group: '--l', '--m', '', '--s', '--xs';
