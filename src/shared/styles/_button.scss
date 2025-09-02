@@ -42,7 +42,7 @@ button {
 .btn {
   @each $size in $button-size-group {
     // 아이콘 버튼
-    &__ic#{size} {
+    &__ic#{$size} {
       height: fit-content;
       line-height: 0;
       @if $size == '--xs' {
@@ -55,6 +55,10 @@ button {
         padding: 0.313rem; // 5px
       } @else if $size == '--l' {
         padding: 0.313rem; //5px
+      }
+
+      > [class*='ic-'] {
+        background: blue;
       }
     }
   }

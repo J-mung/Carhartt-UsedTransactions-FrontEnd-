@@ -1,6 +1,6 @@
 @use './image' as image;
 
-[class='ic-'] {
+[class*='ic-'] {
   display: inline-block;
   -webkit-print-color-adjust: exact;
 }
