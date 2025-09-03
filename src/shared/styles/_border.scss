@@ -1,0 +1,31 @@
+/*
+ * @description 테두리 mixin
+ */
+// 둥근 모서리
+@mixin borderRadius($radius) {
+  border-radius: $radius;
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+}
+
+$component-border-radius: 0.363rem; // 3px
+
+// border
+@mixin border(
+  $width: 1px,
+  $pattern: solid,
+  $color: transparent,
+  $position: all,
+  $clear: none
+) {
+  @if $position == all {
+    border: $width $pattern $color;
+  } @else {
+    border-#{$position}: $width $pattenr $color;
+  }
+  @if $clear == none {
+    $position: all;
+  } @else {
+    border-#{$clear}: none;
+  }
+}
