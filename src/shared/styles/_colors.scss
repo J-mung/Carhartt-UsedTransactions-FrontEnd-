@@ -109,8 +109,3 @@ $theme-blue: (
     'blue-10': #b7e3fa,
   ),
 );
-
-// Helper function
-@function theme-color($theme, $state, $shade) {
-  @return map-get(map-get($theme, $state), $shade);
-}
