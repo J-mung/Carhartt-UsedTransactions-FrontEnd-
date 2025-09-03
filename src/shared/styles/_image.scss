@@ -3,10 +3,18 @@
  * @description 이미지 관련 Mixin
  */
 
-$icon-folder-path: '../../app/assets/icons/';
+$icon-folder-path: '@/app/assets/icons/';
 
 // icon mixin
-@mixin iconMask($name, $width: 1.5rem, $height: 1.5rem, $repeat: no-repeat, $pos: center, $size: null, $color: null) {
+@mixin iconMask(
+  $name,
+  $width: 1.5rem,
+  $height: 1.5rem,
+  $repeat: no-repeat,
+  $pos: center,
+  $size: null,
+  $color: null
+) {
   $path: $icon-folder-path + $name;
   width: $width;
   height: $height;
