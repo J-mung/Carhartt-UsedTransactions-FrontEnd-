@@ -1,0 +1,34 @@
+/*
+ * @file _image.scss
+ * @description 이미지 관련 Mixin
+ */
+
+$icon-folder-path: '@/app/assets/icons/';
+
+// icon mixin
+@mixin iconMask(
+  $name,
+  $width: 1.5rem,
+  $height: 1.5rem,
+  $repeat: no-repeat,
+  $pos: center,
+  $size: null,
+  $color: null
+) {
+  $path: $icon-folder-path + $name;
+  width: $width;
+  height: $height;
+  -webkit-mask-image: url($path);
+  mask-image: url($path);
+  -webkit-mask-repeat: if($repeat == null, no-repeat, $repeat);
+  mask-repeat: if($repeat == null, no-repeat, $repeat);
+  -webkit-mask-position: if($pos == null, center, $pos);
+  mask-position: if($pos == null, center, $pos);
+  @if ($size != null) {
+    -webkit-mask-size: $size;
+    mask-size: $size;
+  }
+  @if ($color != null) {
+    background: $color;
+  }
+}
