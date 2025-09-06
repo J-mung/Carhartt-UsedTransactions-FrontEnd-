@@ -9,6 +9,9 @@ const __dirname = dirname(__filename);
 export default defineConfig({
   base: '/',
   plugins: [react()],
+  optimizeDeps: {
+    include: ['cookie', 'set-cookie-parser'],
+  },
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
