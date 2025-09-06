@@ -1,3 +1,4 @@
+import { viteCommonjs } from '@originjs/vite-plugin-commonjs';
 import react from '@vitejs/plugin-react';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -8,13 +9,18 @@ const __dirname = dirname(__filename);
 
 export default defineConfig({
   base: '/',
-  plugins: [react()],
+  plugins: [react(), viteCommonjs()],
   optimizeDeps: {
     include: ['cookie', 'set-cookie-parser'],
   },
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
+    },
+  },
+  build: {
+    rollupOptions: {
+      external: ['set-cookie-parser'],
     },
   },
 });
