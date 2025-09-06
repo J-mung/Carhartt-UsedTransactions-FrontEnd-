@@ -1,0 +1,11 @@
+// _map-utils.scss
+@use 'sass:map';
+
+// 중첩 맵 헬퍼 함수
+@function deep-get($map, $keys...) {
+  $result: $map;
+  @each $key in $keys {
+    $result: map.get($result, $key);
+  }
+  @return $result;
+}

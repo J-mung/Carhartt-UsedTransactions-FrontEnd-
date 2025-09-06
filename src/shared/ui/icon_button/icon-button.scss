@@ -1,0 +1,77 @@
+@use '../../styles/button' as btn;
+@use '../../styles/border' as border;
+@use '../../styles/map' as *;
+@use 'sass:map';
+
+// 버튼 테마 맵
+$button-fill: (
+  'primary': (
+    'default': (
+      'background': #1890ff,
+      'border': #1890ff,
+      'font': #ffffff,
+      'icon': #ffffff,
+    ),
+  ),
+  'secondary': (
+    'default': (
+      'background': #ffffff,
+      'border': #d9d9d9,
+      'font': #000000,
+      'icon': #000000,
+    ),
+  ),
+);
+
+.btn__ic {
+  @each $size in btn.$button-size-group {
+    // 아이콘 버튼
+    &#{$size} {
+      height: fit-content;
+      line-height: 0;
+      @if $size == '--xs' {
+        padding: 0.0625rem; // 1px
+      } @else if $size == '--s' {
+        padding: 0.125rem; //2px
+      } @else if $size == '' {
+        padding: 0.313rem; // 5px
+      } @else if $size == '--m' {
+        padding: 0.313rem; // 5px
+      } @else if $size == '--l' {
+        padding: 0.313rem; //5px
+      }
+
+      > [class*='ic-'] {
+        background: blue;
+      }
+    }
+
+    &.primary {
+      background: deep-get($button-fill, 'primary', 'default', 'background');
+      @include border.border(
+        0.0625rem,
+        deep-get($button-fill, 'primary', 'default', 'border'),
+        solid,
+        all
+      ); // 1px
+
+      > [class*='ic-'] {
+        background: deep-get($button-fill, 'primary', 'default', 'icon');
+      }
+    }
+
+    &.secondary {
+      background: deep-get($button-fill, 'secondary', 'default', 'background');
+      @include border.border(
+        0.0625rem,
+        deep-get($button-fill, 'secondary', 'default', 'border'),
+        solid,
+        all
+      ); // 1px
+
+      > [class*='ic-'] {
+        background: deep-get($button-fill, 'secondary', 'default', 'icon');
+      }
+    }
+  }
+}
