@@ -7,22 +7,22 @@ export default function ImageUploader() {
     <div>
       <input type="file" accept="image/*" multiple onChange={handleSelect} />
       <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-        {items.map(({ file, preview }, idx) => {
+        {items.map(({ file, preview }, idx) => (
           <div key={idx} style={{ textAlign: 'center' }}>
             <img
               src={preview}
               alt={file.name}
               onError={() => console.log('Fale to load image(s): ', preview)}
               style={{
-                width: 150,
-                height: 150,
+                width: 500,
+                height: 'auto', // 비율 맞춤
                 objectFit: 'cover',
                 borderRadius: 8,
               }}
             />
             <p style={{ fontSize: '0.9rem' }}>{file.name}</p>
-          </div>;
-        })}
+          </div>
+        ))}
       </div>
       {items.length > 0 && (
         <button onClick={handleConfirm} style={{ marginTop: '1rem' }}>
