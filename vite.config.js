@@ -19,4 +19,9 @@ export default defineConfig({
       '@styles': path.resolve(__dirname, './src/shared/styles'),
     },
   },
+  build: {
+    rollupOptions: {
+      external: ['set-cookie-parser'],
+    },
+  },
 });
