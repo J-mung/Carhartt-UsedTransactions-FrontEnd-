@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import path from 'path';
 import { defineConfig } from 'vite';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -15,6 +16,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
+      '@styles': path.resolve(__dirname, './src/shared/styles'),
     },
   },
 });

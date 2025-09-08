@@ -27,6 +27,7 @@ export function useImageUploader() {
       compressed.push(resized);
     }
 
+    // S3 업로드 로직 추가될 부분
     console.log('압축 완료: ', compressed);
   };
 
