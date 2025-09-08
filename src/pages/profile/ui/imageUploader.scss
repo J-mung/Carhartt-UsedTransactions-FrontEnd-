@@ -12,7 +12,7 @@
       > .image-uploader__preview {
         width: 31.25rem; // 500px
         height: auto; // 비율 맞추기
-        border: borderRadius($component-border-radius);
+        @include borderRadius($component-border-radius);
       }
     }
 
@@ -23,5 +23,6 @@
 
   > .image-uploader__button {
     margin-top: 1rem; // 16px
+    @include borderRadius($component-border-radius);
   }
 }
