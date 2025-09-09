@@ -1,6 +1,6 @@
-import TestProfilePage from '@/pages/profile/TestProfilePage';
 import { createBrowserRouter } from 'react-router-dom';
 import HomePage from '../pages/home/HomePage';
+import TestProfilePage from '../pages/profile';
 import MainLayout from './layouts/MainLayout';
 
 export const router = createBrowserRouter(

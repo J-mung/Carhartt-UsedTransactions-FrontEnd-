@@ -1,0 +1,28 @@
+@use '@styles/border' as *;
+
+.image-uploader {
+  > .image-uploader__items {
+    display: 'flex';
+    margin-top: 1rem; // 16px
+    gap: 1rem; // 16px
+
+    > .image-uploader__item {
+      text-align: 'center';
+
+      > .image-uploader__preview {
+        width: 31.25rem; // 500px
+        height: auto; // 비율 맞추기
+        @include borderRadius($component-border-radius);
+      }
+    }
+
+    > .image-uploader__label {
+      font-size: 1rem; // 16px
+    }
+  }
+
+  > .image-uploader__button {
+    margin-top: 1rem; // 16px
+    @include borderRadius($component-border-radius);
+  }
+}
