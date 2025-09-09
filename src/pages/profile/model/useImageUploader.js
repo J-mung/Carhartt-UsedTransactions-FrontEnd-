@@ -6,29 +6,52 @@ export function useImageUploader() {
 
   // 파일 선택
   const handleSelect = (event) => {
-    const selected = Array.from(event.target.files).map((_file) => ({
-      file: _file,
-      preview: URL.createObjectURL(_file),
-    }));
-    setItems((prev) => [...prev, ...selected]);
+    const format = supportsWebP() ? 'image/webp' : 'image/jpeg';
+
+    const selectedPromises = Array.from(event.target.files).map((_file) => {
+      return resizeImage(_file, {
+        width: 800,
+        height: 'auto',
+        format: format,
+      })
+        .then((resized) => {
+          return {
+            file: resized,
+            overSize: false,
+            preview: URL.createObjectURL(resized),
+          };
+        })
+        .catch(() => {
+          return {
+            file: _file,
+            overSize: true,
+            preview: URL.createObjectURL(_file),
+          };
+        });
+    });
+
+    Promise.all(selectedPromises).then((_selected) => {
+      _selected.forEach((_select) => {
+        console.log(`${Math.round(_select.file.size / 1024)}KB`);
+      });
+      setItems((prev) => [...prev, ..._selected]);
+    });
   };
 
   // 업로드 (압축/리사이즈 후)
   const handleConfirm = async () => {
-    const compressed = [];
-    for (const { file } of items) {
-      console.log('압축 전: ', file);
-      const format = supportsWebP() ? 'image/webp' : 'image/jpeg';
-      const resized = await resizeImage(file, {
-        width: 800,
-        height: 800,
-        format: format,
-      });
-      compressed.push(resized);
+    // 업로드 가능 체크
+    const overSizeList = items.filter((_item) => _item.sizeLimit === true);
+    if (overSizeList && overSizeList.length > 0) {
+      alert('업로드 불가');
+      return;
     }
 
-    // S3 업로드 로직 추가될 부분
-    console.log('압축 완료: ', compressed);
+    // 서버에게 S3 Presigned url 요청
+    // 발급된 url로 이미지 업로드
+    // 200?
+    // 서버에게 업로드 완료 안내
+    // 종료
   };
 
   return { items, handleSelect, handleConfirm };
