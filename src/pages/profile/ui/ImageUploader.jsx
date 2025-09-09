@@ -1,5 +1,5 @@
 import { useImageUploader } from '../model/useImageUploader';
-import './imageUPloader.scss';
+import './imageUploader.scss';
 
 export default function ImageUploader() {
   const { items, handleSelect, handleConfirm } = useImageUploader();
