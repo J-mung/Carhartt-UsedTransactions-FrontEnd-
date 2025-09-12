@@ -1,0 +1,121 @@
+@use '../../styles/button' as btn;
+@use '../../styles/border' as border;
+@use '../../styles/colors' as *;
+@use '../../styles/map' as *;
+@use 'sass:map';
+@use '../../styles/theme' as theme;
+
+// 버튼 전용 테마 맵 (light / dark)
+$button-themes: (
+  light: (
+    selector: theme.$theme-light-selector,
+    fill: (
+      primary: (
+        default: (
+          background: map.get($theme-blue, 'light', 'blue-6'),
+          border: map.get($theme-blue, 'light', 'blue-6'),
+          font: map.get($theme-gray, 'light', 'gray-1'),
+          icon: map.get($theme-gray, 'light', 'gray-1'),
+        ),
+      ),
+      secondary: (
+        default: (
+          background: map.get($theme-gray, 'light', 'gray-1'),
+          border: map.get($theme-gray, 'light', 'gray-5'),
+          font: map.get($theme-gray, 'light', 'gray-13'),
+          icon: map.get($theme-gray, 'light', 'gray-13'),
+        ),
+      ),
+    ),
+  ),
+  dark: (
+    selector: theme.$theme-dark-selector,
+    fill: (
+      primary: (
+        default: (
+          background: map.get($theme-blue, 'dark', 'blue-6'),
+          border: map.get($theme-blue, 'dark', 'blue-6'),
+          font: map.get($theme-gray, 'dark', 'gray-1'),
+          icon: map.get($theme-gray, 'dark', 'gray-1'),
+        ),
+      ),
+      secondary: (
+        default: (
+          background: map.get($theme-gray, 'dark', 'gray-1'),
+          border: map.get($theme-gray, 'dark', 'gray-5'),
+          font: map.get($theme-gray, 'dark', 'gray-13'),
+          icon: map.get($theme-gray, 'dark', 'gray-13'),
+        ),
+      ),
+    ),
+  ),
+);
+
+// $theme: var(--theme);
+$theme: 'light';
+
+// 버튼 테마 맵
+$button-fill: (
+  'primary': (
+    'default': (
+      'background': map.get($theme-blue, $theme, 'blue-6'),
+      'border': map.get($theme-blue, $theme, 'blue-6'),
+      'font': map.get($theme-gray, $theme, 'gray-1'),
+      'icon': map.get($theme-gray, $theme, 'gray-1'),
+    ),
+  ),
+  'secondary': (
+    'default': (
+      'background': map.get($theme-gray, $theme, 'gray-1'),
+      'border': map.get($theme-gray, $theme, 'gray-5'),
+      'font': map.get($theme-gray, $theme, 'gray-13'),
+      'icon': map.get($theme-gray, $theme, 'gray-13'),
+    ),
+  ),
+);
+
+.btn__ic {
+  @each $size in btn.$button-size-group {
+    // 아이콘 버튼
+    &#{$size} {
+      height: fit-content;
+      line-height: 0;
+      @if $size == '--xs' {
+        padding: 0.0625rem; // 1px
+      } @else if $size == '--s' {
+        padding: 0.125rem; //2px
+      } @else if $size == '' {
+        padding: 0.313rem; // 5px
+      } @else if $size == '--m' {
+        padding: 0.313rem; // 5px
+      } @else if $size == '--l' {
+        padding: 0.313rem; //5px
+      }
+
+      > [class*='ic-'] {
+        background: blue;
+      }
+    }
+
+    // 테마 반복문
+    @each $mode, $config in $button-themes {
+      #{map.get($config, selector)} & {
+        @each $variant, $states in map.get($config, fill) {
+          &.#{$variant} {
+            background: deep-get($states, 'default', 'background');
+            @include border.border(
+              0.0625rem,
+              deep-get($states, 'default', 'border'),
+              solid,
+              all
+            );
+
+            > [class*='ic-'] {
+              background: deep-get($states, 'default', 'icon');
+            }
+          }
+        }
+      }
+    }
+  }
+}

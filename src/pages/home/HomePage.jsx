@@ -1,5 +1,5 @@
 import Button from '@/shared/ui/Button';
-import { IconButton } from '@/shared/ui/icon_button';
+import { IconButton } from '@/shared/ui/buttons';
 import SearchButton from './ui/SearchButton';
 /**
  * 임시 홈 화면
