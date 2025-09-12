@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use '../../shared/styles/colors' as *;
 
 // theme-selectors
 $theme-light-selector: ':root';
@@ -7,19 +8,19 @@ $theme-system-selector: ":root[data-theme='system']";
 
 // 테마 팔레트 맵
 $theme-light: (
-  bg: #f7f7f8,
-  surface: #ffffff,
-  text: #111111,
-  border: #e8e8ea,
-  focus: #2684ff,
+  bg: map.get($theme-gray, 'light', 'gray-3'),
+  surface: map.get($theme-gray, 'light', 'gray-1'),
+  text: map.get($theme-gray, 'light', 'gray-10'),
+  border: map.get($theme-gray, 'light', 'gray-5'),
+  focus: map.get($theme-blue, 'light', 'blue-6'),
 );
 
 $theme-dark: (
-  bg: #0f1115,
-  surface: #161a22,
-  text: #e6e8ee,
-  border: #2a2f3a,
-  focus: #60a5fa,
+  bg: map.get($theme-gray, 'dark', 'gray-3'),
+  surface: map.get($theme-gray, 'dark', 'gray-1'),
+  text: map.get($theme-gray, 'dark', 'gray-11'),
+  border: map.get($theme-gray, 'dark', 'gray-5'),
+  focus: map.get($theme-blue, 'dark', 'blue-6'),
 );
 
 // CSS 변수로 내보내기
