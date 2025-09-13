@@ -31,6 +31,12 @@ export default function HomePage() {
           alert('외부 주입 메서드');
         }}
       />
+      <SearchButton
+        onClick={() => {
+          alert('외부 주입 메서드');
+        }}
+        disabled={true}
+      />
 
       <div style={{ height: 1200 }} />
     </div>
