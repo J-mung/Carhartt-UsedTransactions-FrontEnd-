@@ -1,5 +1,5 @@
-import Button from '@/shared/ui/Button';
-import { IconButton } from '@/shared/ui/buttons';
+import Button from '@/shared/ui/buttons/Button';
+import { IconButton } from '@/shared/ui/icon_buttons';
 import SearchButton from './ui/SearchButton';
 /**
  * 임시 홈 화면
@@ -11,11 +11,40 @@ export default function HomePage() {
       <h1>홈</h1>
       <p>여기에 페이지 콘텐츠를 배치하세요.</p>
       <Button
-        label="Hello"
+        variant={'primary'}
         onClick={() => {
           alert('외부에서 주입한 함수, 버튼 클릭 함');
         }}
-      />
+      >
+        <span className={'btn__label'}>Hello world</span>
+      </Button>
+      <Button
+        variant={'secondary'}
+        onClick={() => {
+          alert('외부에서 주입한 함수, 버튼 클릭 함');
+        }}
+      >
+        <span className={'btn__label'}>Hello world</span>
+      </Button>
+      <Button
+        variant={'secondary'}
+        onClick={() => {
+          alert('외부에서 주입한 함수, 버튼 클릭 함');
+        }}
+        disabled={true}
+      >
+        <span className={'btn__label'}>Hello world</span>
+      </Button>
+      <Button
+        variant={'secondary'}
+        onClick={() => {
+          alert('외부에서 주입한 함수, 버튼 클릭 함');
+        }}
+        disabled={true}
+      >
+        <span className={'btn__label'}>Hello world</span>
+      </Button>
+
       {/* shared/ui에 선언된 버튼 */}
       <IconButton
         iconClass={'ic-comment'}
@@ -27,7 +56,8 @@ export default function HomePage() {
       />
       {/* (예시) 홈페이지에서만 사용할 버튼 */}
       <SearchButton
-        onClick={() => {
+        variant={'primary'}
+        onSearch={() => {
           alert('외부 주입 메서드');
         }}
       />
