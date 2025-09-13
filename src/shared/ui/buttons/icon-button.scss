@@ -104,10 +104,6 @@ $button-themes: (
       } @else if $size == '--l' {
         padding: 0.313rem; //5px
       }
-
-      > [class*='ic-'] {
-        background: blue;
-      }
     }
 
     // 테마 반복문
