@@ -51,29 +51,6 @@ $button-themes: (
   ),
 );
 
-// $theme: var(--theme);
-$theme: 'light';
-
-// 버튼 테마 맵
-$button-fill: (
-  'primary': (
-    'default': (
-      'background': map.get($theme-blue, $theme, 'blue-6'),
-      'border': map.get($theme-blue, $theme, 'blue-6'),
-      'font': map.get($theme-gray, $theme, 'gray-1'),
-      'icon': map.get($theme-gray, $theme, 'gray-1'),
-    ),
-  ),
-  'secondary': (
-    'default': (
-      'background': map.get($theme-gray, $theme, 'gray-1'),
-      'border': map.get($theme-gray, $theme, 'gray-5'),
-      'font': map.get($theme-gray, $theme, 'gray-13'),
-      'icon': map.get($theme-gray, $theme, 'gray-13'),
-    ),
-  ),
-);
-
 .btn__ic {
   @each $size in btn.$button-size-group {
     // 아이콘 버튼
