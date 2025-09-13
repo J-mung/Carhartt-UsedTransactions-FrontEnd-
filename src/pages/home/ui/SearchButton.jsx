@@ -1,4 +1,4 @@
-import { IconButton } from '@/shared/ui/icon_button';
+import { IconButton } from '@/shared/ui/buttons';
 export default function SearchButton({
   onSearch = () => {
     alert('외부 주입 메서드');

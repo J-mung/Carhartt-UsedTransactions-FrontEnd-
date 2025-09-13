@@ -1,5 +1,3 @@
-import './icon-button.scss';
-
 export default function IconButton({
   iconClass = 'ic-close', // SCSS에서 정의한 아이콘 클래스
   onClick, // React 컨벤션에 맞춰 메서드 주입
