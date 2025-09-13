@@ -1,20 +1,18 @@
 export default function Button({
   label = '',
   variant = 'primary',
-  onClickHandler = () => {},
+  onClick = () => {},
   disabled = false,
   children,
 }) {
-  const className = `button btn--${variant}`;
+  const className = `btn ${variant}`;
 
   return (
     <button
       type="button"
       className={className}
-      onClick={onClickHandler}
-      aria-label={label}
+      onClick={onClick}
       disabled={disabled}
-      data-class={variant}
     >
       {children ?? label}
     </button>
