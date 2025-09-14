@@ -1,3 +1,91 @@
+// Daybreak Blue
+$theme-blue: (
+  'light': (
+    'blue-1': #e6f7ff,
+    'blue-2': #bae7ff,
+    'blue-3': #91d5ff,
+    'blue-4': #69c0ff,
+    'blue-5': #40a9ff,
+    'blue-6': #1890ff,
+    'blue-7': #096dd9,
+    'blue-8': #0050b3,
+    'blue-9': #003a8c,
+    'blue-10': #002766,
+  ),
+  'dark': (
+    'blue-1': #111d2c,
+    'blue-2': #112a45,
+    'blue-3': #15395b,
+    'blue-4': #164c7e,
+    'blue-5': #1765ad,
+    'blue-6': #177ddc,
+    'blue-7': #3c9ae8,
+    'blue-8': #65b7f3,
+    'blue-9': #8dcff8,
+    'blue-10': #b7e3fa,
+  ),
+);
+
+// Gray (dark 모드를 고려해서 별도 정의)
+$theme-gray: (
+  'light': (
+    'gray-1': #ffffff,
+    // 가장 밝음: 배경 or 카드 surface
+    'gray-2': #fcfcfc,
+    // subtle surface
+    'gray-3': #f7f7f8,
+    // secondary surface
+    'gray-4': #f0f0f2,
+    // tertiary surface
+    'gray-5': #e5e5e7,
+    // border (얇은 divider)
+    'gray-6': #d9d9dc,
+    // border (강조 divider, input border)
+    'gray-7': #bfbfc4,
+    // disabled bg / subtle icon
+    'gray-8': #8c8c91,
+    // secondary text
+    'gray-9': #66666b,
+    // placeholder / hint text
+    'gray-10': #434348,
+    // body text
+    'gray-11': #2a2a2f,
+    // heading text
+    'gray-12': #1a1a1e,
+    // strong heading / 강조 텍스트
+    'gray-13': #000000,
+    // pure black (아이콘, 아주 강한 대비)
+  ),
+  'dark': (
+    'gray-1': #121212,
+    // 배경 (완전 검정 대신 거의 검정)
+    'gray-2': #1a1a1a,
+    // surface 1
+    'gray-3': #1f1f1f,
+    // surface 2
+    'gray-4': #242424,
+    // surface 3
+    'gray-5': #2e2e2e,
+    // border / subtle divider
+    'gray-6': #3a3a3a,
+    // strong border / disabled bg
+    'gray-7': #555555,
+    // neutral text
+    'gray-8': #777777,
+    // secondary text
+    'gray-9': #999999,
+    // placeholder text
+    'gray-10': #b3b3b3,
+    // subtle text
+    'gray-11': #d0d0d0,
+    // strong text
+    'gray-12': #e5e5e5,
+    // heading text
+    'gray-13': #f5f5f5,
+    // 거의 흰색 (primary text)
+  ),
+);
+
 // Dust Red
 $theme-red: (
   'light': (
@@ -79,33 +167,5 @@ $theme-green: (
     'green-8': #8fd460,
     'green-9': #b2e58b,
     'green-10': #d5f2bb,
-  ),
-);
-
-// Daybreak Blue
-$theme-blue: (
-  'light': (
-    'blue-1': #e6f7ff,
-    'blue-2': #bae7ff,
-    'blue-3': #91d5ff,
-    'blue-4': #69c0ff,
-    'blue-5': #40a9ff,
-    'blue-6': #1890ff,
-    'blue-7': #096dd9,
-    'blue-8': #0050b3,
-    'blue-9': #003a8c,
-    'blue-10': #002766,
-  ),
-  'dark': (
-    'blue-1': #111d2c,
-    'blue-2': #112a45,
-    'blue-3': #15395b,
-    'blue-4': #164c7e,
-    'blue-5': #1765ad,
-    'blue-6': #177ddc,
-    'blue-7': #3c9ae8,
-    'blue-8': #65b7f3,
-    'blue-9': #8dcff8,
-    'blue-10': #b7e3fa,
   ),
 );
