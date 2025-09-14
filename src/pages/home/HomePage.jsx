@@ -1,5 +1,4 @@
-import Button from '@/shared/ui/buttons/Button';
-import { IconButton } from '@/shared/ui/buttons/IconButton';
+import { Button, IconButton } from '@/shared/ui/buttons';
 import SearchButton from './ui/SearchButton';
 /**
  * 임시 홈 화면
@@ -9,14 +8,15 @@ export default function HomePage() {
   return (
     <div>
       <h1>홈</h1>
-      <p>여기에 페이지 콘텐츠를 배치하세요.</p>
+      <p className={'text-strong'}>여기에 페이지 콘텐츠를 배치하세요.</p>
       <Button
         variant={'primary'}
+        size={'--l'}
         onClick={() => {
           alert('외부에서 주입한 함수, 버튼 클릭 함');
         }}
       >
-        <span className={'btn__label'}>Hello world</span>
+        <span className={'btn__label text-regular'}>text-regular</span>
       </Button>
       <Button
         variant={'secondary'}
@@ -24,7 +24,16 @@ export default function HomePage() {
           alert('외부에서 주입한 함수, 버튼 클릭 함');
         }}
       >
-        <span className={'btn__label'}>Hello world</span>
+        <span className={'btn__label text-medium'}>text-medium</span>
+      </Button>
+      <Button
+        variant={'secondary'}
+        onClick={() => {
+          alert('외부에서 주입한 함수, 버튼 클릭 함');
+        }}
+        disabled={true}
+      >
+        <span className={'btn__label text-strong'}>text-strong</span>
       </Button>
       <Button
         variant={'secondary'}
@@ -36,7 +45,15 @@ export default function HomePage() {
         <span className={'btn__label'}>Hello world</span>
       </Button>
       <Button
-        variant={'secondary'}
+        variant={'link'}
+        onClick={() => {
+          alert('외부에서 주입한 함수, 버튼 클릭 함');
+        }}
+      >
+        <span className={'btn__label'}>Hello world</span>
+      </Button>
+      <Button
+        variant={'link'}
         onClick={() => {
           alert('외부에서 주입한 함수, 버튼 클릭 함');
         }}

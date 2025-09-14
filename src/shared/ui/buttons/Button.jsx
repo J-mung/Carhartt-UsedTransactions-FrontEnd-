@@ -1,11 +1,12 @@
 export default function Button({
   label = '',
   variant = 'primary',
+  size = '',
   onClick = () => {},
   disabled = false,
   children,
 }) {
-  const className = `btn ${variant}`;
+  const className = `btn${size} ${variant}`;
 
   return (
     <button
