@@ -6,7 +6,7 @@ export default function Button({
   disabled = false,
   children,
 }) {
-  // 허용 variant, size 값 세트
+  // 허용 tone, variant, size, font 값 세트
   const TONES = ['standard', 'danger'];
   const VARIANTS = ['primary', 'secondary', 'link'];
   const ALLOWED_VARIANTS = TONES.flatMap((tone) =>
@@ -20,7 +20,7 @@ export default function Button({
     default: 'text-regular',
   };
 
-  // variant / size 안전 처리 (fallback 적용)
+  // variant, size, font 안전 처리 (fallback 적용)
   const safeVariant = ALLOWED_VARIANTS.includes(variant)
     ? variant
     : 'standard-primary';
