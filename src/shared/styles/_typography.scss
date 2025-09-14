@@ -111,6 +111,11 @@ $font-colors-dark: (
       @include font-weight(regular);
       @include font-color(primary, $mode);
     }
+    .h5-regular {
+      @include font-scale(16);
+      @include font-weight(regular);
+      @include font-color(primary, $mode);
+    }
 
     // Medium emphasis text
     .text-medium {

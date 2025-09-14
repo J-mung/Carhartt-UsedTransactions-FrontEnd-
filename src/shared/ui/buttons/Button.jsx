@@ -7,33 +7,48 @@ export default function Button({
   children,
 }) {
   // 허용 variant, size 값 세트
-  const VARIANTS = [
-    'standard-primary',
-    'standard-secondary',
-    'standard-link',
-    'danger-primary',
-    'danger-secondary',
-    'danger-link',
-  ];
-  const SIZES = ['--xs', '--s', '', '--m', '--l'];
+  const TONES = ['standard', 'danger'];
+  const VARIANTS = ['primary', 'secondary', 'link'];
+  const ALLOWED_VARIANTS = TONES.flatMap((tone) =>
+    VARIANTS.map((variant) => `${tone}-${variant}`)
+  );
+  const SIZES = ['--s', '', '--m', '--l'];
+  const FONTS = {
+    '--l': 'h5-regular',
+    '--m': 'text-regular',
+    '--s': 'text-regular',
+    default: 'text-regular',
+  };
 
   // variant / size 안전 처리 (fallback 적용)
-  const safeVariant = VARIANTS.includes(variant) ? variant : 'standard-primary';
+  const safeVariant = ALLOWED_VARIANTS.includes(variant)
+    ? variant
+    : 'standard-primary';
   const safeSize = SIZES.includes(size) ? size : '--m';
+  const safeFont = FONTS[safeSize] || FONTS.default;
+
+  // style 처리
+  const buttonClassName = `btn${safeSize} ${safeVariant}`;
+  const labelClassName = `btn__label ${safeFont}`;
 
   // 함수 안전 처리
   const safeOnClick = typeof onClick === 'function' ? onClick : () => {};
 
-  const className = `btn${safeSize} ${safeVariant}`;
+  // 라벨 안전 처리
+  const renderLabel = () => {
+    if (children) return children;
+    if (label) return <span className={labelClassName}>{label}</span>;
+    return <span className={labelClassName}>fall back</span>;
+  };
 
   return (
     <button
       type="button"
-      className={className}
+      className={buttonClassName}
       onClick={safeOnClick}
-      disabled={disabled}
+      {...(disabled && { disabled: true })}
     >
-      {children ?? <span className="btn__label">{label}</span>}
+      {renderLabel()}
     </button>
   );
 }
