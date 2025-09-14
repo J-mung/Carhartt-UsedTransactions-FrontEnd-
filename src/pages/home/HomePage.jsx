@@ -10,7 +10,7 @@ export default function HomePage() {
       <h1>홈</h1>
       <p className={'text-strong'}>여기에 페이지 콘텐츠를 배치하세요.</p>
       <Button
-        variant={'primary'}
+        variant={'standard-primary'}
         size={'--l'}
         onClick={() => {
           alert('외부에서 주입한 함수, 버튼 클릭 함');
@@ -19,7 +19,7 @@ export default function HomePage() {
         <span className={'btn__label text-regular'}>text-regular</span>
       </Button>
       <Button
-        variant={'secondary'}
+        variant={'standard-secondary'}
         onClick={() => {
           alert('외부에서 주입한 함수, 버튼 클릭 함');
         }}
@@ -27,7 +27,7 @@ export default function HomePage() {
         <span className={'btn__label text-medium'}>text-medium</span>
       </Button>
       <Button
-        variant={'secondary'}
+        variant={'standard-secondary'}
         onClick={() => {
           alert('외부에서 주입한 함수, 버튼 클릭 함');
         }}
@@ -36,7 +36,7 @@ export default function HomePage() {
         <span className={'btn__label text-strong'}>text-strong</span>
       </Button>
       <Button
-        variant={'secondary'}
+        variant={'standard-secondary'}
         onClick={() => {
           alert('외부에서 주입한 함수, 버튼 클릭 함');
         }}
@@ -45,7 +45,7 @@ export default function HomePage() {
         <span className={'btn__label'}>Hello world</span>
       </Button>
       <Button
-        variant={'link'}
+        variant={'standard-link'}
         onClick={() => {
           alert('외부에서 주입한 함수, 버튼 클릭 함');
         }}
@@ -53,7 +53,7 @@ export default function HomePage() {
         <span className={'btn__label'}>Hello world</span>
       </Button>
       <Button
-        variant={'link'}
+        variant={'standard-link'}
         onClick={() => {
           alert('외부에서 주입한 함수, 버튼 클릭 함');
         }}
@@ -69,17 +69,17 @@ export default function HomePage() {
           alert('아이콘 버튼 클릭');
         }}
         title={'test'}
-        className={'secondary'}
+        className={'standard-secondary'}
       />
       {/* (예시) 홈페이지에서만 사용할 버튼 */}
       <SearchButton
-        variant={'primary'}
+        variant={'standard-primary'}
         onSearch={() => {
           alert('외부 주입 메서드');
         }}
       />
       <SearchButton
-        variant={'primary'}
+        variant={'standard-primary'}
         onSearch={() => {
           alert('외부 주입 메서드');
         }}
