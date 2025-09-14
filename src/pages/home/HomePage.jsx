@@ -61,6 +61,58 @@ export default function HomePage() {
       >
         <span className={'btn__label'}>Hello world</span>
       </Button>
+      <Button
+        variant={'danger-primary'}
+        size={'--l'}
+        onClick={() => {
+          alert('외부에서 주입한 함수, 버튼 클릭 함');
+        }}
+      >
+        <span className={'btn__label text-regular'}>text-regular</span>
+      </Button>
+      <Button
+        variant={'danger-secondary'}
+        onClick={() => {
+          alert('외부에서 주입한 함수, 버튼 클릭 함');
+        }}
+      >
+        <span className={'btn__label text-medium'}>text-medium</span>
+      </Button>
+      <Button
+        variant={'danger-secondary'}
+        onClick={() => {
+          alert('외부에서 주입한 함수, 버튼 클릭 함');
+        }}
+        disabled={true}
+      >
+        <span className={'btn__label text-strong'}>text-strong</span>
+      </Button>
+      <Button
+        variant={'danger-secondary'}
+        onClick={() => {
+          alert('외부에서 주입한 함수, 버튼 클릭 함');
+        }}
+        disabled={true}
+      >
+        <span className={'btn__label'}>Hello world</span>
+      </Button>
+      <Button
+        variant={'danger-link'}
+        onClick={() => {
+          alert('외부에서 주입한 함수, 버튼 클릭 함');
+        }}
+      >
+        <span className={'btn__label'}>Hello world</span>
+      </Button>
+      <Button
+        variant={'danger-link'}
+        onClick={() => {
+          alert('외부에서 주입한 함수, 버튼 클릭 함');
+        }}
+        disabled={true}
+      >
+        <span className={'btn__label'}>Hello world</span>
+      </Button>
 
       {/* shared/ui에 선언된 버튼 */}
       <IconButton
