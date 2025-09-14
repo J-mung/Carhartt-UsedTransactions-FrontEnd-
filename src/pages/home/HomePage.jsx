@@ -15,9 +15,8 @@ export default function HomePage() {
         onClick={() => {
           alert('외부에서 주입한 함수, 버튼 클릭 함');
         }}
-      >
-        <span className={'btn__label text-regular'}>text-regular</span>
-      </Button>
+        label={'text-regular'}
+      />
       <Button
         variant={'standard-secondary'}
         onClick={() => {
@@ -32,9 +31,7 @@ export default function HomePage() {
           alert('외부에서 주입한 함수, 버튼 클릭 함');
         }}
         disabled={true}
-      >
-        <span className={'btn__label text-strong'}>text-strong</span>
-      </Button>
+      />
       <Button
         variant={'standard-secondary'}
         onClick={() => {
