@@ -1,5 +1,5 @@
 import Button from '@/shared/ui/buttons/Button';
-import { IconButton } from '@/shared/ui/icon_buttons';
+import { IconButton } from '@/shared/ui/buttons/IconButton';
 import SearchButton from './ui/SearchButton';
 /**
  * 임시 홈 화면
@@ -62,7 +62,8 @@ export default function HomePage() {
         }}
       />
       <SearchButton
-        onClick={() => {
+        variant={'primary'}
+        onSearch={() => {
           alert('외부 주입 메서드');
         }}
         disabled={true}

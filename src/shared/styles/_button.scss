@@ -124,8 +124,7 @@ $button-themes: (
 
 $button-size-group: '--l', '--m', '', '--s', '--xs';
 
-// 기본 스타일
-button {
+.btn {
   display: inline-block;
   overflow: visible;
   @include border.borderRadius(border.$component-border-radius); // 3px
@@ -137,36 +136,31 @@ button {
   white-space: none;
   text-decoration: none;
   cursor: pointer;
-}
 
-.btn {
   // 텍스트 버튼
-
-  // 아이콘 버튼
-  &__ic {
-    @each $size in $button-size-group {
-      // 아이콘 버튼
-      &#{$size} {
-        height: fit-content;
-        line-height: 0;
-        @if $size == '--xs' {
-          padding: 0.0625rem; // 1px
-        } @else if $size == '--s' {
-          padding: 0.125rem; //2px
-        } @else if $size == '' {
-          padding: 0.313rem; // 5px
-        } @else if $size == '--m' {
-          padding: 0.313rem; // 5px
-        } @else if $size == '--l' {
-          padding: 0.313rem; //5px
-        }
+  @each $size in $button-size-group {
+    &#{$size} {
+      display: inline-block;
+      line-height: 1.3;
+      @if $size == '--xs' {
+        padding: 0.0625rem; // 1px
+      } @else if $size == '--s' {
+        padding: 0.125rem; // 2px
+      } @else if $size == '' {
+        padding: 0.313rem; // 5px
+      } @else if $size == '--m' {
+        padding: 0.313rem; // 5px
+      } @else if $size == '--l' {
+        padding: 0.313rem; // 5px
       }
     }
+  }
 
-    // 테마 반복문
-    @each $mode, $config in $button-themes {
-      #{map.get($config, selector)} & {
-        @each $variant, $states in map.get($config, fill) {
+  // 테마 반복문
+  @each $mode, $config in $button-themes {
+    #{map.get($config, selector)} & {
+      @each $variant, $states in map.get($config, fill) {
+        &:not(.disabled) {
           &.#{$variant} {
             background: deep-get($states, 'default', 'background');
             @include border.border(
@@ -176,8 +170,9 @@ button {
               all
             );
 
-            > [class*='ic-'] {
-              background: deep-get($states, 'default', 'icon');
+            // 폰트
+            > .btn__label {
+              color: deep-get($states, 'default', 'font');
             }
 
             &:hover {
@@ -189,8 +184,9 @@ button {
                 all
               );
 
-              > [class*='ic-'] {
-                background: deep-get($states, 'hover', 'icon');
+              // 폰트
+              > .btn__label {
+                color: deep-get($states, 'hover', 'font');
               }
             }
             &:active {
@@ -202,12 +198,14 @@ button {
                 all
               );
 
-              > [class*='ic-'] {
-                background: deep-get($states, 'active', 'icon');
+              // 폰트
+              > .btn__label {
+                color: deep-get($states, 'active', 'font');
               }
             }
             &:disabled {
               cursor: not-allowed;
+
               background: deep-get($states, 'disabled', 'background');
               @include border.border(
                 0.0625rem,
@@ -216,8 +214,9 @@ button {
                 all
               );
 
-              > [class*='ic-'] {
-                background: deep-get($states, 'disabled', 'icon');
+              // 폰트
+              > .btn__label {
+                color: deep-get($states, 'disabled', 'font');
               }
             }
           }
