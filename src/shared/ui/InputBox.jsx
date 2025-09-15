@@ -7,9 +7,7 @@ export default function InputBox({
   placeholder = '',
   value = '',
   onChange = () => {},
-  variant = 'default', // 'default' | 'search' | 'price' | 'size'
-  disabled = false,
-  required = false,
+  variant = 'default', // default | search | number
   iconClass = '', // 'ic-search' | 'ic-close' | 'ic-user'
   iconPosition = 'left', // 'left' | 'right'
   maxLength,
@@ -17,9 +15,17 @@ export default function InputBox({
   onClear = () => {},
   prefix = '', // "총장", etc
   suffix = '', // '원'  | 'cm' , etc
+  disabled = false,
+  required = false,
+  error = false,
 }) {
-  const className = `input-box input-box--${variant}`;
   const showClear = clear && value && value.length > 0;
+  const hasIconLeft = iconClass && iconPosition === 'left';
+  const hasPrefix = prefix && prefix.length > 0;
+
+  const className = `input-box input-box--${variant}${
+    hasIconLeft ? ' input-box--has-icon-left' : ''
+  }${hasPrefix ? ' input-box--has-prefix' : ''}${error ? ' input-box--error' : ''}`;
 
   // Handle clear button click
   const handleClear = () => {
@@ -41,9 +47,9 @@ export default function InputBox({
         </label>
       )}
 
-      {prefix && <span className="input-box__prefix">{prefix}</span>}
-
       <div className="input-box__container">
+        {prefix && <span className="input-box__prefix">{prefix}</span>}
+
         <input
           type={type}
           className="input-box__input"
@@ -52,11 +58,11 @@ export default function InputBox({
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          disabled={disabled}
-          required={required}
           maxLength={maxLength}
           aria-label={label}
           data-variant={variant}
+          disabled={disabled}
+          required={required}
         />
 
         {showClear && (
