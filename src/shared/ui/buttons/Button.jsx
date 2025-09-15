@@ -1,7 +1,7 @@
 export default function Button({
   label = '',
   variant = 'primary',
-  size = '--m',
+  size = '',
   onClick,
   disabled = false,
   children,
@@ -24,7 +24,7 @@ export default function Button({
   const safeVariant = ALLOWED_VARIANTS.includes(variant)
     ? variant
     : 'standard-primary';
-  const safeSize = SIZES.includes(size) ? size : '--m';
+  const safeSize = SIZES.includes(size) ? size : '';
   const safeFont = FONTS[safeSize] || FONTS.default;
 
   // style 처리

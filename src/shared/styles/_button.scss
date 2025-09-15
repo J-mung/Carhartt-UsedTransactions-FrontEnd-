@@ -512,9 +512,7 @@ button {
     &#{$size} {
       display: inline-block;
       line-height: 1.3;
-      @if $size == '--xs' {
-        padding: 0.0625rem; // 1px
-      } @else if $size == '--s' {
+      @if $size == '--s' {
         padding: 0.125rem; // 2px
       } @else if $size == '' {
         padding: 0.313rem; // 5px
@@ -667,79 +665,81 @@ button {
 
       // 아이콘 버튼
       &__ic {
-        @each $size in $button-size-group {
+        &.circle {
+          @include border.borderRadius(999px);
+        }
+
+        @each $ic_size in $button-size-group {
           // 버튼 사이즈
-          &#{$size} {
+          &#{$ic_size} {
             height: fit-content;
             line-height: 0;
-            @if $size == '--xs' {
-              padding: 0.0625rem; // 1px
-            } @else if $size == '--s' {
+            @if $ic_size == '--s' {
               padding: 0.125rem; // 2px
-            } @else if $size == '' {
+            } @else if $ic_size == '' {
               padding: 0.313rem; // 5px
-            } @else if $size == '--m' {
+            } @else if $ic_size == '--m' {
               padding: 0.313rem; // 5px
-            } @else if $size == '--l' {
+            } @else if $ic_size == '--l' {
               padding: 0.5rem; // 8px
             }
-          }
 
-          // 테마 반복문
-          @each $mode, $config in $button-themes {
-            #{map.get($config, selector)} & {
-              @each $variant, $states in map.get($config, standard) {
-                &.standard-#{$variant} {
-                  background: deep-get($states, 'default', 'background');
-                  @include border.border(
-                    0.0625rem,
-                    deep-get($states, 'default', 'border'),
-                    solid,
-                    all
-                  );
-
-                  > [class*='ic-'] {
-                    background: deep-get($states, 'default', 'icon');
-                  }
-
-                  &:hover {
-                    background: deep-get($states, 'hover', 'background');
+            // 테마 반복문
+            @each $mode, $config in $button-themes {
+              #{map.get($config, selector)} & {
+                @each $variant, $states in map.get($config, standard) {
+                  &.standard-#{$variant} {
+                    background: deep-get($states, 'default', 'background');
                     @include border.border(
                       0.0625rem,
-                      deep-get($states, 'hover', 'border'),
+                      deep-get($states, 'default', 'border'),
                       solid,
                       all
                     );
 
                     > [class*='ic-'] {
-                      background: deep-get($states, 'hover', 'icon');
+                      background: deep-get($states, 'default', 'icon');
                     }
-                  }
-                  &:active {
-                    background: deep-get($states, 'active', 'background');
-                    @include border.border(
-                      0.0625rem,
-                      deep-get($states, 'active', 'border'),
-                      solid,
-                      all
-                    );
 
-                    > [class*='ic-'] {
-                      background: deep-get($states, 'active', 'icon');
+                    &:hover {
+                      background: deep-get($states, 'hover', 'background');
+                      @include border.border(
+                        0.0625rem,
+                        deep-get($states, 'hover', 'border'),
+                        solid,
+                        all
+                      );
+
+                      > [class*='ic-'] {
+                        background: deep-get($states, 'hover', 'icon');
+                      }
                     }
-                  }
-                  &:disabled {
-                    cursor: not-allowed;
-                    background: deep-get($states, 'disabled', 'background');
-                    @include border.border(
-                      0.0625rem,
-                      deep-get($states, 'disabled', 'border'),
-                      solid,
-                      all
-                    );
+                    &:active {
+                      background: deep-get($states, 'active', 'background');
+                      @include border.border(
+                        0.0625rem,
+                        deep-get($states, 'active', 'border'),
+                        solid,
+                        all
+                      );
 
-                    > [class*='ic-'] {
-                      background: deep-get($states, 'disabled', 'icon');
+                      > [class*='ic-'] {
+                        background: deep-get($states, 'active', 'icon');
+                      }
+                    }
+                    &:disabled {
+                      cursor: not-allowed;
+                      background: deep-get($states, 'disabled', 'background');
+                      @include border.border(
+                        0.0625rem,
+                        deep-get($states, 'disabled', 'border'),
+                        solid,
+                        all
+                      );
+
+                      > [class*='ic-'] {
+                        background: deep-get($states, 'disabled', 'icon');
+                      }
                     }
                   }
                 }

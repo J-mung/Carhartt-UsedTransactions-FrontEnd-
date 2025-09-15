@@ -12,7 +12,7 @@ export default function SearchButton({
       iconClass={'ic-search'}
       onClick={safeFunc(onSearch)}
       title={'검색'}
-      className={variant}
+      variant={variant}
       disabled={disabled}
     />
   );

@@ -15,7 +15,7 @@ export default function HomePage() {
         onClick={() => {
           alert('외부에서 주입한 함수, 버튼 클릭 함');
         }}
-        label={'text-regular'}
+        label={'standard-primary'}
       />
       <Button
         variant={'standard-secondary'}
@@ -23,7 +23,7 @@ export default function HomePage() {
           alert('외부에서 주입한 함수, 버튼 클릭 함');
         }}
       >
-        <span className={'btn__label text-medium'}>text-medium</span>
+        <span className={'btn__label h5-regular'}>custom text-medium</span>
       </Button>
       <Button
         variant={'standard-secondary'}
@@ -64,9 +64,7 @@ export default function HomePage() {
         onClick={() => {
           alert('외부에서 주입한 함수, 버튼 클릭 함');
         }}
-      >
-        <span className={'btn__label text-regular'}>text-regular</span>
-      </Button>
+      />
       <Button
         variant={'danger-secondary'}
         onClick={() => {
@@ -103,6 +101,7 @@ export default function HomePage() {
       </Button>
       <Button
         variant={'danger-link'}
+        size={'--l'}
         onClick={() => {
           alert('외부에서 주입한 함수, 버튼 클릭 함');
         }}
@@ -110,6 +109,35 @@ export default function HomePage() {
       >
         <span className={'btn__label'}>Hello world</span>
       </Button>
+      <Button
+        variant={'ghost-primary'}
+        size={'--l'}
+        onClick={() => {
+          alert('외부에서 주입한 함수, 버튼 클릭 함');
+        }}
+      />
+      <Button
+        variant={'ghost-secondary'}
+        size={'--m'}
+        onClick={() => {
+          alert('외부에서 주입한 함수, 버튼 클릭 함');
+        }}
+      />
+      <Button
+        variant={'ghost-link'}
+        size={'--s'}
+        onClick={() => {
+          alert('외부에서 주입한 함수, 버튼 클릭 함');
+        }}
+      />
+      <Button
+        variant={'ghost-link'}
+        size={'--s'}
+        onClick={() => {
+          alert('외부에서 주입한 함수, 버튼 클릭 함');
+        }}
+        disabled={true}
+      />
 
       {/* shared/ui에 선언된 버튼 */}
       <IconButton
@@ -118,7 +146,7 @@ export default function HomePage() {
           alert('아이콘 버튼 클릭');
         }}
         title={'test'}
-        className={'standard-secondary'}
+        variant={'standard-secondary'}
       />
       {/* (예시) 홈페이지에서만 사용할 버튼 */}
       <SearchButton
