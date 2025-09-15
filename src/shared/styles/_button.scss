@@ -70,7 +70,7 @@ $button-themes: (
         hover: (
           background: transparent,
           border: transparent,
-          font: map.get($theme-blue, 'light', 'blue-6'),
+          font: map.get($theme-blue, 'light', 'blue-5'),
         ),
         active: (
           background: transparent,
@@ -160,6 +160,82 @@ $button-themes: (
         ),
       ),
     ),
+    ghost: (
+      primary: (
+        default: (
+          background: transparent,
+          border: map.get($theme-blue, 'light', 'blue-6'),
+          font: map.get($theme-blue, 'light', 'blue-6'),
+          icon: map.get($theme-blue, 'light', 'blue-6'),
+        ),
+        hover: (
+          background: transparent,
+          border: map.get($theme-blue, 'light', 'blue-5'),
+          font: map.get($theme-blue, 'light', 'blue-5'),
+          icon: map.get($theme-blue, 'light', 'blue-5'),
+        ),
+        active: (
+          background: transparent,
+          border: map.get($theme-blue, 'light', 'blue-7'),
+          font: map.get($theme-blue, 'light', 'blue-7'),
+          icon: map.get($theme-blue, 'light', 'blue-7'),
+        ),
+        disabled: (
+          background: map.get($theme-gray, 'light', 'gray-3'),
+          border: map.get($theme-gray, 'light', 'gray-7'),
+          font: map.get($theme-gray, 'light', 'gray-7'),
+          icon: map.get($theme-gray, 'light', 'gray-7'),
+        ),
+      ),
+      secondary: (
+        default: (
+          background: transparent,
+          border: map.get($theme-gray, 'light', 'gray-1'),
+          font: map.get($theme-gray, 'light', 'gray-1'),
+          icon: map.get($theme-gray, 'light', 'gray-1'),
+        ),
+        hover: (
+          background: transparent,
+          border: map.get($theme-blue, 'light', 'blue-5'),
+          font: map.get($theme-blue, 'light', 'blue-5'),
+          icon: map.get($theme-blue, 'light', 'blue-5'),
+        ),
+        active: (
+          background: transparent,
+          border: map.get($theme-blue, 'light', 'blue-7'),
+          font: map.get($theme-blue, 'light', 'blue-7'),
+          icon: map.get($theme-blue, 'light', 'blue-7'),
+        ),
+        disabled: (
+          background: transparent,
+          border: map.get($theme-gray, 'light', 'gray-7'),
+          font: map.get($theme-gray, 'light', 'gray-7'),
+          icon: map.get($theme-gray, 'light', 'gray-7'),
+        ),
+      ),
+      link: (
+        default: (
+          background: transparent,
+          border: transparent,
+          font: map.get($theme-blue, 'light', 'blue-6'),
+        ),
+        hover: (
+          background: transparent,
+          border: transparent,
+          font: map.get($theme-blue, 'light', 'blue-5'),
+        ),
+        active: (
+          background: transparent,
+          border: transparent,
+          font: map.get($theme-blue, 'light', 'blue-7'),
+        ),
+        disabled: (
+          background: transparent,
+          border: transparent,
+          font: map.get($theme-gray, 'light', 'gray-7'),
+        ),
+      ),
+    ),
   ),
   dark: (
     selector: theme.$theme-dark-selector,
@@ -168,20 +244,20 @@ $button-themes: (
         default: (
           background: map.get($theme-blue, 'dark', 'blue-6'),
           border: map.get($theme-blue, 'dark', 'blue-6'),
-          font: map.get($theme-gray, 'dark', 'gray-13'),
-          icon: map.get($theme-gray, 'dark', 'gray-13'),
+          font: map.get($theme-gray, 'dark', 'gray-12'),
+          icon: map.get($theme-gray, 'dark', 'gray-12'),
         ),
         hover: (
           background: map.get($theme-blue, 'dark', 'blue-7'),
           border: map.get($theme-blue, 'dark', 'blue-7'),
-          font: map.get($theme-gray, 'dark', 'gray-13'),
-          icon: map.get($theme-gray, 'dark', 'gray-13'),
+          font: map.get($theme-gray, 'dark', 'gray-12'),
+          icon: map.get($theme-gray, 'dark', 'gray-12'),
         ),
         active: (
           background: map.get($theme-blue, 'dark', 'blue-5'),
           border: map.get($theme-blue, 'dark', 'blue-5'),
-          font: map.get($theme-gray, 'dark', 'gray-13'),
-          icon: map.get($theme-gray, 'dark', 'gray-13'),
+          font: map.get($theme-gray, 'dark', 'gray-12'),
+          icon: map.get($theme-gray, 'dark', 'gray-12'),
         ),
         disabled: (
           background: map.get($theme-gray, 'dark', 'gray-6'),
@@ -193,9 +269,9 @@ $button-themes: (
       secondary: (
         default: (
           background: map.get($theme-gray, 'dark', 'gray-1'),
-          border: map.get($theme-gray, 'dark', 'gray-5'),
-          font: map.get($theme-gray, 'dark', 'gray-13'),
-          icon: map.get($theme-gray, 'dark', 'gray-13'),
+          border: map.get($theme-gray, 'dark', 'gray-6'),
+          font: map.get($theme-gray, 'dark', 'gray-12'),
+          icon: map.get($theme-gray, 'dark', 'gray-12'),
         ),
         hover: (
           background: map.get($theme-gray, 'dark', 'gray-1'),
@@ -225,7 +301,7 @@ $button-themes: (
         hover: (
           background: transparent,
           border: transparent,
-          font: map.get($theme-blue, 'dark', 'blue-6'),
+          font: map.get($theme-blue, 'dark', 'blue-5'),
         ),
         active: (
           background: transparent,
@@ -244,20 +320,20 @@ $button-themes: (
         default: (
           background: map.get($theme-red, 'dark', 'red-5'),
           border: map.get($theme-red, 'dark', 'red-5'),
-          font: map.get($theme-gray, 'dark', 'gray-1'),
-          icon: map.get($theme-gray, 'dark', 'gray-1'),
+          font: map.get($theme-gray, 'dark', 'gray-12'),
+          icon: map.get($theme-gray, 'dark', 'gray-12'),
         ),
         hover: (
-          background: map.get($theme-red, 'dark', 'red-4'),
-          border: map.get($theme-red, 'dark', 'red-4'),
-          font: map.get($theme-gray, 'dark', 'gray-1'),
-          icon: map.get($theme-gray, 'dark', 'gray-1'),
-        ),
-        active: (
           background: map.get($theme-red, 'dark', 'red-6'),
           border: map.get($theme-red, 'dark', 'red-6'),
-          font: map.get($theme-gray, 'dark', 'gray-1'),
-          icon: map.get($theme-gray, 'dark', 'gray-1'),
+          font: map.get($theme-gray, 'dark', 'gray-12'),
+          icon: map.get($theme-gray, 'dark', 'gray-12'),
+        ),
+        active: (
+          background: map.get($theme-red, 'dark', 'red-4'),
+          border: map.get($theme-red, 'dark', 'red-4'),
+          font: map.get($theme-gray, 'dark', 'gray-12'),
+          icon: map.get($theme-gray, 'dark', 'gray-12'),
         ),
         disabled: (
           background: map.get($theme-gray, 'dark', 'gray-3'),
@@ -315,6 +391,82 @@ $button-themes: (
         ),
       ),
     ),
+    ghost: (
+      primary: (
+        default: (
+          background: transparent,
+          border: map.get($theme-blue, 'dark', 'blue-6'),
+          font: map.get($theme-blue, 'dark', 'blue-6'),
+          icon: map.get($theme-blue, 'dark', 'blue-6'),
+        ),
+        hover: (
+          background: transparent,
+          border: map.get($theme-blue, 'dark', 'blue-7'),
+          font: map.get($theme-blue, 'dark', 'blue-7'),
+          icon: map.get($theme-blue, 'dark', 'blue-7'),
+        ),
+        active: (
+          background: transparent,
+          border: map.get($theme-blue, 'dark', 'blue-5'),
+          font: map.get($theme-blue, 'dark', 'blue-5'),
+          icon: map.get($theme-blue, 'dark', 'blue-5'),
+        ),
+        disabled: (
+          background: map.get($theme-gray, 'dark', 'gray-3'),
+          border: map.get($theme-gray, 'dark', 'gray-7'),
+          font: map.get($theme-gray, 'dark', 'gray-7'),
+          icon: map.get($theme-gray, 'dark', 'gray-7'),
+        ),
+      ),
+      secondary: (
+        default: (
+          background: transparent,
+          border: map.get($theme-gray, 'dark', 'gray-1'),
+          font: map.get($theme-gray, 'dark', 'gray-1'),
+          icon: map.get($theme-gray, 'dark', 'gray-1'),
+        ),
+        hover: (
+          background: transparent,
+          border: map.get($theme-blue, 'dark', 'blue-7'),
+          font: map.get($theme-blue, 'dark', 'blue-7'),
+          icon: map.get($theme-blue, 'dark', 'blue-7'),
+        ),
+        active: (
+          background: transparent,
+          border: map.get($theme-blue, 'dark', 'blue-5'),
+          font: map.get($theme-blue, 'dark', 'blue-5'),
+          icon: map.get($theme-blue, 'dark', 'blue-5'),
+        ),
+        disabled: (
+          background: transparent,
+          border: map.get($theme-gray, 'dark', 'gray-7'),
+          font: map.get($theme-gray, 'dark', 'gray-7'),
+          icon: map.get($theme-gray, 'dark', 'gray-7'),
+        ),
+      ),
+      link: (
+        default: (
+          background: transparent,
+          border: transparent,
+          font: map.get($theme-blue, 'dark', 'blue-6'),
+        ),
+        hover: (
+          background: transparent,
+          border: transparent,
+          font: map.get($theme-blue, 'dark', 'blue-7'),
+        ),
+        active: (
+          background: transparent,
+          border: transparent,
+          font: map.get($theme-blue, 'dark', 'blue-5'),
+        ),
+        disabled: (
+          background: transparent,
+          border: transparent,
+          font: map.get($theme-gray, 'dark', 'gray-7'),
+        ),
+      ),
+    ),
   ),
 );
 
@@ -324,6 +476,20 @@ $button-themes: (
 $button-tone: 'standard', 'danger';
 // 버튼 사이즈 그룹
 $button-size-group: '--l', '--m', '', '--s';
+
+@mixin setBorder($variant, $states, $state) {
+  // link 변형일 때는 border 제거
+  @if $variant == link {
+    border: none;
+  } @else {
+    @include border.border(
+      0.0625rem,
+      deep-get($states, $state, 'border'),
+      solid,
+      all
+    );
+  }
+}
 
 // 버튼 기본 스타일
 button {
@@ -364,12 +530,8 @@ button {
           @each $variant, $states in map.get($config, standard) {
             &.standard-#{$variant} {
               background: deep-get($states, 'default', 'background');
-              @include border.border(
-                0.0625rem,
-                deep-get($states, 'default', 'border'),
-                solid,
-                all
-              );
+              // link 변형일 때는 border 제거
+              @include setBorder($variant, $states, 'default');
 
               // 폰트
               > .btn__label {
@@ -378,12 +540,8 @@ button {
 
               &:hover {
                 background: deep-get($states, 'hover', 'background');
-                @include border.border(
-                  0.0625rem,
-                  deep-get($states, 'hover', 'border'),
-                  solid,
-                  all
-                );
+                // link 변형일 때는 border 제거
+                @include setBorder($variant, $states, 'hover');
 
                 // 폰트
                 > .btn__label {
@@ -392,12 +550,8 @@ button {
               }
               &:active {
                 background: deep-get($states, 'active', 'background');
-                @include border.border(
-                  0.0625rem,
-                  deep-get($states, 'active', 'border'),
-                  solid,
-                  all
-                );
+                // link 변형일 때는 border 제거
+                @include setBorder($variant, $states, 'active');
 
                 // 폰트
                 > .btn__label {
@@ -408,12 +562,8 @@ button {
                 cursor: not-allowed;
 
                 background: deep-get($states, 'disabled', 'background');
-                @include border.border(
-                  0.0625rem,
-                  deep-get($states, 'disabled', 'border'),
-                  solid,
-                  all
-                );
+                // link 변형일 때는 border 제거
+                @include setBorder($variant, $states, 'disabled');
 
                 // 폰트
                 > .btn__label {
@@ -425,12 +575,8 @@ button {
           @each $variant, $states in map.get($config, danger) {
             &.danger-#{$variant} {
               background: deep-get($states, 'default', 'background');
-              @include border.border(
-                0.0625rem,
-                deep-get($states, 'default', 'border'),
-                solid,
-                all
-              );
+              // link 변형일 때는 border 제거
+              @include setBorder($variant, $states, 'default');
 
               // 폰트
               > .btn__label {
@@ -439,12 +585,8 @@ button {
 
               &:hover {
                 background: deep-get($states, 'hover', 'background');
-                @include border.border(
-                  0.0625rem,
-                  deep-get($states, 'hover', 'border'),
-                  solid,
-                  all
-                );
+                // link 변형일 때는 border 제거
+                @include setBorder($variant, $states, 'hover');
 
                 // 폰트
                 > .btn__label {
@@ -453,12 +595,8 @@ button {
               }
               &:active {
                 background: deep-get($states, 'active', 'background');
-                @include border.border(
-                  0.0625rem,
-                  deep-get($states, 'active', 'border'),
-                  solid,
-                  all
-                );
+                // link 변형일 때는 border 제거
+                @include setBorder($variant, $states, 'active');
 
                 // 폰트
                 > .btn__label {
@@ -469,12 +607,53 @@ button {
                 cursor: not-allowed;
 
                 background: deep-get($states, 'disabled', 'background');
-                @include border.border(
-                  0.0625rem,
-                  deep-get($states, 'disabled', 'border'),
-                  solid,
-                  all
-                );
+                // link 변형일 때는 border 제거
+                @include setBorder($variant, $states, 'disabled');
+
+                // 폰트
+                > .btn__label {
+                  color: deep-get($states, 'disabled', 'font');
+                }
+              }
+            }
+          }
+          @each $variant, $states in map.get($config, ghost) {
+            &.ghost-#{$variant} {
+              background: deep-get($states, 'default', 'background');
+              // link 변형일 때는 border 제거
+              @include setBorder($variant, $states, 'default');
+
+              // 폰트
+              > .btn__label {
+                color: deep-get($states, 'default', 'font');
+              }
+
+              &:hover {
+                background: deep-get($states, 'hover', 'background');
+                // link 변형일 때는 border 제거
+                @include setBorder($variant, $states, 'hover');
+
+                // 폰트
+                > .btn__label {
+                  color: deep-get($states, 'hover', 'font');
+                }
+              }
+              &:active {
+                background: deep-get($states, 'active', 'background');
+                // link 변형일 때는 border 제거
+                @include setBorder($variant, $states, 'active');
+
+                // 폰트
+                > .btn__label {
+                  color: deep-get($states, 'active', 'font');
+                }
+              }
+              &:disabled {
+                cursor: not-allowed;
+
+                background: deep-get($states, 'disabled', 'background');
+                // link 변형일 때는 border 제거
+                @include setBorder($variant, $states, 'disabled');
 
                 // 폰트
                 > .btn__label {

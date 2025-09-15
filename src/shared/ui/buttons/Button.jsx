@@ -7,7 +7,7 @@ export default function Button({
   children,
 }) {
   // 허용 tone, variant, size, font 값 세트
-  const TONES = ['standard', 'danger'];
+  const TONES = ['standard', 'danger', 'ghost'];
   const VARIANTS = ['primary', 'secondary', 'link'];
   const ALLOWED_VARIANTS = TONES.flatMap((tone) =>
     VARIANTS.map((variant) => `${tone}-${variant}`)
