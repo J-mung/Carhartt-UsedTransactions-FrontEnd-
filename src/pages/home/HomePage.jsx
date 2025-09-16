@@ -2,7 +2,6 @@ import Button from '@/shared/ui/Button';
 import { IconButton } from '@/shared/ui/buttons';
 import SearchButton from './ui/SearchButton';
 import InputBox from '@/shared/ui/InputBox';
-import TextArea from '@/shared/ui/TextArea';
 import { useState } from 'react';
 
 /**
@@ -15,10 +14,6 @@ export default function HomePage() {
   const [profileName, setProfileName] = useState('');
   const [price, setPrice] = useState('');
   const [totalLength, setTotalLength] = useState('');
-
-  // state 예시 - textArea
-  const [productDescription, setProductDescription] = useState('');
-  const [messageToSeller, setMessageToSeller] = useState('');
 
   return (
     <div>
