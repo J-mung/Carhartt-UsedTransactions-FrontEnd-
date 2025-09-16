@@ -116,20 +116,6 @@ export default function HomePage() {
         error={true}
       />
 
-      {/* shared/ui에 선언된 TextArea */}
-      {/* (예시) 상품 설명 textarea */}
-      <TextArea
-        label="상품 설명"
-        name="product-description"
-        rows={5}
-        maxLength={500}
-        value={productDescription}
-        onChange={(e) => setProductDescription(e.target.value)}
-        variant="product"
-        showCharCount={true}
-        required={true}
-      />
-
       <div style={{ height: 1200 }} />
     </div>
   );
