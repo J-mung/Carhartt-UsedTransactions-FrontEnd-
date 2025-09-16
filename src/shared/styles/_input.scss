@@ -15,6 +15,7 @@ $input-themes: (
       placeholder: map.get($theme-gray, 'light', 'gray-8'),
       label: map.get($theme-gray, 'light', 'gray-13'),
       icon: map.get($theme-gray, 'light', 'gray-11'),
+      asterisk: map.get($theme-red, 'light', 'red-6'),
     ),
     focused: (
       background: map.get($theme-gray, 'light', 'gray-1'),
@@ -46,6 +47,7 @@ $input-themes: (
       placeholder: map.get($theme-gray, 'dark', 'gray-8'),
       label: map.get($theme-gray, 'dark', 'gray-13'),
       icon: map.get($theme-gray, 'dark', 'gray-10'),
+      asterisk: map.get($theme-red, 'dark', 'red-6'),
     ),
     focused: (
       background: map.get($theme-gray, 'dark', 'gray-2'),
@@ -177,8 +179,7 @@ $input-size-group: '--l', '', '--s';
 
   // Prefix & Suffix and Icon
   &__prefix,
-  &__suffix,
-  [class*='ic-'] {
+  &__suffix {
     position: absolute;
     padding: 0 0.75rem; // 0 12px
   }
@@ -193,15 +194,40 @@ $input-size-group: '--l', '', '--s';
     );
   }
 
-  &__suffix,
-  [class*='ic-'].right {
-    right: 0.75rem;
+  &__suffix {
+    right: 0;
+  }
+
+  [class*='ic-'] {
+    position: absolute;
+
+    &.left {
+      left: 0.75rem; // 12px
+    }
+
+    &.right {
+      right: 0.75rem; // 12px
+    }
   }
 
   // Input padding adjustments for icons and affixes
-  &--has-prefix .input-box__input,
-  &--has-icon-left .input-box__input {
-    padding-left: 4rem;
+  &--has-prefix,
+  &--has-icon-left {
+    .input-box__input {
+      padding-left: 4rem; // 64px
+    }
+  }
+
+  &--has-suffix,
+  &--has-icon-right,
+  &--has-clear {
+    .input-box__input {
+      padding-right: 6rem; // 96px
+    }
+
+    .input-box__clear-btn {
+      right: 4rem; // 64px
+    }
   }
 
   // 테마 반복문
@@ -210,6 +236,11 @@ $input-size-group: '--l', '', '--s';
       // Base styles
       .input-box__label {
         color: deep-get($config, 'base', 'label');
+      }
+
+      // Required asterisk
+      .input-box__required {
+        color: deep-get($config, 'base', 'asterisk');
       }
 
       .input-box__input {

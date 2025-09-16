@@ -21,11 +21,17 @@ export default function InputBox({
 }) {
   const showClear = clear && value && value.length > 0;
   const hasIconLeft = iconClass && iconPosition === 'left';
+  const hasIconRight = iconClass && iconPosition === 'right';
   const hasPrefix = prefix && prefix.length > 0;
+  const hasSuffix = suffix && suffix.length > 0;
 
   const className = `input-box input-box--${variant}${
     hasIconLeft ? ' input-box--has-icon-left' : ''
-  }${hasPrefix ? ' input-box--has-prefix' : ''}${error ? ' input-box--error' : ''}`;
+  }${hasIconRight ? ' input-box--has-icon-right' : ''}${
+    hasPrefix ? ' input-box--has-prefix' : ''
+  }${hasSuffix ? ' input-box--has-suffix' : ''}${
+    showClear ? ' input-box--has-clear' : ''
+  }${error ? ' input-box--error' : ''}`;
 
   // Handle clear button click
   const handleClear = () => {

@@ -2,6 +2,7 @@ import Button from '@/shared/ui/Button';
 import { IconButton } from '@/shared/ui/buttons';
 import SearchButton from './ui/SearchButton';
 import InputBox from '@/shared/ui/InputBox';
+import TextArea from '@/shared/ui/TextArea';
 import { useState } from 'react';
 
 /**
@@ -14,6 +15,10 @@ export default function HomePage() {
   const [profileName, setProfileName] = useState('');
   const [price, setPrice] = useState('');
   const [totalLength, setTotalLength] = useState('');
+
+  // state 예시 - textArea
+  const [productDescription, setProductDescription] = useState('');
+  const [messageToSeller, setMessageToSeller] = useState('');
 
   return (
     <div>
@@ -66,8 +71,6 @@ export default function HomePage() {
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
         variant="search"
-        iconClass="ic-search"
-        iconPosition="right"
         clear={true}
         disabled={true}
       />
@@ -111,6 +114,20 @@ export default function HomePage() {
         value="잘못된 값 placeholder"
         prefix="예시"
         error={true}
+      />
+
+      {/* shared/ui에 선언된 TextArea */}
+      {/* (예시) 상품 설명 textarea */}
+      <TextArea
+        label="상품 설명"
+        name="product-description"
+        rows={5}
+        maxLength={500}
+        value={productDescription}
+        onChange={(e) => setProductDescription(e.target.value)}
+        variant="product"
+        showCharCount={true}
+        required={true}
       />
 
       <div style={{ height: 1200 }} />
