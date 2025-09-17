@@ -34,6 +34,7 @@ export default function InputBox({
   const safeOnChange = typeof onChange === 'function' ? onChange : () => {};
   const safeOnClear = typeof onClear === 'function' ? onClear : () => {};
 
+  // 스타일 및 상태 처리
   const showClear = clear && value && value.length > 0;
   const hasIconLeft = iconClass && safeIconPosition === 'left';
   const hasIconRight = iconClass && safeIconPosition === 'right';
@@ -63,8 +64,8 @@ export default function InputBox({
     <div className={className}>
       {label && (
         <label className="input-box__label" htmlFor={name}>
-          {label}
           {required && <span className="input-box__required">*</span>}
+          {label}
         </label>
       )}
 
@@ -76,9 +77,9 @@ export default function InputBox({
           className="input-box__input"
           id={name}
           name={name}
+          placeholder={placeholder}
           value={value}
           onChange={safeOnChange}
-          placeholder={placeholder}
           maxLength={maxLength}
           aria-label={label}
           data-variant={safeVariant}

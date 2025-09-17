@@ -178,50 +178,51 @@ export default function HomePage() {
         <InputBox
           label="검색"
           name="search"
+          variant="search"
           placeholder="상품을 검색하세요"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
-          variant="search"
           iconClass="ic-search"
           iconPosition="right"
           clear={true}
         />
         <InputBox
-          placeholder="상품을 검색하세요"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
           variant="search"
-          iconClass="ic-search"
-          iconPosition="right"
-          clear={true}
-          disabled={true}
           size="--s"
-        />
-        <InputBox
           placeholder="상품을 검색하세요"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
-          variant="search"
           iconClass="ic-search"
           iconPosition="right"
           clear={true}
           disabled={true}
         />
         <InputBox
+          variant="search"
           placeholder="상품을 검색하세요"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
-          variant="search"
           iconClass="ic-search"
           iconPosition="right"
           clear={true}
           disabled={true}
+        />
+        <InputBox
+          variant="search"
           size="--l"
+          placeholder="상품을 검색하세요"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          iconClass="ic-search"
+          iconPosition="right"
+          clear={true}
+          disabled={true}
         />
         {/* (예시) 사용자 이름 input */}
         <InputBox
           label="프로필명"
           name="profilename"
+          size="--s"
           value={profileName}
           onChange={(e) => setProfileName(e.target.value)}
           iconClass="ic-user"
@@ -229,7 +230,6 @@ export default function HomePage() {
           maxLength={10}
           clear={true}
           required={true}
-          size="--s"
         />
         <InputBox
           value={profileName}
@@ -240,46 +240,38 @@ export default function HomePage() {
           required={true}
         />
         <InputBox
-          value={profileName}
-          onChange={(e) => setProfileName(e.target.value)}
-          iconClass="ic-user"
-          iconPosition="left"
-          clear={true}
-          required={true}
           size="--l"
+          value={profileName}
+          onChange={(e) => setProfileName(e.target.value)}
+          iconClass="ic-user"
+          iconPosition="left"
+          clear={true}
+          required={true}
         />
         {/* (예시) 가격 input */}
         <InputBox
-          type="number"
           label="가격"
+          type="number"
           name="price"
+          variant="number"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
-          variant="number"
           suffix="원"
         />
         {/* (예시) 사이즈 input */}
         <InputBox
-          type="number"
           label="사이즈"
+          type="number"
           name="totallength"
-          placeholder="72"
-          value={totalLength}
-          onChange={(e) => setTotalLength(e.target.value)}
           variant="number"
-          prefix="총장"
-          suffix="cm"
-        />
-        <InputBox
           placeholder="72"
           value={totalLength}
           onChange={(e) => setTotalLength(e.target.value)}
           prefix="총장"
           suffix="cm"
-          disabled={true}
+        />
+        <InputBox
           size="--s"
-        />
-        <InputBox
           placeholder="72"
           value={totalLength}
           onChange={(e) => setTotalLength(e.target.value)}
@@ -294,21 +286,29 @@ export default function HomePage() {
           prefix="총장"
           suffix="cm"
           disabled={true}
+        />
+        <InputBox
           size="--l"
+          placeholder="72"
+          value={totalLength}
+          onChange={(e) => setTotalLength(e.target.value)}
+          prefix="총장"
+          suffix="cm"
+          disabled={true}
         />
         <InputBox
+          size="--s"
           label="에러 예시"
           value="잘못된 값 placeholder"
           prefix="예시"
           error={true}
-          size="--s"
         />
         <InputBox value="잘못된 값 placeholder" prefix="예시" error={true} />
         <InputBox
+          size="--l"
           value="잘못된 값 placeholder"
           prefix="예시"
           error={true}
-          size="--l"
         />
       </div>
 
