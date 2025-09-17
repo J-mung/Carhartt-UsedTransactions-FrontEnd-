@@ -3,10 +3,12 @@
 @use './border';
 @use './map';
 
-// base - 사이트 전반에 사용되는 스타일, 폰트 등
-// colro, font 등 추가 필요
+// base - 사이트 전반에 사용되는 스타일
+// typography - 폰트
+// colro, 등 추가 필요
 @use './variables';
 @use './base';
+@use './typography';
 @use './icon';
 
 // components
