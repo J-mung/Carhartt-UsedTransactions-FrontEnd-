@@ -3,6 +3,7 @@
 @use './map' as *;
 @use 'sass:map';
 @use './theme' as theme;
+@use './typography' as *;
 
 // InputBox 전용 테마 맵 (light / dark)
 $input-themes: (
@@ -72,52 +73,20 @@ $input-themes: (
   ),
 );
 
-$input-size-group: '--l', '', '--s';
+$input-size-group: '', '--s', '--l';
 
 // 기본 스타일
 .input-box {
   display: flex;
   width: 100%;
   flex-direction: column;
-  margin-bottom: 1rem; // 16px
+  margin: 1rem auto; // 16px
 
   // Input container
   &__container {
     position: relative;
     display: flex;
     align-items: center;
-
-    // Size variants
-    @each $size in $input-size-group {
-      &#{$size} {
-        .input-box__input {
-          @if $size == '--s' {
-            font-size: 0.75rem; // 12px
-            padding: 0.5rem 0.625rem; // 4px 10px
-          } @else if $size == '' {
-            font-size: 0.875rem; // 14px
-            padding: 0.5rem 0.75rem; // 4px 12px
-          } @else if $size == '--l' {
-            font-size: 1rem; // 16px
-            padding: 0.5rem 0.875rem; // 4px 14px
-          }
-        }
-
-        // 아이콘 사이즈
-        [class*='ic-'] {
-          @if $size == '--s' {
-            width: 1.25rem;
-            height: 1.25rem;
-          } @else if $size == '' {
-            width: 1.375rem;
-            height: 1.375rem;
-          } @else if $size == '--l' {
-            width: 1.5rem;
-            height: 1.5rem;
-          }
-        }
-      }
-    }
   }
 
   // Label
@@ -125,7 +94,6 @@ $input-size-group: '--l', '', '--s';
     display: block;
     font-weight: 500;
     margin-bottom: 0.3125rem; // 5px
-    line-height: 1.4;
   }
 
   // Required asterisk
@@ -155,25 +123,17 @@ $input-size-group: '--l', '', '--s';
   // Clear button
   &__clear-btn {
     position: absolute;
-    right: 3rem; // 48px
-    height: 1rem; // 16px
-    width: 1rem; // 16px
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
     z-index: 5;
     border: none;
     border-radius: 50%;
     transition: opacity 0.2s ease;
+    cursor: pointer;
 
     &:hover {
       opacity: 0.75;
-    }
-
-    .ic-close {
-      width: 0.5rem;
-      height: 0.5rem;
     }
   }
 
@@ -210,165 +170,206 @@ $input-size-group: '--l', '', '--s';
     }
   }
 
-  // Input padding adjustments for icons and affixes
-  &--has-prefix,
-  &--has-icon-left {
-    .input-box__input {
-      padding-left: 4rem; // 64px
-    }
-  }
+  // Size variants
+  @each $size in $input-size-group {
+    &#{$size} {
+      .input-box__input {
+        @if $size == '--s' {
+          @include font-scale(12);
+          padding: 0.25rem 0.75rem; // 4px 12px
+        } @else if $size == '' {
+          @include font-scale(14);
+          padding: 0.5rem 0.75rem; // 8px 12px
+        } @else if $size == '--l' {
+          @include font-scale(16);
+          padding: 0.75rem 0.75rem; // 12px
+        }
+      }
 
-  &--has-suffix,
-  &--has-icon-right,
-  &--has-clear {
-    .input-box__input {
-      padding-right: 6rem; // 96px
-    }
+      // Input padding adjustments for icons and affixes
+      &.input-box--has-prefix,
+      &.input-box--has-icon-left {
+        .input-box__input {
+          padding-left: 4rem; // 64px
+        }
+      }
 
-    .input-box__clear-btn {
-      right: 4rem; // 64px
+      &.input-box--has-suffix,
+      &.input-box--has-icon-right,
+      &.input-box--has-clear {
+        .input-box__input {
+          padding-right: 7rem;
+        }
+
+        .input-box__clear-btn {
+          right: 4rem; // 64px
+          cursor: pointer;
+          @if $size == '--s' {
+            width: 0.875rem; // 14px
+            height: 0.875rem; // 14px
+
+            .ic-close {
+              width: 0.375rem; // 6px
+              height: 0.375rem; // 6px
+            }
+          } @else {
+            width: 1rem; // 16px
+            height: 1rem; // 16px
+
+            .ic-close {
+              width: 0.5rem; // 8px
+              height: 0.5rem; // 8px
+            }
+          }
+        }
+      }
     }
   }
 
   // 테마 반복문
   @each $mode, $config in $input-themes {
     #{map.get($config, selector)} & {
-      // Base styles
-      .input-box__label {
-        color: deep-get($config, 'base', 'label');
-      }
-
-      // Required asterisk
-      .input-box__required {
-        color: deep-get($config, 'base', 'asterisk');
-      }
-
-      .input-box__input {
-        background: deep-get($config, 'base', 'background');
-        color: deep-get($config, 'base', 'font');
-        @include border.border(
-          0.0625rem,
-          deep-get($config, 'base', 'border'),
-          solid,
-          all
-        );
-
-        &::placeholder {
-          color: deep-get($config, 'base', 'placeholder');
-        }
-
-        // Focus state
-        &:focus {
-          background: deep-get($config, 'focused', 'background');
-          @include border.border(
-            0.0625rem,
-            deep-get($config, 'focused', 'border'),
-            solid,
-            all
-          );
-          box-shadow: 0
-            0
-            0
-            0.125rem
-            rgba(deep-get($config, 'focused', 'border'), 0.2);
-          outline: none;
-        }
-
-        // Disabled state
-        &:disabled {
-          cursor: not-allowed;
-          background: deep-get($config, 'disabled', 'background');
-          color: deep-get($config, 'disabled', 'font');
-          @include border.border(
-            0.0625rem,
-            deep-get($config, 'disabled', 'border'),
-            solid,
-            all
-          );
-
-          &::placeholder {
-            color: deep-get($config, 'disabled', 'placeholder');
+      @each $size in $input-size-group {
+        &#{$size},
+        & {
+          // Base styles
+          .input-box__label {
+            color: deep-get($config, 'base', 'label');
           }
-        }
-      }
 
-      // Prefix & Suffix
-      &__prefix {
-        background: deep-get($config, 'base', 'border');
-        color: deep-get($config, 'base', 'font');
-        @include border.border(
-          0.0625rem,
-          deep-get($config, 'base', 'border'),
-          solid,
-          all
-        );
-      }
+          // Required asterisk
+          .input-box__required {
+            color: deep-get($config, 'base', 'asterisk');
+          }
 
-      &:focus-within .input-box__prefix {
-        @include border.border(
-          0.0625rem,
-          deep-get($config, 'focused', 'border'),
-          solid,
-          all
-        );
-        border-right: none;
-      }
+          .input-box__input {
+            background: deep-get($config, 'base', 'background');
+            color: deep-get($config, 'base', 'font');
+            @include border.border(
+              0.0625rem,
+              deep-get($config, 'base', 'border'),
+              solid,
+              all
+            );
 
-      &:has(.input-box__input:disabled) .input-box__prefix {
-        @include border.border(
-          0.0625rem,
-          deep-get($config, 'disabled', 'border'),
-          solid,
-          all
-        );
-      }
+            &::placeholder {
+              color: deep-get($config, 'base', 'placeholder');
+            }
 
-      &__suffix {
-        color: deep-get($config, 'base', 'icon');
-      }
+            // Focus state
+            &:focus {
+              background: deep-get($config, 'focused', 'background');
+              @include border.border(
+                0.0625rem,
+                deep-get($config, 'focused', 'border'),
+                solid,
+                all
+              );
+              box-shadow: 0
+                0
+                0
+                0.125rem
+                rgba(deep-get($config, 'focused', 'border'), 0.2);
+              outline: none;
+            }
 
-      // Icons
-      [class*='ic-'] {
-        background: deep-get($config, 'base', 'icon');
-      }
+            // Disabled state
+            &:disabled {
+              cursor: not-allowed;
+              background: deep-get($config, 'disabled', 'background');
+              color: deep-get($config, 'disabled', 'font');
+              @include border.border(
+                0.0625rem,
+                deep-get($config, 'disabled', 'border'),
+                solid,
+                all
+              );
 
-      // Clear button
-      &__clear-btn {
-        background: deep-get($config, 'base', 'font');
+              &::placeholder {
+                color: deep-get($config, 'disabled', 'placeholder');
+              }
+            }
+          }
 
-        .ic-close {
-          background: deep-get($config, 'base', 'background');
-        }
-      }
+          // Prefix & Suffix
+          &__prefix {
+            background: deep-get($config, 'base', 'border');
+            color: deep-get($config, 'base', 'font');
+            @include border.border(
+              0.0625rem,
+              deep-get($config, 'base', 'border'),
+              solid,
+              all
+            );
+          }
 
-      // Error state
-      &.input-box--error {
-        .input-box__label {
-          color: deep-get($config, 'error', 'label');
-        }
+          &:focus-within .input-box__prefix {
+            @include border.border(
+              0.0625rem,
+              deep-get($config, 'focused', 'border'),
+              solid,
+              all
+            );
+            border-right: none;
+          }
 
-        .input-box__input {
-          background: deep-get($config, 'error', 'background');
-          @include border.border(
-            0.0625rem,
-            deep-get($config, 'error', 'border'),
-            solid,
-            all
-          );
-          color: deep-get($config, 'error', 'font');
-        }
+          &:has(.input-box__input:disabled) .input-box__prefix {
+            @include border.border(
+              0.0625rem,
+              deep-get($config, 'disabled', 'border'),
+              solid,
+              all
+            );
+          }
 
-        .input-box__prefix {
-          @include border.border(
-            0.0625rem,
-            deep-get($config, 'error', 'border'),
-            solid,
-            all
-          );
-        }
+          &__suffix {
+            color: deep-get($config, 'base', 'icon');
+          }
 
-        [class*='ic-'] {
-          background: deep-get($config, 'error', 'icon');
+          // Icons
+          [class*='ic-'] {
+            background: deep-get($config, 'base', 'icon');
+          }
+
+          // Clear button
+          &__clear-btn {
+            background: deep-get($config, 'base', 'font');
+
+            .ic-close {
+              background: deep-get($config, 'base', 'background');
+            }
+          }
+
+          // Error state
+          &.input-box--error {
+            .input-box__label {
+              color: deep-get($config, 'error', 'label');
+            }
+
+            .input-box__input {
+              background: deep-get($config, 'error', 'background');
+              @include border.border(
+                0.0625rem,
+                deep-get($config, 'error', 'border'),
+                solid,
+                all
+              );
+              color: deep-get($config, 'error', 'font');
+            }
+
+            .input-box__prefix {
+              @include border.border(
+                0.0625rem,
+                deep-get($config, 'error', 'border'),
+                solid,
+                all
+              );
+            }
+
+            [class*='ic-'] {
+              background: deep-get($config, 'error', 'icon');
+            }
+          }
         }
       }
     }
