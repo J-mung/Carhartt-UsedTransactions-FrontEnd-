@@ -5,6 +5,11 @@
 $theme-light-selector: ':root';
 $theme-dark-selector: ":root[data-theme='dark']";
 $theme-system-selector: ":root[data-theme='system']";
+$theme-group: (
+  $theme-light-selector,
+  $theme-dark-selector,
+  $theme-system-selector
+);
 
 // 테마 팔레트 맵
 $theme-light: (

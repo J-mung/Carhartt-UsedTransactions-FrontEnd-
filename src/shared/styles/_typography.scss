@@ -1,0 +1,148 @@
+@use './theme' as *;
+@use './map' as *;
+// 폰트 Size & Line Height
+$font-sizes: (
+  12: 20,
+  14: 22,
+  16: 24,
+  20: 28,
+  24: 32,
+  30: 38,
+  38: 46,
+  46: 54,
+  56: 64,
+  68: 76,
+);
+
+// 폰트 size, line height mixin
+@mixin font-scale($size) {
+  font-size: #{$size}px;
+  line-height: #{deep-get($font-sizes, $size)}px;
+}
+
+// 폰트 Weights
+$font-weights: (
+  regular: 400,
+  medium: 500,
+  semibold: 600,
+  bold: 700,
+);
+
+@mixin font-weight($weight) {
+  font-weight: deep-get($font-weights, $weight);
+}
+
+// 폰트 Colors
+$font-colors-light: (
+  title: rgba(0, 0, 0, 0.85),
+  primary: rgba(0, 0, 0, 0.65),
+  secondary: rgba(0, 0, 0, 0.45),
+  disable: rgba(0, 0, 0, 0.25),
+  border: rgba(0, 0, 0, 0.15),
+  divider: rgba(0, 0, 0, 0.06),
+  background: rgba(0, 0, 0, 0.04),
+  table-header: rgba(0, 0, 0, 0.02),
+);
+
+$font-colors-dark: (
+  title: rgba(255, 255, 255, 0.85),
+  primary: rgba(255, 255, 255, 0.65),
+  secondary: rgba(255, 255, 255, 0.45),
+  disable: rgba(255, 255, 255, 0.3),
+  border: rgba(255, 255, 255, 0.2),
+  divider: rgba(255, 255, 255, 0.12),
+  background: rgba(255, 255, 255, 0.08),
+  table-header: rgba(255, 255, 255, 0.04),
+);
+
+@mixin font-color($type, $mode) {
+  @if $mode == $theme-light-selector {
+    color: deep-get($font-colors-light, $type);
+  } @else if $mode == $theme-dark-selector {
+    color: deep-get($font-colors-dark, $type);
+  } @else if $mode == $theme-system-selector {
+    // 시스템 모드: 기본은 라이트 컬러로
+    color: deep-get($font-colors-light, $type);
+  }
+}
+
+@each $mode in $theme-group {
+  #{$mode} {
+    // h1, h2, h3, h4, h5 헤딩 스타일
+    .h1 {
+      @include font-scale(38); // font-size: 38px, line-height: 46px
+      @include font-weight(bold);
+      @include font-color(title, $mode);
+    }
+
+    .h2 {
+      @include font-scale(30);
+      @include font-weight(semibold);
+      @include font-color(title, $mode);
+    }
+
+    .h3 {
+      @include font-scale(24);
+      @include font-weight(medium);
+      @include font-color(title, $mode);
+    }
+
+    .h4 {
+      @include font-scale(20);
+      @include font-weight(medium);
+      @include font-color(title, $mode);
+    }
+
+    .h5 {
+      @include font-scale(16);
+      @include font-weight(medium);
+      @include font-color(title, $mode);
+    }
+  }
+}
+
+// theme 모드별 font 정의
+@each $mode in $theme-group {
+  #{$mode} {
+    // theme text per mode
+    // Regular text
+    .text-regular {
+      @include font-scale(14);
+      @include font-weight(regular);
+      @include font-color(primary, $mode);
+    }
+    .h5-regular {
+      @include font-scale(16);
+      @include font-weight(regular);
+      @include font-color(primary, $mode);
+    }
+
+    // Medium emphasis text
+    .text-medium {
+      @include font-scale(14);
+      @include font-weight(medium);
+      @include font-color(primary, $mode);
+    }
+
+    // Strong emphasis text
+    .text-strong {
+      @include font-scale(14);
+      @include font-weight(bold);
+      @include font-color(primary, $mode);
+    }
+
+    // Small captions / helper text
+    .text-caption {
+      @include font-scale(12);
+      @include font-weight(regular);
+      @include font-color(secondary, $mode);
+    }
+
+    // Disabled text (공통 활용)
+    .text-disabled {
+      @include font-scale(14);
+      @include font-weight(regular);
+      @include font-color(disable, $mode);
+    }
+  }
+}
