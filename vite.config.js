@@ -24,4 +24,12 @@ export default defineConfig({
       external: ['set-cookie-parser'],
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://3.35.168.54:8080',
+        changeOrigin: true,
+      },
+    },
+  },
 });
