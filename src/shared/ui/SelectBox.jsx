@@ -29,6 +29,20 @@ export default function SelectBox({
     error ? ' select-box--error' : ''
   }${isOpen ? ' select-box--open' : ''}`;
 
+  // Handle toggle
+  const handleToggle = () => {
+    if (disabled) return;
+    setIsOpen(!isOpen);
+  };
+
+  // Handle focus
+  const handleFocus = (e) => {
+    if (disabled) {
+      e.preventDefault();
+      e.target.blur();
+    }
+  };
+
   // Normalize options
   const normalizedOptions = options.map((option) => {
     if (typeof option === 'string') {
@@ -54,12 +68,6 @@ export default function SelectBox({
     };
     safeOnChange(syntheticEvent);
     setIsOpen(false);
-  };
-
-  // Handle toggle
-  const handleToggle = () => {
-    if (disabled) return;
-    setIsOpen(!isOpen);
   };
 
   // Close dropdown when clicking outside
@@ -94,6 +102,9 @@ export default function SelectBox({
           name={name}
           className="select-box__select"
           onClick={handleToggle}
+          onFocus={handleFocus}
+          tabIndex={disabled ? -1 : 0}
+          aria-disabled={disabled}
           aria-label={label}
         >
           <span
@@ -135,7 +146,6 @@ export default function SelectBox({
           </div>
         )}
 
-        {/* Hidden input for form compatibility */}
         <input type="hidden" name={name} value={value} required={required} />
       </div>
 

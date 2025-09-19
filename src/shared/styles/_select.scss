@@ -23,7 +23,7 @@ $selectbox-themes: (
     ),
     focused: (
       background: map.get($theme-gray, 'light', 'gray-1'),
-      border: map.get($theme-blue, 'light', 'blue-6'),
+      border: map.get($theme-blue, 'light', 'blue-5'),
     ),
     disabled: (
       background: map.get($theme-gray, 'light', 'gray-3'),
@@ -38,7 +38,7 @@ $selectbox-themes: (
       border: map.get($theme-red, 'light', 'red-6'),
       font: map.get($theme-gray, 'light', 'gray-13'),
       placeholder: map.get($theme-gray, 'light', 'gray-8'),
-      label: map.get($theme-red, 'light', 'red-5'),
+      label: map.get($theme-gray, 'light', 'gray-13'),
       arrow: map.get($theme-gray, 'light', 'gray-8'),
       dropdown-bg: map.get($theme-red, 'light', 'red-1'),
       dropdown-border: map.get($theme-red, 'light', 'red-6'),
@@ -61,7 +61,7 @@ $selectbox-themes: (
     ),
     focused: (
       background: map.get($theme-gray, 'dark', 'gray-2'),
-      border: map.get($theme-blue, 'dark', 'blue-6'),
+      border: map.get($theme-blue, 'dark', 'blue-5'),
     ),
     disabled: (
       background: map.get($theme-gray, 'dark', 'gray-6'),
@@ -76,11 +76,11 @@ $selectbox-themes: (
       border: map.get($theme-red, 'dark', 'red-6'),
       font: map.get($theme-red, 'dark', 'red-5'),
       placeholder: map.get($theme-gray, 'dark', 'gray-8'),
-      label: map.get($theme-red, 'dark', 'red-6'),
+      label: map.get($theme-gray, 'dark', 'gray-13'),
       arrow: map.get($theme-gray, 'dark', 'gray-8'),
       dropdown-bg: map.get($theme-red, 'dark', 'red-1'),
       dropdown-border: map.get($theme-red, 'dark', 'red-6'),
-      option-hover: map.get($theme-red, 'dark', 'red-2'),
+      option-hover: map.get($theme-red, 'dark', 'red-3'),
     ),
   ),
 );
@@ -94,7 +94,7 @@ $selectbox-size-group: '', '--s', '--l';
   flex-direction: column;
   margin: 1rem auto; // 16px
 
-  // Container
+  // Selectbox container
   &__container {
     position: relative;
   }
@@ -129,9 +129,6 @@ $selectbox-size-group: '', '--s', '--l';
   // Arrow
   &__arrow {
     position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
     .ic-right {
       transform: rotate(90deg);
@@ -253,11 +250,15 @@ $selectbox-size-group: '', '--s', '--l';
                 solid,
                 all
               );
-              box-shadow: 0 0 0 0.125rem deep-get($config, 'focused', 'border');
+              box-shadow: 0
+                0
+                0.25rem
+                0.05rem
+                deep-get($config, 'focused', 'border');
             }
 
             // Disabled state
-            &:disabled {
+            &[aria-disabled='true'] {
               cursor: not-allowed;
               background: deep-get($config, 'disabled', 'background');
               color: deep-get($config, 'disabled', 'font');
@@ -314,11 +315,6 @@ $selectbox-size-group: '', '--s', '--l';
             }
           }
 
-          // Error message styling
-          .select-box__error-message {
-            color: deep-get($config, 'error', 'label');
-          }
-
           // Error state
           &.select-box--error {
             .select-box__label {
@@ -352,10 +348,6 @@ $selectbox-size-group: '', '--s', '--l';
               }
             }
 
-            .select-box__arrow .ic-right {
-              background: deep-get($config, 'error', 'arrow');
-            }
-
             // Error state dropdown
             .select-box__dropdown {
               background: deep-get($config, 'error', 'dropdown-bg');
@@ -378,6 +370,11 @@ $selectbox-size-group: '', '--s', '--l';
               }
             }
           }
+        }
+
+        // 에러 메세지
+        .select-box__error-message {
+          color: deep-get($config, 'error', 'border');
         }
       }
     }

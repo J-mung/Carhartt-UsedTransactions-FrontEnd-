@@ -392,7 +392,7 @@ export default function HomePage() {
           options={selectionOptions}
           size="--l"
         />
-        <SelectBox disabled={true} />
+        <SelectBox disabled={true} size="--s" />
         <SelectBox
           label="SelectBox"
           value={selectedCategory}
