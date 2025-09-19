@@ -347,6 +347,7 @@ export default function HomePage() {
           maxLength={500}
           required={true}
           error={true}
+          errorMessage="Error Message"
         />
 
         {/* Message to seller (purchase page) */}

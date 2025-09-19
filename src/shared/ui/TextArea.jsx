@@ -9,6 +9,7 @@ export default function TextArea({
   disabled = false,
   required = false,
   error = false,
+  errorMessage = '',
 }) {
   // 허용 size 값 세트 & 안전 처리
   const SIZES = ['--s', '', '--l'];
@@ -47,15 +48,21 @@ export default function TextArea({
         required={required}
       />
 
-      {maxLength && (
-        <div
-          className={`textarea__counter ${
-            isOverLimit ? 'textarea__counter--over' : ''
-          }`}
-        >
-          {currentLength}/{maxLength}
-        </div>
-      )}
+      <div className="textarea__bottom">
+        {error && errorMessage && (
+          <div className="textarea__error-message">{errorMessage}</div>
+        )}
+
+        {maxLength && (
+          <div
+            className={`textarea__counter ${
+              isOverLimit ? 'textarea__counter--over' : ''
+            }`}
+          >
+            {currentLength}/{maxLength}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
