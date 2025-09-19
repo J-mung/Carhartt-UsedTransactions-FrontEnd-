@@ -1,4 +1,4 @@
-export default ENV = {
+export const ENV = {
   NAME: import.meta.env.VITE_ENV ?? 'development',
   API_BASE_URL: import.meta.env.VITE_API_BASE_URL,
 };

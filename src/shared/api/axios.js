@@ -8,7 +8,7 @@ import axios from 'axios';
  * @returns
  */
 function getUuid() {
-  if (typeof crypto !== 'undefined' && cryptop.randomUUID)
+  if (typeof crypto !== 'undefined' && crypto.randomUUID)
     return crypto.randomUUID();
 
   // fallback (랜덤 생성)
@@ -79,8 +79,9 @@ carHarttApi.interceptors.response.use(
       }
 
       // 실패 규격: { success: false, error: {code, message, details[]}, meta }
-      const err = new ApiError(body.error.message, {
+      const err = new ApiError({
         code: body.error.code ?? 'UNKNOWN',
+        message: body.error.message,
         details: body.error.detail ?? [],
         status: res.status ?? '404',
         requestId,
