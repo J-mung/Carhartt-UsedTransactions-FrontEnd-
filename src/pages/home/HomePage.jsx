@@ -2,6 +2,7 @@ import { Button, IconButton } from '@/shared/ui/buttons';
 import SearchButton from './ui/SearchButton';
 import InputBox from '@/shared/ui/InputBox';
 import TextArea from '@/shared/ui/TextArea';
+import SelectBox from '@/shared/ui/SelectBox';
 import { useState } from 'react';
 
 /**
@@ -14,8 +15,20 @@ export default function HomePage() {
   const [profileName, setProfileName] = useState('');
   const [price, setPrice] = useState('');
   const [totalLength, setTotalLength] = useState('');
-  const [productDescription, setProductDescription] = useState('');
-  const [messageToSeller, setMessageToSeller] = useState('');
+
+  // state 예시 - textArea
+  const [textAreaText, setTextAreaText] = useState('');
+  const [message, setMessage] = useState('');
+
+  // state 예시 - textArea
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const selectionOptions = [
+    { value: 'option1', label: 'Option 1' },
+    { value: 'option2', label: 'Option 2' },
+    { value: 'option3', label: 'Option 3' },
+    { value: 'option4', label: 'Option 4' },
+    { value: 'option5', label: 'Option 5' },
+  ];
 
   return (
     <div>
@@ -182,7 +195,7 @@ export default function HomePage() {
           label="검색"
           name="search"
           variant="search"
-          placeholder="상품을 검색하세요"
+          placeholder="Placeholder Text"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           iconClass="ic-search"
@@ -192,7 +205,7 @@ export default function HomePage() {
         <InputBox
           variant="search"
           size="--s"
-          placeholder="상품을 검색하세요"
+          placeholder="Placeholder Text"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           iconClass="ic-search"
@@ -202,7 +215,7 @@ export default function HomePage() {
         />
         <InputBox
           variant="search"
-          placeholder="상품을 검색하세요"
+          placeholder="Placeholder Text"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           iconClass="ic-search"
@@ -213,7 +226,7 @@ export default function HomePage() {
         <InputBox
           variant="search"
           size="--l"
-          placeholder="상품을 검색하세요"
+          placeholder="Placeholder Text"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           iconClass="ic-search"
@@ -317,47 +330,76 @@ export default function HomePage() {
 
       {/* shared/ui에 선언된 TextArea */}
       <div style={{ marginTop: 50 }}>
-        {/* (예사) 상품 설명 */}
         <TextArea
-          label="상품 설명"
-          name="productDescription"
+          label="TextArea"
+          name="textArea"
           variant="product"
           size="--s"
-          placeholder="상품에 대한 자세한 설명을 입력하세요"
-          value={productDescription}
-          onChange={(e) => setProductDescription(e.target.value)}
+          placeholder="Placeholder Text"
+          value={textAreaText}
+          onChange={(e) => setTextAreaText(e.target.value)}
           maxLength={500}
           required={true}
         />
         <TextArea
-          variant="product"
-          placeholder="상품에 대한 자세한 설명을 입력하세요"
-          value={productDescription}
-          onChange={(e) => setProductDescription(e.target.value)}
+          placeholder="Placeholder Text"
+          value={textAreaText}
+          onChange={(e) => setTextAreaText(e.target.value)}
           maxLength={500}
           disabled={true}
         />
         <TextArea
-          label="상품 설명"
-          variant="product"
+          label="TextArea"
           size="--l"
-          placeholder="상품에 대한 자세한 설명을 입력하세요"
-          value={productDescription}
-          onChange={(e) => setProductDescription(e.target.value)}
+          placeholder="Placeholder Text"
+          value={textAreaText}
+          onChange={(e) => setTextAreaText(e.target.value)}
           maxLength={500}
           required={true}
           error={true}
         />
-
-        {/* Message to seller (purchase page) */}
         <TextArea
-          label="판매자에게 전달할 요청사항"
-          name="messageToSeller"
-          variant="message"
+          label="메세지"
+          name="messageText"
           size="--s"
-          placeholder="판매자에게 전달하고 싶은 내용이 있다면 입력해주세요"
-          value={messageToSeller}
-          onChange={(e) => setMessageToSeller(e.target.value)}
+          placeholder="Message Placeholder"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+      </div>
+
+      {/* shared/ui에 선언된 SelectBox */}
+      <div style={{ marginTop: 50 }}>
+        <SelectBox
+          label="SelectBox"
+          name="category"
+          placeholder="Placeholder Text"
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          options={selectionOptions}
+          required={true}
+          size="--s"
+        />
+        <SelectBox
+          placeholder="Placeholder Text"
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          options={selectionOptions}
+        />
+        <SelectBox
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          options={selectionOptions}
+          size="--l"
+        />
+        <SelectBox disabled={true} />
+        <SelectBox
+          label="SelectBox"
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          options={selectionOptions}
+          error={true}
+          errorMessage="Error Message"
         />
       </div>
 

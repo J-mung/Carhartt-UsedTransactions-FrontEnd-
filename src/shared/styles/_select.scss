@@ -1,0 +1,385 @@
+@use './border' as border;
+@use './colors' as *;
+@use './map' as *;
+@use 'sass:map';
+@use './theme' as theme;
+@use './typography' as *;
+
+// SelectBox 전용 테마 맵 (light / dark)
+$selectbox-themes: (
+  light: (
+    selector: theme.$theme-light-selector,
+    base: (
+      background: map.get($theme-gray, 'light', 'gray-1'),
+      border: map.get($theme-gray, 'light', 'gray-6'),
+      font: map.get($theme-gray, 'light', 'gray-13'),
+      placeholder: rgba((map.get($theme-gray, 'light', 'gray-13')), 0.25),
+      label: map.get($theme-gray, 'light', 'gray-13'),
+      asterisk: map.get($theme-red, 'light', 'red-6'),
+      arrow: map.get($theme-gray, 'light', 'gray-8'),
+      dropdown-bg: map.get($theme-gray, 'light', 'gray-1'),
+      dropdown-border: map.get($theme-gray, 'light', 'gray-5'),
+      option-hover: map.get($theme-gray, 'light', 'gray-3'),
+    ),
+    focused: (
+      background: map.get($theme-gray, 'light', 'gray-1'),
+      border: map.get($theme-blue, 'light', 'blue-6'),
+    ),
+    disabled: (
+      background: map.get($theme-gray, 'light', 'gray-3'),
+      border: map.get($theme-gray, 'light', 'gray-6'),
+      font: rgba((map.get($theme-gray, 'light', 'gray-13')), 0.25),
+      placeholder: rgba((map.get($theme-gray, 'light', 'gray-13')), 0.25),
+      label: map.get($theme-gray, 'light', 'gray-7'),
+      arrow: map.get($theme-gray, 'light', 'gray-6'),
+    ),
+    error: (
+      background: map.get($theme-gray, 'light', 'gray-2'),
+      border: map.get($theme-red, 'light', 'red-6'),
+      font: map.get($theme-gray, 'light', 'gray-13'),
+      placeholder: map.get($theme-gray, 'light', 'gray-8'),
+      label: map.get($theme-red, 'light', 'red-5'),
+      arrow: map.get($theme-gray, 'light', 'gray-8'),
+      dropdown-bg: map.get($theme-red, 'light', 'red-1'),
+      dropdown-border: map.get($theme-red, 'light', 'red-6'),
+      option-hover: map.get($theme-red, 'light', 'red-2'),
+    ),
+  ),
+  dark: (
+    selector: theme.$theme-dark-selector,
+    base: (
+      background: map.get($theme-gray, 'dark', 'gray-2'),
+      border: map.get($theme-gray, 'dark', 'gray-6'),
+      font: map.get($theme-gray, 'dark', 'gray-13'),
+      placeholder: map.get($theme-gray, 'dark', 'gray-8'),
+      label: map.get($theme-gray, 'dark', 'gray-13'),
+      asterisk: map.get($theme-red, 'dark', 'red-6'),
+      arrow: map.get($theme-gray, 'dark', 'gray-8'),
+      dropdown-bg: map.get($theme-gray, 'dark', 'gray-2'),
+      dropdown-border: map.get($theme-gray, 'dark', 'gray-6'),
+      option-hover: map.get($theme-gray, 'dark', 'gray-5'),
+    ),
+    focused: (
+      background: map.get($theme-gray, 'dark', 'gray-2'),
+      border: map.get($theme-blue, 'dark', 'blue-6'),
+    ),
+    disabled: (
+      background: map.get($theme-gray, 'dark', 'gray-6'),
+      border: map.get($theme-gray, 'dark', 'gray-8'),
+      font: map.get($theme-gray, 'dark', 'gray-7'),
+      placeholder: map.get($theme-gray, 'dark', 'gray-7'),
+      label: map.get($theme-gray, 'dark', 'gray-7'),
+      arrow: map.get($theme-gray, 'dark', 'gray-7'),
+    ),
+    error: (
+      background: map.get($theme-gray, 'dark', 'gray-2'),
+      border: map.get($theme-red, 'dark', 'red-6'),
+      font: map.get($theme-red, 'dark', 'red-5'),
+      placeholder: map.get($theme-gray, 'dark', 'gray-8'),
+      label: map.get($theme-red, 'dark', 'red-6'),
+      arrow: map.get($theme-gray, 'dark', 'gray-8'),
+      dropdown-bg: map.get($theme-red, 'dark', 'red-1'),
+      dropdown-border: map.get($theme-red, 'dark', 'red-6'),
+      option-hover: map.get($theme-red, 'dark', 'red-2'),
+    ),
+  ),
+);
+
+$selectbox-size-group: '', '--s', '--l';
+
+// 기본 스타일
+.select-box {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  margin: 1rem auto; // 16px
+
+  // Container
+  &__container {
+    position: relative;
+  }
+
+  // Label
+  &__label {
+    display: block;
+    margin-bottom: 0.3125rem; // 5px
+  }
+
+  // Required asterisk
+  &__required {
+    margin-right: 0.25rem; // 4px
+  }
+
+  // Select
+  &__select {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    @include border.borderRadius(border.$component-border-radius);
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  // Text content
+  &__text {
+    text-overflow: ellipsis;
+  }
+
+  // Arrow
+  &__arrow {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .ic-right {
+      transform: rotate(90deg);
+      transition: transform 0.5s ease;
+    }
+  }
+
+  &--open &__arrow .ic-right {
+    transform: rotate(270deg);
+  }
+
+  // Dropdown container
+  &__dropdown {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    margin-top: 0.25rem; // 4px
+    @include border.borderRadius(border.$component-border-radius);
+    max-height: 12rem; // 192px
+    overflow-y: auto;
+  }
+
+  // Options list
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0.25rem 0; // 4px
+  }
+
+  &__option {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  // Error message
+  &__error-message {
+    margin-top: 0.25rem; // 4px
+    @include font-scale(12);
+  }
+
+  // Size variants
+  @each $size in $selectbox-size-group {
+    &#{$size} {
+      .select-box__select {
+        @if $size == '--s' {
+          @include font-scale(12);
+          padding: 0.25rem 2rem 0.25rem 0.75rem; // 4px 32px 4px 12px
+        } @else if $size == '' {
+          @include font-scale(14);
+          padding: 0.5rem 2rem 0.5rem 0.75rem; // 8px 32px 8px 12px
+        } @else if $size == '--l' {
+          @include font-scale(16);
+          padding: 0.75rem 2rem 0.75rem 0.75rem; // 12px 32px 12px 12px
+        }
+      }
+
+      .select-box__arrow {
+        right: 0.75rem; // 10px
+        @if $size == '--s' {
+          .ic-right {
+            height: 0.625rem; // 10px
+          }
+        } @else if $size == '' {
+          .ic-right {
+            height: 0.75rem; // 12px
+          }
+        } @else if $size == '--l' {
+          .ic-right {
+            height: 1rem; // 16px
+          }
+        }
+      }
+
+      .select-box__option {
+        @if $size == '--s' {
+          @include font-scale(12);
+          padding: 0.375rem 0.75rem; // 6px 12px
+        } @else if $size == '' {
+          @include font-scale(14);
+          padding: 0.5rem 0.75rem; // 8px 12px
+        } @else if $size == '--l' {
+          @include font-scale(16);
+          padding: 0.625rem 0.75rem; // 10px 12px
+        }
+      }
+    }
+  }
+
+  // 테마 반복문
+  @each $mode, $config in $selectbox-themes {
+    #{map.get($config, selector)} & {
+      @each $size in $selectbox-size-group {
+        &#{$size},
+        & {
+          .select-box__label {
+            color: deep-get($config, 'base', 'label');
+          }
+
+          .select-box__required {
+            color: deep-get($config, 'base', 'asterisk');
+          }
+
+          .select-box__select {
+            background: deep-get($config, 'base', 'background');
+            color: deep-get($config, 'base', 'font');
+            @include border.border(
+              0.0625rem,
+              deep-get($config, 'base', 'border'),
+              solid,
+              all
+            );
+
+            &:focus {
+              background: deep-get($config, 'focused', 'background');
+              @include border.border(
+                0.0625rem,
+                deep-get($config, 'focused', 'border'),
+                solid,
+                all
+              );
+              box-shadow: 0 0 0 0.125rem deep-get($config, 'focused', 'border');
+            }
+
+            // Disabled state
+            &:disabled {
+              cursor: not-allowed;
+              background: deep-get($config, 'disabled', 'background');
+              color: deep-get($config, 'disabled', 'font');
+              @include border.border(
+                0.0625rem,
+                deep-get($config, 'disabled', 'border'),
+                solid,
+                all
+              );
+
+              &::placeholder {
+                color: deep-get($config, 'disabled', 'placeholder');
+              }
+            }
+          }
+
+          .select-box__text {
+            color: deep-get($config, 'base', 'font');
+          }
+
+          .select-box__placeholder {
+            color: deep-get($config, 'base', 'placeholder');
+          }
+
+          .select-box__arrow .ic-right {
+            background: deep-get($config, 'base', 'arrow');
+          }
+
+          // Disabled arrow styling
+          &:has(.select-box__select:disabled) .select-box__arrow .ic-right {
+            background: deep-get($config, 'disabled', 'arrow');
+          }
+
+          // Dropdown styling
+          .select-box__dropdown {
+            background: deep-get($config, 'base', 'dropdown-bg');
+            @include border.border(
+              0.0625rem,
+              deep-get($config, 'base', 'dropdown-border'),
+              solid,
+              all
+            );
+            box-shadow: 0rem
+              0.25rem
+              0.5rem
+              deep-get($config, 'base', 'dropdown-border');
+          }
+
+          .select-box__option {
+            color: deep-get($config, 'base', 'font');
+
+            &:hover {
+              background: deep-get($config, 'base', 'option-hover');
+            }
+          }
+
+          // Error message styling
+          .select-box__error-message {
+            color: deep-get($config, 'error', 'label');
+          }
+
+          // Error state
+          &.select-box--error {
+            .select-box__label {
+              color: deep-get($config, 'error', 'label');
+            }
+
+            .select-box__select {
+              background: deep-get($config, 'error', 'background');
+              color: deep-get($config, 'error', 'font');
+              @include border.border(
+                0.0625rem,
+                deep-get($config, 'error', 'border'),
+                solid,
+                all
+              );
+
+              &:focus {
+                background: deep-get($config, 'error', 'background');
+                @include border.border(
+                  0.0625rem,
+                  deep-get($config, 'error', 'border'),
+                  solid,
+                  all
+                );
+                box-shadow: 0
+                  0
+                  0
+                  0.125rem
+                  rgba((deep-get($config, 'error', 'border')), 0.2);
+                outline: none;
+              }
+            }
+
+            .select-box__arrow .ic-right {
+              background: deep-get($config, 'error', 'arrow');
+            }
+
+            // Error state dropdown
+            .select-box__dropdown {
+              background: deep-get($config, 'error', 'dropdown-bg');
+              @include border.border(
+                0.0625rem,
+                deep-get($config, 'error', 'dropdown-border'),
+                solid,
+                all
+              );
+            }
+
+            .select-box__option {
+              &:hover {
+                background: deep-get($config, 'error', 'option-hover');
+              }
+
+              &--selected {
+                background: deep-get($config, 'error', 'option-selected');
+                color: deep-get($config, 'error', 'option-selected-text');
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
