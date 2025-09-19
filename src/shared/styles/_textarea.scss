@@ -160,6 +160,7 @@ $textarea-size-group: '', '--s', '--l';
               solid,
               all
             );
+            scrollbar-color: deep-get($config, 'base', 'counter') transparent;
 
             &::placeholder {
               color: deep-get($config, 'base', 'placeholder');
@@ -176,7 +177,7 @@ $textarea-size-group: '', '--s', '--l';
               );
               box-shadow: 0
                 0
-                0
+                0.25rem
                 0.125rem
                 rgba(deep-get($config, 'focused', 'border'), 0.2);
               outline: none;
@@ -243,7 +244,7 @@ $textarea-size-group: '', '--s', '--l';
                 );
                 box-shadow: 0
                   0
-                  0
+                  0.25rem
                   0.125rem
                   rgba(deep-get($config, 'error', 'border'), 0.2);
               }
