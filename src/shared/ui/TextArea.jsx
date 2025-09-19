@@ -18,13 +18,18 @@ export default function TextArea({
   // 함수 안전 처리
   const safeOnChange = typeof onChange === 'function' ? onChange : () => {};
 
-  // style 처리
+  // 에러 처리
   const currentLength = value ? value.length : 0;
   const isOverLimit = maxLength && currentLength > maxLength;
+  const hasError = error || isOverLimit;
+  const limitErrorMessage = isOverLimit
+    ? `최대 ${maxLength}자까지 입력 가능합니다`
+    : '';
+  const displayErrorMessage = errorMessage || limitErrorMessage;
 
   const className = `textarea${
     safeSize ? ` textarea${safeSize}` : ''
-  }${error ? ' textarea--error' : ''}`;
+  }${hasError ? ' textarea--error' : ''}`;
 
   return (
     <div className={className}>
@@ -49,8 +54,8 @@ export default function TextArea({
       />
 
       <div className="textarea__bottom">
-        {error && errorMessage && (
-          <div className="textarea__error-message">{errorMessage}</div>
+        {hasError && displayErrorMessage && (
+          <div className="textarea__error-message">{displayErrorMessage}</div>
         )}
 
         {maxLength && (

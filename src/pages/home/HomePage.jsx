@@ -332,8 +332,6 @@ export default function HomePage() {
         <TextArea
           variant="product"
           placeholder="상품에 대한 자세한 설명을 입력하세요"
-          value={productDescription}
-          onChange={(e) => setProductDescription(e.target.value)}
           maxLength={500}
           disabled={true}
         />
