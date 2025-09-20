@@ -2,8 +2,7 @@ import LoginForm from './ui/LoginForm';
 
 export default function LoginPage() {
   return (
-    <div>
-      <p>로그인 화면입니다.</p>
+    <div style={{ display: 'flex', flexDirection: 'column', flex: '1 1 auto' }}>
       <LoginForm />
     </div>
   );
