@@ -15,6 +15,8 @@ export default function HomePage() {
   const [profileName, setProfileName] = useState('');
   const [price, setPrice] = useState('');
   const [totalLength, setTotalLength] = useState('');
+  const [productDescription, setProductDescription] = useState('');
+  const [messageToSeller, setMessageToSeller] = useState('');
 
   // state 예시 - textArea
   const [textAreaText, setTextAreaText] = useState('');
@@ -195,7 +197,7 @@ export default function HomePage() {
           label="검색"
           name="search"
           variant="search"
-          placeholder="Placeholder Text"
+          placeholder="상품을 검색하세요"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           iconClass="ic-search"
@@ -205,7 +207,7 @@ export default function HomePage() {
         <InputBox
           variant="search"
           size="--s"
-          placeholder="Placeholder Text"
+          placeholder="상품을 검색하세요"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           iconClass="ic-search"
@@ -215,7 +217,7 @@ export default function HomePage() {
         />
         <InputBox
           variant="search"
-          placeholder="Placeholder Text"
+          placeholder="상품을 검색하세요"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           iconClass="ic-search"
@@ -226,7 +228,7 @@ export default function HomePage() {
         <InputBox
           variant="search"
           size="--l"
-          placeholder="Placeholder Text"
+          placeholder="상품을 검색하세요"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           iconClass="ic-search"
@@ -325,6 +327,51 @@ export default function HomePage() {
           value="잘못된 값 placeholder"
           prefix="예시"
           error={true}
+        />
+      </div>
+
+      {/* shared/ui에 선언된 TextArea */}
+      <div style={{ marginTop: 50 }}>
+        {/* (예사) 상품 설명 */}
+        <TextArea
+          label="상품 설명"
+          name="productDescription"
+          variant="product"
+          size="--s"
+          placeholder="상품에 대한 자세한 설명을 입력하세요"
+          value={productDescription}
+          onChange={(e) => setProductDescription(e.target.value)}
+          maxLength={500}
+          required={true}
+        />
+        <TextArea
+          variant="product"
+          placeholder="상품에 대한 자세한 설명을 입력하세요"
+          maxLength={500}
+          disabled={true}
+        />
+        <TextArea
+          label="상품 설명"
+          variant="product"
+          size="--l"
+          placeholder="상품에 대한 자세한 설명을 입력하세요"
+          value={productDescription}
+          onChange={(e) => setProductDescription(e.target.value)}
+          maxLength={500}
+          required={true}
+          error={true}
+          errorMessage="Error Message"
+        />
+
+        {/* Message to seller (purchase page) */}
+        <TextArea
+          label="판매자에게 전달할 요청사항"
+          name="messageToSeller"
+          variant="message"
+          size="--s"
+          placeholder="판매자에게 전달하고 싶은 내용이 있다면 입력해주세요"
+          value={messageToSeller}
+          onChange={(e) => setMessageToSeller(e.target.value)}
         />
       </div>
 

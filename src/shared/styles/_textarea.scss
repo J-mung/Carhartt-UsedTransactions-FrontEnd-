@@ -31,11 +31,11 @@ $textarea-themes: (
       counter: rgba(map.get($theme-gray, 'light', 'gray-13'), 0.25),
     ),
     error: (
-      background: map.get($theme-red, 'light', 'red-1'),
+      background: map.get($theme-gray, 'light', 'gray-2'),
       border: map.get($theme-red, 'light', 'red-6'),
-      font: map.get($theme-gray, 'light', 'gray-13'),
+      font: map.get($theme-gray, 'light', 'gray-10'),
       placeholder: map.get($theme-gray, 'light', 'gray-8'),
-      label: map.get($theme-red, 'light', 'red-6'),
+      label: map.get($theme-gray, 'light', 'gray-13'),
       counter: map.get($theme-red, 'light', 'red-6'),
     ),
   ),
@@ -63,11 +63,11 @@ $textarea-themes: (
       counter: map.get($theme-gray, 'dark', 'gray-7'),
     ),
     error: (
-      background: map.get($theme-red, 'dark', 'red-1'),
+      background: map.get($theme-gray, 'dark', 'gray-3'),
       border: map.get($theme-red, 'dark', 'red-6'),
-      font: map.get($theme-gray, 'dark', 'gray-13'),
+      font: map.get($theme-gray, 'dark', 'gray-10'),
       placeholder: map.get($theme-gray, 'dark', 'gray-8'),
-      label: map.get($theme-red, 'dark', 'red-6'),
+      label: map.get($theme-gray, 'dark', 'gray-13'),
       counter: map.get($theme-red, 'dark', 'red-6'),
     ),
   ),
@@ -103,12 +103,19 @@ $textarea-size-group: '', '--s', '--l';
     resize: vertical;
   }
 
-  // Character counter
-  &__counter {
+  // Textarea bottom section (에러 메세지, 글자 수)
+  .textarea__bottom {
     display: flex;
-    justify-content: flex-end;
     margin-top: 0.25rem; // 4px
     @include font-scale(12);
+
+    .textarea__error-message {
+      margin-right: auto;
+    }
+
+    .textarea__counter {
+      margin-left: auto;
+    }
   }
 
   // Size variants
@@ -153,6 +160,7 @@ $textarea-size-group: '', '--s', '--l';
               solid,
               all
             );
+            scrollbar-color: deep-get($config, 'base', 'counter') transparent;
 
             &::placeholder {
               color: deep-get($config, 'base', 'placeholder');
@@ -169,7 +177,7 @@ $textarea-size-group: '', '--s', '--l';
               );
               box-shadow: 0
                 0
-                0
+                0.25rem
                 0.125rem
                 rgba(deep-get($config, 'focused', 'border'), 0.2);
               outline: none;
@@ -236,13 +244,14 @@ $textarea-size-group: '', '--s', '--l';
                 );
                 box-shadow: 0
                   0
-                  0
+                  0.25rem
                   0.125rem
                   rgba(deep-get($config, 'error', 'border'), 0.2);
               }
             }
 
-            .textarea__counter {
+            .textarea__counter,
+            .textarea__error-message {
               color: deep-get($config, 'error', 'counter');
             }
           }

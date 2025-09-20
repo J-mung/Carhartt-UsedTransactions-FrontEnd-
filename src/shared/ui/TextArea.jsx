@@ -9,6 +9,7 @@ export default function TextArea({
   disabled = false,
   required = false,
   error = false,
+  errorMessage = '',
 }) {
   // 허용 size 값 세트 & 안전 처리
   const SIZES = ['--s', '', '--l'];
@@ -17,13 +18,18 @@ export default function TextArea({
   // 함수 안전 처리
   const safeOnChange = typeof onChange === 'function' ? onChange : () => {};
 
-  // style 처리
+  // 에러 처리
   const currentLength = value ? value.length : 0;
   const isOverLimit = maxLength && currentLength > maxLength;
+  const hasError = error || isOverLimit;
+  const limitErrorMessage = isOverLimit
+    ? `최대 ${maxLength}자까지 입력 가능합니다`
+    : '';
+  const displayErrorMessage = errorMessage || limitErrorMessage;
 
   const className = `textarea${
     safeSize ? ` textarea${safeSize}` : ''
-  }${error ? ' textarea--error' : ''}`;
+  }${hasError ? ' textarea--error' : ''}`;
 
   return (
     <div className={className}>
@@ -41,21 +47,27 @@ export default function TextArea({
         placeholder={placeholder}
         value={value}
         onChange={safeOnChange}
-        maxLength={maxLength}
+        maxLength={maxLength + 1}
         aria-label={label}
         disabled={disabled}
         required={required}
       />
 
-      {maxLength && (
-        <div
-          className={`textarea__counter ${
-            isOverLimit ? 'textarea__counter--over' : ''
-          }`}
-        >
-          {currentLength}/{maxLength}
-        </div>
-      )}
+      <div className="textarea__bottom">
+        {hasError && displayErrorMessage && (
+          <div className="textarea__error-message">{displayErrorMessage}</div>
+        )}
+
+        {maxLength && (
+          <div
+            className={`textarea__counter ${
+              isOverLimit ? 'textarea__counter--over' : ''
+            }`}
+          >
+            {currentLength}/{maxLength}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
