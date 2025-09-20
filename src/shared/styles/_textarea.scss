@@ -1,0 +1,262 @@
+@use './border' as border;
+@use './colors' as *;
+@use './map' as *;
+@use 'sass:map';
+@use './theme' as theme;
+@use './typography' as *;
+
+// TextArea 전용 테마 맵 (light / dark)
+$textarea-themes: (
+  light: (
+    selector: theme.$theme-light-selector,
+    base: (
+      background: map.get($theme-gray, 'light', 'gray-1'),
+      border: map.get($theme-gray, 'light', 'gray-5'),
+      font: map.get($theme-gray, 'light', 'gray-13'),
+      placeholder: rgba(map.get($theme-gray, 'light', 'gray-13'), 0.25),
+      label: map.get($theme-gray, 'light', 'gray-13'),
+      asterisk: map.get($theme-red, 'light', 'red-6'),
+      counter: map.get($theme-gray, 'light', 'gray-8'),
+    ),
+    focused: (
+      background: map.get($theme-gray, 'light', 'gray-1'),
+      border: map.get($theme-blue, 'light', 'blue-6'),
+    ),
+    disabled: (
+      background: map.get($theme-gray, 'light', 'gray-3'),
+      border: map.get($theme-gray, 'light', 'gray-6'),
+      font: rgba(map.get($theme-gray, 'light', 'gray-13'), 0.25),
+      placeholder: rgba(map.get($theme-gray, 'light', 'gray-13'), 0.25),
+      label: map.get($theme-gray, 'light', 'gray-7'),
+      counter: rgba(map.get($theme-gray, 'light', 'gray-13'), 0.25),
+    ),
+    error: (
+      background: map.get($theme-gray, 'light', 'gray-2'),
+      border: map.get($theme-red, 'light', 'red-6'),
+      font: map.get($theme-gray, 'light', 'gray-10'),
+      placeholder: map.get($theme-gray, 'light', 'gray-8'),
+      label: map.get($theme-gray, 'light', 'gray-13'),
+      counter: map.get($theme-red, 'light', 'red-6'),
+    ),
+  ),
+  dark: (
+    selector: theme.$theme-dark-selector,
+    base: (
+      background: map.get($theme-gray, 'dark', 'gray-2'),
+      border: map.get($theme-gray, 'dark', 'gray-6'),
+      font: map.get($theme-gray, 'dark', 'gray-13'),
+      placeholder: map.get($theme-gray, 'dark', 'gray-8'),
+      label: map.get($theme-gray, 'dark', 'gray-13'),
+      asterisk: map.get($theme-red, 'dark', 'red-6'),
+      counter: map.get($theme-gray, 'dark', 'gray-8'),
+    ),
+    focused: (
+      background: map.get($theme-gray, 'dark', 'gray-2'),
+      border: map.get($theme-blue, 'dark', 'blue-6'),
+    ),
+    disabled: (
+      background: map.get($theme-gray, 'dark', 'gray-6'),
+      border: map.get($theme-gray, 'dark', 'gray-8'),
+      font: map.get($theme-gray, 'dark', 'gray-7'),
+      placeholder: map.get($theme-gray, 'dark', 'gray-7'),
+      label: map.get($theme-gray, 'dark', 'gray-7'),
+      counter: map.get($theme-gray, 'dark', 'gray-7'),
+    ),
+    error: (
+      background: map.get($theme-gray, 'dark', 'gray-3'),
+      border: map.get($theme-red, 'dark', 'red-6'),
+      font: map.get($theme-gray, 'dark', 'gray-10'),
+      placeholder: map.get($theme-gray, 'dark', 'gray-8'),
+      label: map.get($theme-gray, 'dark', 'gray-13'),
+      counter: map.get($theme-red, 'dark', 'red-6'),
+    ),
+  ),
+);
+
+$textarea-size-group: '', '--s', '--l';
+
+// 기본 스타일
+.textarea {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  margin: 1rem auto;
+
+  // Label
+  &__label {
+    display: block;
+    @include font-weight(medium);
+    margin-bottom: 0.3125rem; // 5px
+  }
+
+  // Required asterisk
+  &__required {
+    margin-right: 0.25rem; // 4px
+  }
+
+  // Base textarea styling
+  &__input {
+    width: 100%;
+    @include border.borderRadius(border.$component-border-radius);
+    font-family: inherit;
+    box-sizing: border-box;
+    resize: vertical;
+  }
+
+  // Textarea bottom section (에러 메세지, 글자 수)
+  .textarea__bottom {
+    display: flex;
+    margin-top: 0.25rem; // 4px
+    @include font-scale(12);
+
+    .textarea__error-message {
+      margin-right: auto;
+    }
+
+    .textarea__counter {
+      margin-left: auto;
+    }
+  }
+
+  // Size variants
+  @each $size in $textarea-size-group {
+    &#{$size} {
+      .textarea__input {
+        padding: 0.75rem 1rem;
+        @if $size == '--s' {
+          @include font-scale(12);
+          min-height: 4rem; // 64px
+        } @else if $size == '' {
+          @include font-scale(14);
+          min-height: 6rem; // 96px
+        } @else if $size == '--l' {
+          @include font-scale(16);
+          min-height: 8rem; // 128px
+        }
+      }
+    }
+  }
+
+  // 테마 반복문
+  @each $mode, $config in $textarea-themes {
+    #{map.get($config, selector)} & {
+      @each $size in $textarea-size-group {
+        &#{$size},
+        & {
+          .textarea__label {
+            color: deep-get($config, 'base', 'label');
+          }
+
+          .textarea__required {
+            color: deep-get($config, 'base', 'asterisk');
+          }
+
+          .textarea__input {
+            background: deep-get($config, 'base', 'background');
+            color: deep-get($config, 'base', 'font');
+            @include border.border(
+              0.0625rem,
+              deep-get($config, 'base', 'border'),
+              solid,
+              all
+            );
+            scrollbar-color: deep-get($config, 'base', 'counter') transparent;
+
+            &::placeholder {
+              color: deep-get($config, 'base', 'placeholder');
+            }
+
+            // Focus state
+            &:focus {
+              background: deep-get($config, 'focused', 'background');
+              @include border.border(
+                0.0625rem,
+                deep-get($config, 'focused', 'border'),
+                solid,
+                all
+              );
+              box-shadow: 0
+                0
+                0.25rem
+                0.125rem
+                rgba(deep-get($config, 'focused', 'border'), 0.2);
+              outline: none;
+            }
+
+            // Disabled state
+            &:disabled {
+              cursor: not-allowed;
+              //   resize: none;
+              background: deep-get($config, 'disabled', 'background');
+              color: deep-get($config, 'disabled', 'font');
+              @include border.border(
+                0.0625rem,
+                deep-get($config, 'disabled', 'border'),
+                solid,
+                all
+              );
+
+              &::placeholder {
+                color: deep-get($config, 'disabled', 'placeholder');
+              }
+            }
+          }
+
+          .textarea__counter {
+            color: deep-get($config, 'base', 'counter');
+
+            &--over {
+              color: deep-get($config, 'error', 'counter');
+            }
+          }
+
+          &:has(.textarea__input:disabled) .textarea__counter {
+            color: deep-get($config, 'disabled', 'counter');
+          }
+
+          // Error state
+          &.textarea--error {
+            .textarea__label {
+              color: deep-get($config, 'error', 'label');
+            }
+
+            .textarea__input {
+              background: deep-get($config, 'error', 'background');
+              @include border.border(
+                0.0625rem,
+                deep-get($config, 'error', 'border'),
+                solid,
+                all
+              );
+              color: deep-get($config, 'error', 'font');
+
+              &::placeholder {
+                color: deep-get($config, 'error', 'placeholder');
+              }
+
+              &:focus {
+                background: deep-get($config, 'error', 'background');
+                @include border.border(
+                  0.0625rem,
+                  deep-get($config, 'error', 'border'),
+                  solid,
+                  all
+                );
+                box-shadow: 0
+                  0
+                  0.25rem
+                  0.125rem
+                  rgba(deep-get($config, 'error', 'border'), 0.2);
+              }
+            }
+
+            .textarea__counter,
+            .textarea__error-message {
+              color: deep-get($config, 'error', 'counter');
+            }
+          }
+        }
+      }
+    }
+  }
+}
