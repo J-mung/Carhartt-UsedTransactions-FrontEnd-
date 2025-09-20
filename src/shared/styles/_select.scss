@@ -129,15 +129,19 @@ $selectbox-size-group: '', '--s', '--l';
   // Arrow
   &__arrow {
     position: absolute;
+    right: 0.75rem; // 12px
+    top: 50%;
 
     .ic-right {
-      transform: rotate(90deg);
+      position: absolute;
+      transform: translateY(-50%) rotate(90deg);
+      right: 0;
       transition: transform 0.5s ease;
     }
   }
 
   &--open &__arrow .ic-right {
-    transform: rotate(270deg);
+    transform: translateY(-50%) rotate(270deg);
   }
 
   // Dropdown container
@@ -183,23 +187,6 @@ $selectbox-size-group: '', '--s', '--l';
         } @else if $size == '--l' {
           @include font-scale(16);
           padding: 0.75rem 2rem 0.75rem 0.75rem; // 12px 32px 12px 12px
-        }
-      }
-
-      .select-box__arrow {
-        right: 0.75rem; // 10px
-        @if $size == '--s' {
-          .ic-right {
-            height: 0.625rem; // 10px
-          }
-        } @else if $size == '' {
-          .ic-right {
-            height: 0.75rem; // 12px
-          }
-        } @else if $size == '--l' {
-          .ic-right {
-            height: 1rem; // 16px
-          }
         }
       }
 
@@ -252,7 +239,7 @@ $selectbox-size-group: '', '--s', '--l';
               );
               box-shadow: 0
                 0
-                0.25rem
+                0.125rem
                 0.05rem
                 deep-get($config, 'focused', 'border');
             }
@@ -273,6 +260,17 @@ $selectbox-size-group: '', '--s', '--l';
                 color: deep-get($config, 'disabled', 'placeholder');
               }
             }
+          }
+
+          &:not(.select-box--open) .select-box__select:focus {
+            background: deep-get($config, 'base', 'background');
+            @include border.border(
+              0.0625rem,
+              deep-get($config, 'base', 'border'),
+              solid,
+              all
+            );
+            box-shadow: none;
           }
 
           .select-box__text {
@@ -301,7 +299,7 @@ $selectbox-size-group: '', '--s', '--l';
               solid,
               all
             );
-            box-shadow: 0rem
+            box-shadow: 0
               0.25rem
               0.5rem
               deep-get($config, 'base', 'dropdown-border');
@@ -341,11 +339,22 @@ $selectbox-size-group: '', '--s', '--l';
                 );
                 box-shadow: 0
                   0
-                  0
+                  0.25rem
                   0.125rem
                   rgba((deep-get($config, 'error', 'border')), 0.2);
                 outline: none;
               }
+            }
+
+            &:not(.select-box--open) .select-box__select:focus {
+              background: deep-get($config, 'error', 'background');
+              @include border.border(
+                0.0625rem,
+                deep-get($config, 'error', 'border'),
+                solid,
+                all
+              );
+              box-shadow: none;
             }
 
             // Error state dropdown
