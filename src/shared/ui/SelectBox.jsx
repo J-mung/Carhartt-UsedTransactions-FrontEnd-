@@ -123,14 +123,6 @@ export default function SelectBox({
         {isOpen && (
           <div className="select-box__dropdown" ref={listRef}>
             <ul className="select-box__list">
-              {placeholder && (
-                <li
-                  className="select-box__option select-box__option--placeholder"
-                  onClick={() => handleOptionSelect('')}
-                >
-                  {placeholder}
-                </li>
-              )}
               {normalizedOptions.map((option, index) => (
                 <li
                   key={option.value || index}
