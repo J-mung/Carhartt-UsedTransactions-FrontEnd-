@@ -15,8 +15,6 @@ export default function HomePage() {
   const [profileName, setProfileName] = useState('');
   const [price, setPrice] = useState('');
   const [totalLength, setTotalLength] = useState('');
-  const [productDescription, setProductDescription] = useState('');
-  const [messageToSeller, setMessageToSeller] = useState('');
 
   // state 예시 - textArea
   const [textAreaText, setTextAreaText] = useState('');
@@ -30,6 +28,11 @@ export default function HomePage() {
     { value: 'option3', label: 'Option 3' },
     { value: 'option4', label: 'Option 4' },
     { value: 'option5', label: 'Option 5' },
+  ];
+  const dupeSelectionOptions = [
+    { value: 'option1', label: 'Option 1' },
+    { value: 'option1', label: 'Option 2' },
+    { value: 'option2', label: 'Option 3' },
   ];
 
   return (
@@ -403,6 +406,7 @@ export default function HomePage() {
           error={true}
           errorMessage="Error Message"
         />
+        <SelectBox options={dupeSelectionOptions} />
       </div>
 
       <div style={{ height: 1200 }} />

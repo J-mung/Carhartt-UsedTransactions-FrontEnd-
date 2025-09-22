@@ -24,25 +24,6 @@ export default function SelectBox({
   // 함수 안전 처리
   const safeOnChange = typeof onChange === 'function' ? onChange : () => {};
 
-  // style 처리
-  const className = `select-box${safeSize ? ` select-box${safeSize}` : ''} ${
-    error ? ' select-box--error' : ''
-  }${isOpen ? ' select-box--open' : ''}`;
-
-  // Handle toggle
-  const handleToggle = () => {
-    if (disabled) return;
-    setIsOpen(!isOpen);
-  };
-
-  // Handle focus
-  const handleFocus = (e) => {
-    if (disabled) {
-      e.preventDefault();
-      e.target.blur();
-    }
-  };
-
   // Normalize options
   const normalizedOptions = options.map((option) => {
     if (typeof option === 'string') {
@@ -50,6 +31,37 @@ export default function SelectBox({
     }
     return option;
   });
+
+  // 중복 value 체크
+  const values = normalizedOptions.map((option) => option.value);
+  const hasDuplicateValues = values.length !== new Set(values).size;
+
+  // error 처리
+  const showError = error || hasDuplicateValues;
+  const showErrorMessage =
+    errorMessage || (hasDuplicateValues ? '옵션에 중복된 값이 있습니다' : '');
+
+  // disabled 처리
+  const isDisabled = disabled || hasDuplicateValues;
+
+  // style 처리
+  const className = `select-box${safeSize ? ` select-box${safeSize}` : ''} ${
+    showError ? ' select-box--error' : ''
+  }${isOpen ? ' select-box--open' : ''}`;
+
+  // toggle 처리
+  const handleToggle = () => {
+    if (isDisabled) return;
+    setIsOpen(!isOpen);
+  };
+
+  // focus 처리
+  const handleFocus = (e) => {
+    if (isDisabled) {
+      e.preventDefault();
+      e.target.blur();
+    }
+  };
 
   // Find selected option
   const selectedOption = normalizedOptions.find(
@@ -61,7 +73,7 @@ export default function SelectBox({
 
   // Handle option select
   const handleOptionSelect = (optionValue) => {
-    if (disabled) return;
+    if (isDisabled) return;
     const syntheticEvent = {
       target: { name, value: optionValue },
       currentTarget: { name, value: optionValue },
@@ -103,8 +115,8 @@ export default function SelectBox({
           className="select-box__select"
           onClick={handleToggle}
           onFocus={handleFocus}
-          tabIndex={disabled ? -1 : 0}
-          aria-disabled={disabled}
+          tabIndex={isDisabled ? -1 : 0}
+          aria-disabled={isDisabled}
           aria-label={label}
         >
           <span
@@ -116,7 +128,7 @@ export default function SelectBox({
           </span>
 
           <span className="select-box__arrow">
-            <span className="ic-right"></span>
+            <span className="ic-right--xs"></span>
           </span>
         </div>
 
@@ -141,8 +153,8 @@ export default function SelectBox({
         <input type="hidden" name={name} value={value} required={required} />
       </div>
 
-      {error && errorMessage && (
-        <div className="select-box__error-message">{errorMessage}</div>
+      {showError && showErrorMessage && (
+        <div className="select-box__error-message">{showErrorMessage}</div>
       )}
     </div>
   );
