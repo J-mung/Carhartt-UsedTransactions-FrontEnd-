@@ -132,7 +132,7 @@ $selectbox-size-group: '', '--s', '--l';
     right: 0.75rem; // 12px
     top: 50%;
 
-    .ic-right {
+    .ic-right--xs {
       position: absolute;
       transform: translateY(-50%) rotate(90deg);
       right: 0;
@@ -140,7 +140,7 @@ $selectbox-size-group: '', '--s', '--l';
     }
   }
 
-  &--open &__arrow .ic-right {
+  &--open &__arrow .ic-right--xs {
     transform: translateY(-50%) rotate(270deg);
   }
 
@@ -281,12 +281,12 @@ $selectbox-size-group: '', '--s', '--l';
             color: deep-get($config, 'base', 'placeholder');
           }
 
-          .select-box__arrow .ic-right {
+          .select-box__arrow .ic-right--xs {
             background: deep-get($config, 'base', 'arrow');
           }
 
           // Disabled arrow styling
-          &:has(.select-box__select:disabled) .select-box__arrow .ic-right {
+          &:has(.select-box__select:disabled) .select-box__arrow .ic-right--xs {
             background: deep-get($config, 'disabled', 'arrow');
           }
 
