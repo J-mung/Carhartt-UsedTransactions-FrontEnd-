@@ -47,7 +47,7 @@ export default function TextArea({
         placeholder={placeholder}
         value={value}
         onChange={safeOnChange}
-        maxLength={maxLength + 1}
+        maxLength={maxLength ? maxLength + 1 : undefined}
         aria-label={label}
         disabled={disabled}
         required={required}
