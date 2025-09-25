@@ -1,0 +1,398 @@
+@use './colors' as *;
+@use './theme' as theme;
+@use './border' as border;
+@use './map' as *;
+@use 'sass:map';
+
+$dropdown-size-group: '--l', '', '--s';
+
+$dropdown-label-themes: (
+  light: (
+    selector: theme.$theme-light-selector,
+    default: (
+      background: deep-get($theme-gray, 'light', 'gray-1'),
+      border: deep-get($theme-gray, 'light', 'gray-5'),
+      font: deep-get($theme-gray, 'light', 'gray-13'),
+      icon: deep-get($theme-gray, 'light', 'gray-13'),
+    ),
+    hover: (
+      background: deep-get($theme-gray, 'light', 'gray-1'),
+      border: deep-get($theme-blue, 'light', 'blue-5'),
+      font: deep-get($theme-blue, 'light', 'blue-6'),
+      icon: deep-get($theme-blue, 'light', 'blue-6'),
+    ),
+    active: (
+      background: deep-get($theme-gray, 'light', 'gray-1'),
+      border: deep-get($theme-blue, 'light', 'blue-7'),
+      font: deep-get($theme-blue, 'light', 'blue-7'),
+      icon: deep-get($theme-blue, 'light', 'blue-7'),
+    ),
+    disabled: (
+      background: deep-get($theme-gray, 'light', 'gray-3'),
+      border: deep-get($theme-gray, 'light', 'gray-5'),
+      font: deep-get($theme-gray, 'light', 'gray-7'),
+      icon: deep-get($theme-gray, 'light', 'gray-7'),
+    ),
+  ),
+  dark: (
+    selector: theme.$theme-dark-selector,
+    default: (
+      background: deep-get($theme-gray, 'dark', 'gray-1'),
+      border: deep-get($theme-gray, 'dark', 'gray-6'),
+      font: deep-get($theme-gray, 'dark', 'gray-12'),
+      icon: deep-get($theme-gray, 'dark', 'gray-12'),
+    ),
+    hover: (
+      background: deep-get($theme-gray, 'dark', 'gray-1'),
+      border: deep-get($theme-blue, 'dark', 'blue-7'),
+      font: deep-get($theme-blue, 'dark', 'blue-7'),
+      icon: deep-get($theme-blue, 'dark', 'blue-7'),
+    ),
+    active: (
+      background: deep-get($theme-gray, 'dark', 'gray-1'),
+      border: deep-get($theme-blue, 'dark', 'blue-5'),
+      font: deep-get($theme-blue, 'dark', 'blue-5'),
+      icon: deep-get($theme-blue, 'dark', 'blue-5'),
+    ),
+    disabled: (
+      background: deep-get($theme-gray, 'dark', 'gray-6'),
+      border: deep-get($theme-gray, 'dark', 'gray-8'),
+      font: deep-get($theme-gray, 'dark', 'gray-8'),
+      icon: deep-get($theme-gray, 'dark', 'gray-8'),
+    ),
+  ),
+);
+
+$dropdown-option-themes: (
+  light: (
+    selector: theme.$theme-light-selector,
+    shadow: deep-get($theme-gray, 'light', 'gray-7'),
+    default: (
+      background: deep-get($theme-gray, 'light', 'gray-1'),
+      border: deep-get($theme-gray, 'light', 'gray-1'),
+      font: deep-get($theme-gray, 'light', 'gray-13'),
+      icon: deep-get($theme-gray, 'light', 'gray-13'),
+    ),
+    hover: (
+      background: deep-get($theme-gray, 'light', 'gray-3'),
+      border: deep-get($theme-gray, 'light', 'gray-3'),
+      font: deep-get($theme-gray, 'light', 'gray-13'),
+      icon: deep-get($theme-gray, 'light', 'gray-13'),
+    ),
+    selected: (
+      background: deep-get($theme-blue, 'light', 'blue-1'),
+      border: deep-get($theme-blue, 'light', 'blue-1'),
+      font: deep-get($theme-gray, 'light', 'gray-13'),
+      icon: deep-get($theme-gray, 'light', 'gray-13'),
+    ),
+    disabled: (
+      background: deep-get($theme-gray, 'light', 'gray-1'),
+      border: deep-get($theme-gray, 'light', 'gray-1'),
+      font: deep-get($theme-gray, 'light', 'gray-3'),
+      icon: deep-get($theme-gray, 'light', 'gray-3'),
+    ),
+    danger: (
+      background: deep-get($theme-gray, 'light', 'gray-1'),
+      border: deep-get($theme-gray, 'light', 'gray-1'),
+      font: deep-get($theme-red, 'light', 'red-5'),
+      icon: deep-get($theme-red, 'light', 'red-5'),
+    ),
+  ),
+  dark: (
+    selector: theme.$theme-dark-selector,
+    shadow: deep-get($theme-gray, 'dark', 'gray-7'),
+    default: (
+      background: deep-get($theme-gray, 'dark', 'gray-6'),
+      border: deep-get($theme-gray, 'dark', 'gray-6'),
+      font: deep-get($theme-gray, 'dark', 'gray-12'),
+      icon: deep-get($theme-gray, 'dark', 'gray-12'),
+    ),
+    hover: (
+      background: deep-get($theme-gray, 'dark', 'gray-7'),
+      border: deep-get($theme-blue, 'dark', 'blue-7'),
+      font: deep-get($theme-blue, 'dark', 'blue-7'),
+      icon: deep-get($theme-blue, 'dark', 'blue-7'),
+    ),
+    active: (
+      background: deep-get($theme-gray, 'dark', 'gray-1'),
+      border: deep-get($theme-blue, 'dark', 'blue-5'),
+      font: deep-get($theme-blue, 'dark', 'blue-5'),
+      icon: deep-get($theme-blue, 'dark', 'blue-5'),
+    ),
+    selected: (
+      background: deep-get($theme-gray, 'dark', 'gray-1'),
+      border: deep-get($theme-blue, 'dark', 'blue-5'),
+      font: deep-get($theme-blue, 'dark', 'blue-5'),
+      icon: deep-get($theme-blue, 'dark', 'blue-5'),
+    ),
+    disabled: (
+      background: deep-get($theme-gray, 'dark', 'gray-6'),
+      border: deep-get($theme-gray, 'dark', 'gray-8'),
+      font: deep-get($theme-gray, 'dark', 'gray-8'),
+      icon: deep-get($theme-gray, 'dark', 'gray-8'),
+    ),
+    danger: (
+      background: deep-get($theme-gray, 'dark', 'gray-1'),
+      border: deep-get($theme-blue, 'dark', 'blue-5'),
+      font: deep-get($theme-blue, 'dark', 'blue-5'),
+      icon: deep-get($theme-blue, 'dark', 'blue-5'),
+    ),
+  ),
+);
+
+.dropdown {
+  position: relative;
+  width: fit-content;
+  align-self: center;
+
+  &[data-open='true'] {
+    [class*='ic-'] {
+      transform: rotate(270deg);
+      transition: transform 0.2s ease;
+    }
+  }
+
+  &__trigger {
+    @each $size in $dropdown-size-group {
+      &#{$size} {
+        @if $size == '--s' {
+          padding: 0.0625rem 0.5rem 0.0625rem 0.5rem; // 2px
+        } @else if $size == '' {
+          padding: 0.313rem 1rem 0.313rem 1rem; // 5px
+        } @else if $size == '--l' {
+          padding: 0.313rem 1rem 0.313rem 1rem; // 8px
+        }
+
+        // width: 100%;
+        display: inline-flex;
+        align-items: center;
+        @include border.borderRadius(border.$component-border-radius);
+
+        > .dropdown__label {
+          font-weight: 400;
+          line-height: 1.3;
+          vertical-align: middle;
+          display: inline-block;
+          width: 100%;
+          text-align: left;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+
+          cursor: pointer;
+        }
+
+        [class*='ic-'] {
+          padding-right: 1rem;
+          line-height: 1.3;
+          transform: rotate(90deg);
+          transition: transform 0.2s ease;
+        }
+
+        // dropdown 테마 반복문
+        @each $mode, $config in $dropdown-label-themes {
+          #{map.get($config, selector)} & {
+            // default 상태
+            $default: map.get($config, 'default');
+            background: map.get($default, 'background');
+            @include border.border(
+              0.0625rem,
+              deep-get($default, 'border'),
+              solid,
+              all
+            );
+            // 폰트
+            > .dropdown__label {
+              color: map.get($default, 'font');
+            }
+            // 아이콘
+            > [class*='ic-'] {
+              background: map.get($default, 'icon');
+            }
+
+            &:hover {
+              $hover: map.get($config, 'hover');
+              background: map.get($hover, 'background');
+              @include border.border(
+                0.0625rem,
+                deep-get($hover, 'border'),
+                solid,
+                all
+              );
+              // 폰트
+              > .dropdown__label {
+                color: map.get($hover, 'font');
+              }
+              // 아이콘
+              > [class*='ic-'] {
+                background: map.get($hover, 'icon');
+              }
+            }
+
+            &:active {
+              $active: map.get($config, 'active');
+              background: map.get($active, 'background');
+              @include border.border(
+                0.0625rem,
+                deep-get($active, 'border'),
+                solid,
+                all
+              );
+              // 폰트
+              > .dropdown__label {
+                color: map.get($active, 'font');
+              }
+              // 아이콘
+              > [class*='ic-'] {
+                background: map.get($active, 'icon');
+              }
+            }
+
+            &.disabled {
+              $disabled: map.get($config, 'disabled');
+              cursor: not-allowed;
+              background: map.get($disabled, 'background');
+              @include border.border(
+                0.0625rem,
+                deep-get($disabled, 'border'),
+                solid,
+                all
+              );
+              // 폰트
+              > .dropdown__label {
+                color: map.get($disabled, 'font');
+              }
+              // 아이콘
+              > [class*='ic-'] {
+                background: map.get($disabled, 'icon');
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &__options {
+    position: absolute;
+    left: 0; // ul 기본 left 제거
+    margin: 0.25rem 0; // 4px 0px
+    padding: 0; // ul 기본 padding 제거
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    border: none;
+    @include border.borderRadius(border.$component-border-radius);
+    transition:
+      max-height 160ms ease,
+      border-color 160ms ease,
+      box-shadow 160ms ease;
+    box-shadow: none;
+    z-index: 10;
+
+    // 열림 상태
+    &[data-open='true'] {
+      // 스크롤 필요할 때
+      &[data-scrollable='true'] {
+        max-height: calc(var(--row-h, 36px) * var(--max-visible, 5));
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+        list-style: none; // 기본 마커 제거
+      }
+      // 스크롤 불필요
+      &:not([data-scrollable='true']) {
+        max-height: 1000px; // 충분히 큰 값
+        overflow: hidden;
+        list-style: none; // 기본 마커 제거
+      }
+      // box-shadow
+      @each $mode, $config in $dropdown-option-themes {
+        #{map.get($config, selector)} & {
+          $theme: map.get($config, 'shadow');
+          box-shadow: 0px 4px 6px #{$theme};
+        }
+      }
+    }
+  }
+
+  &__option {
+    padding: 0.313rem 0 0.313rem 0.75rem;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease-in,
+      color 0.2s ease-in;
+
+    @each $mode, $config in $dropdown-option-themes {
+      #{map.get($config, selector)} & {
+        // default 상태
+        $default: map.get($config, 'default');
+        background: map.get($default, 'background');
+        // 폰트
+        > .dropdown__label {
+          color: map.get($default, 'font');
+        }
+        // 아이콘
+        > [class*='ic-'] {
+          background: map.get($default, 'icon');
+        }
+
+        &:hover {
+          // hover 상태
+          $hover: map.get($config, 'hover');
+          background: map.get($hover, 'background');
+          // 폰트
+          > .dropdown__label {
+            color: map.get($hover, 'font');
+          }
+          // 아이콘
+          > [class*='ic-'] {
+            background: map.get($hover, 'icon');
+          }
+        }
+
+        &.selected {
+          // selected 상태
+          $selected: map.get($config, 'selected');
+          background: map.get($selected, 'background');
+          // 폰트
+          > .dropdown__label {
+            color: map.get($selected, 'font');
+          }
+          // 아이콘
+          > [class*='ic-'] {
+            background: map.get($selected, 'icon');
+          }
+        }
+
+        &:disabled {
+          // disabled 상태
+          $disabled: map.get($config, 'disabled');
+          background: map.get($disabled, 'background');
+          // 폰트
+          > .dropdown__label {
+            color: map.get($disabled, 'font');
+          }
+          // 아이콘
+          > [class*='ic-'] {
+            background: map.get($disabled, 'icon');
+          }
+        }
+
+        &:danger {
+          // danger 상태
+          $danger: map.get($config, 'danger');
+          background: map.get($danger, 'background');
+          // 폰트
+          > .dropdown__label {
+            color: map.get($danger, 'font');
+          }
+          // 아이콘
+          > [class*='ic-'] {
+            background: map.get($danger, 'icon');
+          }
+        }
+      }
+    }
+  }
+}
