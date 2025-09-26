@@ -1,9 +1,10 @@
 import { Button, IconButton } from '@/shared/ui/buttons';
-import SearchButton from './ui/SearchButton';
+import Dropdown from '@/shared/ui/Dropdown';
 import InputBox from '@/shared/ui/InputBox';
 import TextArea from '@/shared/ui/TextArea';
 import SelectBox from '@/shared/ui/SelectBox';
 import { useState } from 'react';
+import SearchButton from './ui/SearchButton';
 
 /**
  * 임시 홈 화면
@@ -34,6 +35,25 @@ export default function HomePage() {
     { value: 'option1', label: 'Option 2' },
     { value: 'option2', label: 'Option 3' },
   ];
+
+  const dropdownDefault = [1, 2, 3, 4, 5].map((_num) => {
+    return {
+      key: _num,
+      value: `test-${_num}`,
+    };
+  });
+  const dropdownScroll = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((_num) => {
+    return {
+      key: _num,
+      value: `test-${_num}`,
+    };
+  });
+  const dropdownDuplication = [1, 1, 2, 3, 4, 5].map((_num) => {
+    return {
+      key: _num,
+      value: `test-${_num}`,
+    };
+  });
 
   return (
     <div>
@@ -192,6 +212,9 @@ export default function HomePage() {
         }}
         disabled={true}
       />
+      <Dropdown options={dropdownDefault} disabled={false} />
+      <Dropdown options={dropdownScroll} disabled={false} />
+      <Dropdown options={dropdownDuplication} disabled={false} />
 
       {/* shared/ui에 선언된 inputbox */}
       <div style={{ marginTop: 50 }}>
