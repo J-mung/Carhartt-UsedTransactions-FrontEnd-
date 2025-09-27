@@ -11,8 +11,8 @@ export const router = createBrowserRouter(
       element: <MainLayout stickyFooter={false} />,
       children: [
         { index: true, element: <HomePage /> },
-        { path: '/profile', element: <TestProfilePage /> },
-        { path: '/login', element: <LoginPage /> },
+        { path: 'profile', element: <TestProfilePage /> },
+        { path: 'login', element: <LoginPage /> },
       ],
     },
   ],
