@@ -1,3 +1,4 @@
+import LoginPage from '@/pages/login';
 import { createBrowserRouter } from 'react-router-dom';
 import HomePage from '../pages/home/HomePage';
 import TestProfilePage from '../pages/profile';
@@ -10,7 +11,8 @@ export const router = createBrowserRouter(
       element: <MainLayout stickyFooter={false} />,
       children: [
         { index: true, element: <HomePage /> },
-        { path: '/profile', element: <TestProfilePage /> },
+        { path: 'profile', element: <TestProfilePage /> },
+        { path: 'login', element: <LoginPage /> },
       ],
     },
   ],
