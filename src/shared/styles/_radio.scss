@@ -1,0 +1,213 @@
+@use './border' as border;
+@use './colors' as *;
+@use './map' as *;
+@use 'sass:map';
+@use './theme' as theme;
+
+// Radio 전용 테마 맵 (light / dark)
+$radio-themes: (
+  light: (
+    selector: theme.$theme-light-selector,
+    base: (
+      background: map.get($theme-gray, 'light', 'gray-1'),
+      border: map.get($theme-gray, 'light', 'gray-6'),
+      checked: map.get($theme-blue, 'light', 'blue-6'),
+      font: map.get($theme-gray, 'light', 'gray-13'),
+    ),
+    hover: (
+      border: map.get($theme-blue, 'light', 'blue-5'),
+    ),
+    focused: (
+      border: map.get($theme-blue, 'light', 'blue-6'),
+    ),
+    disabled: (
+      background: map.get($theme-gray, 'light', 'gray-3'),
+      border: map.get($theme-gray, 'light', 'gray-7'),
+      checked: map.get($theme-gray, 'light', 'gray-7'),
+      font: map.get($theme-gray, 'light', 'gray-7'),
+    ),
+    error: (
+      border: map.get($theme-red, 'light', 'red-6'),
+      checked: map.get($theme-red, 'light', 'red-6'),
+    ),
+  ),
+  dark: (
+    selector: theme.$theme-dark-selector,
+    base: (
+      background: map.get($theme-gray, 'dark', 'gray-2'),
+      border: map.get($theme-gray, 'dark', 'gray-6'),
+      checked: map.get($theme-blue, 'dark', 'blue-6'),
+      font: map.get($theme-gray, 'dark', 'gray-13'),
+    ),
+    hover: (
+      border: map.get($theme-blue, 'dark', 'blue-6'),
+    ),
+    focused: (
+      border: map.get($theme-blue, 'dark', 'blue-5'),
+    ),
+    disabled: (
+      background: map.get($theme-gray, 'dark', 'gray-6'),
+      border: map.get($theme-gray, 'dark', 'gray-8'),
+      checked: map.get($theme-gray, 'dark', 'gray-8'),
+      font: map.get($theme-gray, 'dark', 'gray-8'),
+    ),
+    error: (
+      border: map.get($theme-red, 'dark', 'red-6'),
+      checked: map.get($theme-red, 'dark', 'red-6'),
+    ),
+  ),
+);
+
+// 기본 스타일
+.radio {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; // 8px
+  margin: 0.25rem 0; // 4px
+
+  // Radio input
+  &__input {
+    appearance: none;
+    width: 1rem; // 16px
+    height: 1rem; // 16px
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    // Inner dot
+    &::before {
+      content: '';
+      display: block;
+      width: 0.375rem; // 6px
+      height: 0.375rem; // 6px
+      border-radius: 50%;
+      margin: 0.1875rem; // 3px
+      transform: scale(0);
+      transition: transform 0.2s ease;
+    }
+
+    // 체크 시 inner dot 표시
+    &:checked::before {
+      transform: scale(1);
+    }
+  }
+
+  // Label
+  &__label {
+    cursor: pointer;
+  }
+
+  // 테마 반복문
+  @each $mode, $config in $radio-themes {
+    #{map.get($config, selector)} & {
+      .radio__input {
+        background: deep-get($config, 'base', 'background');
+        @include border.border(
+          0.125rem,
+          deep-get($config, 'base', 'border'),
+          solid,
+          all
+        );
+
+        &::before {
+          background: deep-get($config, 'base', 'checked');
+        }
+      }
+
+      .radio__label {
+        color: deep-get($config, 'base', 'font');
+      }
+
+      // Hover state
+      &:not(.radio--disabled):not(.radio--error) .radio__input:hover {
+        @include border.border(
+          0.125rem,
+          deep-get($config, 'hover', 'border'),
+          solid,
+          all
+        );
+      }
+
+      // Focus state
+      &:not(.radio--disabled) .radio__input:focus {
+        @include border.border(
+          0.125rem,
+          deep-get($config, 'focused', 'border'),
+          solid,
+          all
+        );
+        box-shadow: 0
+          0
+          0
+          0.125rem
+          rgba(deep-get($config, 'focused', 'border'), 0.2);
+        outline: none;
+      }
+
+      // Disabled state
+      &.radio--disabled {
+        .radio__input {
+          cursor: not-allowed;
+          background: deep-get($config, 'disabled', 'background');
+          @include border.border(
+            0.125rem,
+            deep-get($config, 'disabled', 'border'),
+            solid,
+            all
+          );
+
+          &::before {
+            background: deep-get($config, 'disabled', 'checked');
+          }
+        }
+
+        .radio__label {
+          cursor: not-allowed;
+          color: deep-get($config, 'disabled', 'font');
+        }
+      }
+
+      // Checked state
+      .radio__input:checked {
+        @include border.border(
+          0.125rem,
+          deep-get($config, 'base', 'checked'),
+          solid,
+          all
+        );
+      }
+
+      // Error state
+      &.radio--error {
+        .radio__input {
+          @include border.border(
+            0.125rem,
+            deep-get($config, 'error', 'border'),
+            solid,
+            all
+          );
+
+          &::before {
+            background: deep-get($config, 'error', 'checked');
+          }
+
+          // Error state focus
+          &:focus {
+            @include border.border(
+              0.125rem,
+              deep-get($config, 'error', 'border'),
+              solid,
+              all
+            );
+            box-shadow: 0
+              0
+              0
+              0.125rem
+              rgba(deep-get($config, 'error', 'border'), 0.2);
+            outline: none;
+          }
+        }
+      }
+    }
+  }
+}

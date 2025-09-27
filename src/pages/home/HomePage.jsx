@@ -3,6 +3,7 @@ import Dropdown from '@/shared/ui/Dropdown';
 import InputBox from '@/shared/ui/InputBox';
 import TextArea from '@/shared/ui/TextArea';
 import SelectBox from '@/shared/ui/SelectBox';
+import Radio from '@/shared/ui/Radio';
 import { useState } from 'react';
 import SearchButton from './ui/SearchButton';
 
@@ -54,6 +55,9 @@ export default function HomePage() {
       value: `test-${_num}`,
     };
   });
+
+  // state 예시 - radio
+  const [radioOption, setRadioOption] = useState('option1');
 
   return (
     <div>
@@ -431,6 +435,37 @@ export default function HomePage() {
         />
         <SelectBox options={dupeSelectionOptions} />
       </div>
+
+      {/* shared/ui에 선언된 Radio */}
+      <Radio
+        label="Option 1"
+        name="radio"
+        value="option1"
+        checked={radioOption === 'option1'}
+        onChange={(e) => setRadioOption(e.target.value)}
+      />
+      <Radio
+        label="Option 2"
+        name="radio"
+        value="option2"
+        checked={radioOption === 'option2'}
+        onChange={(e) => setRadioOption(e.target.value)}
+      />
+      <Radio
+        label="Disabled"
+        name="radio"
+        value="disabled"
+        checked={false}
+        disabled={true}
+      />
+      <Radio
+        label="Error"
+        name="radio"
+        value="error"
+        checked={radioOption === 'error'}
+        onChange={(e) => setRadioOption(e.target.value)}
+        error={true}
+      />
 
       <div style={{ height: 1200 }} />
     </div>
