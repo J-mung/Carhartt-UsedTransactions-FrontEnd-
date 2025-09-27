@@ -47,6 +47,7 @@
 }
 
 .app__main {
+  display: flex;
   flex: 1 1 auto;
   overflow: auto;
   padding: var(--space-4); // 1rem // 16px
@@ -76,6 +77,8 @@
 
 // 전역 컨테이너 유틸
 .container {
+  display: flex;
+  flex: 1 1 auto;
   max-width: var(--max-w); // 75rem // 1200px
   margin: 0 auto;
   padding: 0 var(--space-4); // 1rem // 16px
