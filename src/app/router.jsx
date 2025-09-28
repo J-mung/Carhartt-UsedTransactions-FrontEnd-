@@ -1,4 +1,5 @@
 import LoginPage from '@/pages/login';
+import PaymentPage from '@/pages/payment';
 import { createBrowserRouter } from 'react-router-dom';
 import HomePage from '../pages/home/HomePage';
 import TestProfilePage from '../pages/profile';
@@ -13,6 +14,7 @@ export const router = createBrowserRouter(
         { index: true, element: <HomePage /> },
         { path: 'profile', element: <TestProfilePage /> },
         { path: 'login', element: <LoginPage /> },
+        { path: 'payment', element: <PaymentPage /> },
       ],
     },
   ],
