@@ -31,7 +31,7 @@ export default function LoginForm() {
   const onKakaoLogin = () => {
     console.log('clicked');
     sessionStorage.setItem('oauth_state', 'Authorized');
-    navigate(-1);
+    navigate('/', { replace: true });
 
     // if (!kakaoLogin) {
     //   alert('카카오 로그인 이용 불가');
