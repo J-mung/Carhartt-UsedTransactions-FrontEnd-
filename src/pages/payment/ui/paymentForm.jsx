@@ -1,61 +1,108 @@
-import { useState } from 'react';
+import { useProducts } from '@/entities/product/hooks/useProduct';
+import { useAddresses } from '@/entities/user/hooks/useAddresses';
+import { useEffect, useState } from 'react';
 
 export default function PaymentForm() {
-  const [address, setAddress] = useState('add1');
+  const {
+    product,
+    loading: productLoading,
+    error: productError,
+  } = useProducts();
+  const {
+    addresses,
+    loading: addressesLoading,
+    error: addressesError,
+  } = useAddresses();
+
+  const [curAddress, setCurAddress] = useState(undefined);
   const [msgToSeller, setMsgToSeller] = useState('');
-  const [method, setMethod] = useState('kakaoPay');
-  const handleInputMsg = (msg) => {
-    setMsgToSeller(msg);
+  const [method, setMethod] = useState('pay1');
+  const payOptions = [
+    {
+      key: 'pay1',
+      value: 'kakaoPay',
+      label: '카카오페이',
+    },
+    {
+      key: 'pay2',
+      value: 'naverPay',
+      label: '네이버페이',
+    },
+  ];
+  const handleInputMsg = (e) => {
+    setMsgToSeller(e.target.value);
   };
-  const handlePayment = () => {
+  const handlePayment = (e) => {
+    e.preventDefault();
     alert('결제하기 버튼');
   };
+
+  // 주소지 조회
+  useEffect(() => {
+    // 주소지 조회 성공 시
+    if (!addressesLoading && addresses.length > 0) {
+      setCurAddress({ ...addresses[0] });
+    }
+  }, [addressesLoading, addresses]);
+
+  const isLoading = productLoading || addressesLoading;
+
+  // loading 중
+  if (isLoading) {
+    return <p>로딩 중...</p>;
+  }
+
+  // 구매 페이지 구성 중 에러 발생
+  if (productError || addressesError) {
+    return <p>에러가 발생했습니다.</p>;
+  }
+
   return (
     <div>
       <p>결제 요청 신청서 화면입니다.</p>
+      <p>상품명: {product.name}</p>
       <form onSubmit={handlePayment}>
-        <span for={'address'}>[배송지]</span>
-        <RadioGroup
-          name="addresList"
-          value={address}
-          onChange={setAddress}
-          options={[
-            {
-              value: 'add1',
-              label: '집',
-              description: ': 주소1',
-            },
-            { value: 'add2', label: '본가: 주소2' },
-          ]}
-        />
-
-        <span for={'message'}>판매자에게 전달할 요청사항</span>
+        <span>[배송지]</span>
+        {curAddress ? (
+          <RadioGroup
+            name="addressList"
+            value={curAddress?.key}
+            onChange={(val) => {
+              const selected = addresses.find((a) => a.key === val);
+              setCurAddress(selected);
+            }}
+            options={addresses}
+          />
+        ) : (
+          <p>주소지가 없습니다.</p>
+        )}
+        <span>판매자에게 전달할 요청사항</span>
         <input onChange={handleInputMsg}></input>
         <br />
-        <span for={'payment'}>[결제 수단]</span>
+        <span>[결제 수단]</span>
         <RadioGroup
           name="paymentMethod"
           value={method}
-          onChange={setMethod}
-          options={[
-            {
-              value: 'kakaoPay',
-              label: '카카오페이',
-              description: '',
-            },
-            { value: 'naverPay', label: '네이버페이' },
-          ]}
+          onChange={(val) => {
+            const selected = payOptions.find((_opt) => _opt.key === val);
+            setMethod(selected.key);
+          }}
+          options={payOptions}
         />
-        <button type={'submit'}>결제하기</button>
+        {productLoading ? (
+          <p>상품 정보 로딩 중...</p>
+        ) : (
+          <button type={'submit'}>{product.price}결제하기</button>
+        )}
       </form>
     </div>
   );
 }
 
 // shared/ui/Radio.jsx
-import { useId } from 'react';
 
 export function Radio({
+  id,
   name,
   value,
   checked,
@@ -66,8 +113,6 @@ export function Radio({
   error = false,
   className = '',
 }) {
-  const id = useId();
-
   return (
     <label
       htmlFor={id}
@@ -79,12 +124,10 @@ export function Radio({
         name={name}
         value={value}
         checked={checked}
-        onChange={(e) => onChange?.(e.target.value)}
+        onChange={(e) => onChange?.(e.target.value)} // value로 전달
         disabled={disabled}
-        aria-invalid={error ? 'true' : undefined}
         className="radio__input"
       />
-      <span aria-hidden="true" className="radio__control" />
       <span className="radio__label">
         {label}
         {description && <span className="radio__desc">{description}</span>}
@@ -107,13 +150,14 @@ export function RadioGroup({
     <div role="radiogroup" className={`radio-group ${className}`}>
       {options.map((opt) => (
         <Radio
-          key={opt.value}
+          id={opt.key}
+          key={opt.key}
           name={name}
-          value={opt.value}
-          label={opt.label}
-          description={opt.description}
+          value={opt.key}
+          label={opt.alias || opt.label}
+          description={opt.value || opt.description}
           disabled={disabled || opt.disabled}
-          checked={value === opt.value}
+          checked={value === opt.key}
           onChange={onChange}
           error={error}
         />
