@@ -12,46 +12,33 @@ export default function LoginForm() {
   useEffect(() => {
     carHarttApi({
       method: 'GET',
-      url: '/v1/oauth/login',
-      withCredentials: true,
-    }).then((response) => {
-      const { success, data, meta } = response;
-      if (success) {
-        data.providers.map((_provider) => {
-          console.log('provider: ' + _provider.provider);
-          if (_provider.provider === 'kakao')
-            setKakaoLogin(_provider.authorizeUrl);
-          if (_provider.provider === 'naver')
-            setNaverLogin(_provider.authorizeUrl);
-        });
-      }
-    });
+      url: 'v1/oauth/login',
+    })
+      .then((response) => {
+        const { data, meta } = response;
+        if (data) {
+          data.map((_provider) => {
+            console.log('provider: ' + _provider.provider);
+            if (_provider.provider === 'KAKAO')
+              setKakaoLogin(_provider.authorize_url);
+            if (_provider.provider === 'NAVER')
+              setNaverLogin(_provider.authorize_url);
+          });
+        }
+      })
+      .catch((err) => {
+        console.log('OAuth URL fetch error', err);
+      });
   }, []);
 
   const onKakaoLogin = () => {
-    console.log('clicked');
-    sessionStorage.setItem('oauth_state', 'Authorized');
-    navigate(-1);
+    if (!kakaoLogin) {
+      alert('카카오 로그인 URL을 불러오지 못했습니다.');
+      return;
+    }
 
-    // if (!kakaoLogin) {
-    //   alert('카카오 로그인 이용 불가');
-    //   return;
-    // }
-
-    // carHarttApi({
-    //   method: 'GET',
-    //   url: '/v1/auth/login/kakao',
-    //   withCredentials: true,
-    // })
-    //   .then((response) => {
-    //     const { data, meta, status, headers } = response;
-    //     const { authorizeUrl, state } = data.json();
-    //     sessionStorage.setItem('oauth_state', state);
-    //     window.location.assign(authorizeUrl);
-    //   })
-    //   .catch((error) => {
-    //     console.error('Fail login via Kakao');
-    //   });
+    // 카카오 authorize_url로 이동
+    window.location.href = kakaoLogin;
   };
 
   return (
