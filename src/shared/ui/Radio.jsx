@@ -66,11 +66,19 @@ export default function RadioGroup({
       ? '옵션에 중복된 값이 있습니다'
       : '';
 
-  // disabled 처리
-  const isDisabled = disabled || hasDuplicateKeys || hasDuplicateValues;
-
   // current value 처리
-  const currentKey = value || defaultKey;
+  const getCurrentValue = () => {
+    if (value) return value;
+    if (defaultKey && !hasDuplicateKeys && !hasDuplicateValues) {
+      const defaultOption = normalizedOptions.find(
+        (option) => option.key === defaultKey
+      );
+      return defaultOption?.value || '';
+    }
+    return '';
+  };
+
+  const currentValue = getCurrentValue();
 
   // pagination을 위한 옵션 처리 (navigation & ellipsis)
   const processedOptions = (() => {
@@ -79,8 +87,9 @@ export default function RadioGroup({
     }
 
     const currentIndex = normalizedOptions.findIndex(
-      (option) => option.key === currentKey
+      (option) => option.value === currentValue
     );
+
     const isFirst = currentIndex <= 0;
     const isLast = currentIndex >= normalizedOptions.length - 1;
 
@@ -181,7 +190,7 @@ export default function RadioGroup({
 
     if (isNavigation) {
       const currentIndex = normalizedOptions.findIndex(
-        (option) => option.key === currentKey
+        (option) => option.value === currentValue
       );
 
       const navigationMap = {
@@ -231,7 +240,7 @@ export default function RadioGroup({
       <div className="radio__container">
         {processedOptions.map((option) => {
           const radioId = `${radioGroupId}-${option.key}`;
-          const isChecked = currentKey === option.key;
+          const isChecked = option.value === currentValue;
           const isDisabled = disabled || option.disabled || false;
           const isNavigation = option.isNavigation || false;
           const isEllipsis = option.isEllipsis || false;
