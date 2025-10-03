@@ -38,7 +38,21 @@ export default function LoginForm() {
     }
 
     // 카카오 authorize_url로 이동
-    window.location.href = kakaoLogin;
+    window.location.href = 'http://43.203.218.247:8080/v1/oauth/login/kakao';
+    // carHarttApi({
+    //   method: 'GET',
+    //   url: '/v1/oauth/login/kakao',
+    // })
+    //   .then((response) => {
+    //     const { data, meta } = response;
+    //     if (data && data.sessionId) {
+    //       sessionStorage.setItem('oauth_state', data.sessionId);
+    //       navigate('/');
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.error('kakao 로그인 실패');
+    //   });
   };
 
   return (
