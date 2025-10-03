@@ -190,5 +190,35 @@ span {
         $size
       );
     }
+    &.ic-left#{$suffix} {
+      @include image.iconMask(
+        'ic_left.svg',
+        $size,
+        $size,
+        no-repeat,
+        center,
+        $size
+      );
+    }
+    &.ic-first#{$suffix} {
+      @include image.iconMask(
+        'ic_first.svg',
+        $size,
+        $size,
+        no-repeat,
+        center,
+        $size
+      );
+    }
+    &.ic-last#{$suffix} {
+      @include image.iconMask(
+        'ic_last.svg',
+        $size,
+        $size,
+        no-repeat,
+        center,
+        $size
+      );
+    }
   }
 }
