@@ -3,6 +3,7 @@ import Dropdown from '@/shared/ui/Dropdown';
 import InputBox from '@/shared/ui/InputBox';
 import TextArea from '@/shared/ui/TextArea';
 import SelectBox from '@/shared/ui/SelectBox';
+import RadioGroup from '@/shared/ui/Radio';
 import { useState } from 'react';
 import SearchButton from './ui/SearchButton';
 
@@ -54,6 +55,10 @@ export default function HomePage() {
       value: `test-${_num}`,
     };
   });
+
+  // state 예시 - radio
+  const [radioOption, setRadioOption] = useState('option1');
+  const [currentPage, setCurrentPage] = useState('1');
 
   return (
     <div>
@@ -431,6 +436,120 @@ export default function HomePage() {
         />
         <SelectBox options={dupeSelectionOptions} />
       </div>
+
+      {/* shared/ui에 선언된 Radio */}
+      {/* Radio variant */}
+      <RadioGroup
+        label="Radio Example"
+        name="radioExample"
+        options={[
+          {
+            key: 'option1',
+            value: 'option1',
+            label: 'Option 1',
+          },
+          {
+            key: 'option2',
+            value: 'option2',
+            label: 'Option 2',
+          },
+          {
+            key: 'option3',
+            value: 'option3',
+            label: 'Option 3',
+            disabled: true,
+          },
+        ]}
+        defaultKey="option1"
+        value={radioOption}
+        onChange={(e) => {
+          setRadioOption(e.target.value);
+        }}
+        variant="radio"
+        required={true}
+      />
+
+      <RadioGroup
+        name="errorTestRadio"
+        options={[
+          { key: 'option1', value: 'option1', label: 'Error1' },
+          { key: 'option1', value: 'option2', label: 'Error2' },
+        ]}
+        value={radioOption}
+        onChange={(e) => setRadioOption(e.target.value)}
+      />
+      <RadioGroup
+        label="Simple String Options"
+        options={['Option 1', 'Option 2', 'Option 3']}
+        defaultKey="Option 1"
+        value={radioOption}
+        onChange={(e) => setRadioOption(e.target.value)}
+      />
+      {/* Button variant */}
+      <RadioGroup
+        label="Button Example"
+        name="buttonExample"
+        options={[
+          {
+            key: 'option1',
+            value: 'option1',
+            label: 'Option 1',
+          },
+          {
+            key: 'option2',
+            value: 'option2',
+            label: 'Option 2',
+          },
+          {
+            key: 'option3',
+            value: 'option3',
+            label: 'Option 3',
+            disabled: true,
+          },
+        ]}
+        defaultKey="option1"
+        value={radioOption}
+        onChange={(e) => {
+          setRadioOption(e.target.value);
+        }}
+        variant="button"
+        required={true}
+      />
+      <RadioGroup
+        name="errorTestButton"
+        options={[
+          { key: 'option1', value: 'option2', label: 'Error1' },
+          {
+            key: 'option2',
+            value: 'option2',
+            label: 'Error2',
+          },
+        ]}
+        value={radioOption}
+        onChange={(e) => setRadioOption(e.target.value)}
+        variant="button"
+        size="--s"
+      />
+      {/* Pagination */}
+      <RadioGroup
+        name="pagination"
+        options={[
+          { key: '1', value: '1' },
+          { key: '2', value: '2' },
+          { key: '3', value: '3' },
+          { key: '4', value: '4' },
+          { key: '5', value: '5' },
+          { key: '6', value: '6' },
+          { key: '7', value: '7' },
+        ]}
+        value={currentPage}
+        onChange={(e) => {
+          setCurrentPage(e.target.value);
+        }}
+        variant="button"
+        showNavigation={true}
+        size=""
+      />
 
       <div style={{ height: 1200 }} />
     </div>
