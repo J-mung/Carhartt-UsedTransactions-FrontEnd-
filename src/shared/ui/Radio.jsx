@@ -1,5 +1,12 @@
 import { useId } from 'react';
 
+/**
+ * Radio Group 생성 컴포넌트
+ *    state는 value로 관리
+ *    key는 React map 렌더링 등 식별자 전용
+ * @param {*} param0
+ * @returns
+ */
 export default function RadioGroup({
   label = '',
   name = '',
