@@ -1,0 +1,181 @@
+@use './colors' as *;
+@use './theme' as theme;
+@use './map' as *; // deep-get 함수 import
+
+// 탭 전용 테마 맵
+$tab-group-themes: (
+  light: (
+    selector: theme.$theme-light-selector,
+    states: (
+      default: (
+        background: deep-get($theme-gray, 'light', 'gray-2'),
+        border: deep-get($theme-gray, 'light', 'gray-6'),
+        font: deep-get($theme-gray, 'light', 'gray-11'),
+      ),
+      hover: (
+        background: deep-get($theme-gray, 'light', 'gray-1'),
+        border: deep-get($theme-gray, 'light', 'gray-6'),
+        font: deep-get($theme-blue, 'light', 'blue-5'),
+      ),
+      active: (
+        background: deep-get($theme-gray, 'light', 'gray-1'),
+        border: deep-get($theme-blue, 'light', 'blue-7'),
+        font: deep-get($theme-blue, 'light', 'blue-7'),
+      ),
+      selected: (
+        background: deep-get($theme-gray, 'light', 'gray-1'),
+        border: deep-get($theme-blue, 'light', 'blue-6'),
+        font: deep-get($theme-blue, 'light', 'blue-6'),
+      ),
+      disabled: (
+        background: deep-get($theme-gray, 'light', 'gray-3'),
+        border: deep-get($theme-gray, 'light', 'gray-7'),
+        font: deep-get($theme-gray, 'light', 'gray-7'),
+      ),
+      focus: (
+        background: deep-get($theme-gray, 'light', 'gray-1'),
+        border: deep-get($theme-blue, 'light', 'blue-5'),
+        font: deep-get($theme-blue, 'light', 'blue-6'),
+      ),
+    ),
+  ),
+  dark: (
+    selector: theme.$theme-dark-selector,
+    states: (
+      default: (
+        background: deep-get($theme-gray, 'dark', 'gray-3'),
+        border: deep-get($theme-gray, 'dark', 'gray-6'),
+        font: deep-get($theme-gray, 'dark', 'gray-11'),
+      ),
+      hover: (
+        background: deep-get($theme-gray, 'dark', 'gray-2'),
+        border: deep-get($theme-gray, 'dark', 'gray-6'),
+        font: deep-get($theme-blue, 'dark', 'blue-7'),
+      ),
+      active: (
+        background: deep-get($theme-gray, 'dark', 'gray-2'),
+        border: deep-get($theme-blue, 'dark', 'blue-5'),
+        font: deep-get($theme-blue, 'dark', 'blue-5'),
+      ),
+      selected: (
+        background: deep-get($theme-gray, 'dark', 'gray-1'),
+        border: deep-get($theme-blue, 'dark', 'blue-6'),
+        font: deep-get($theme-blue, 'dark', 'blue-6'),
+      ),
+      disabled: (
+        background: deep-get($theme-gray, 'dark', 'gray-6'),
+        border: deep-get($theme-gray, 'dark', 'gray-7'),
+        font: deep-get($theme-gray, 'dark', 'gray-7'),
+      ),
+      focus: (
+        background: deep-get($theme-gray, 'dark', 'gray-2'),
+        border: deep-get($theme-blue, 'dark', 'blue-6'),
+        font: deep-get($theme-blue, 'dark', 'blue-6'),
+      ),
+    ),
+  ),
+);
+
+.tab-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &__list {
+    display: flex;
+    border-bottom: 1px solid;
+    padding: 0 8px;
+  }
+
+  &__tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid;
+    border-bottom: none;
+    padding: 8px 16px;
+    margin-right: 4px;
+    border-radius: 6px 6px 0 0;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &.disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    &:focus-visible {
+      outline: none;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.4);
+    }
+
+    &.active:focus-visible {
+      box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.6);
+    }
+  }
+
+  &__content {
+    border: 1px solid;
+    border-radius: 0 6px 6px 6px;
+    padding: 16px;
+    min-height: 120px;
+  }
+}
+
+// 테마별 스타일 적용
+@each $mode, $config in $tab-group-themes {
+  #{deep-get($config, selector)} {
+    .tab-group {
+      &__list {
+        border-color: deep-get($config, states, 'default', 'border');
+        background: deep-get($config, states, 'default', 'background');
+      }
+
+      &__tab {
+        background: deep-get($config, states, 'default', 'background');
+        border-color: deep-get($config, states, 'default', 'border');
+        color: deep-get($config, states, 'default', 'font');
+
+        &:hover {
+          background: deep-get($config, states, 'hover', 'background');
+          border-color: deep-get($config, states, 'hover', 'border');
+          color: deep-get($config, states, 'hover', 'font');
+        }
+
+        &:active {
+          background: deep-get($config, states, 'active', 'background');
+          border-color: deep-get($config, states, 'active', 'border');
+          color: deep-get($config, states, 'active', 'font');
+        }
+
+        &.active {
+          background: deep-get($config, states, 'selected', 'background');
+          border-color: deep-get($config, states, 'selected', 'border');
+          color: deep-get($config, states, 'selected', 'font');
+          font-weight: 600;
+        }
+
+        &.disabled {
+          background: deep-get($config, states, 'disabled', 'background');
+          border-color: deep-get($config, states, 'disabled', 'border');
+          color: deep-get($config, states, 'disabled', 'font');
+        }
+
+        &:focus-visible {
+          background: deep-get($config, states, 'focus', 'background');
+          border-color: deep-get($config, states, 'focus', 'border');
+          color: deep-get($config, states, 'focus', 'font');
+        }
+      }
+
+      &__content {
+        border-color: deep-get($config, states, 'default', 'border');
+        background: deep-get($config, states, 'default', 'background');
+      }
+    }
+  }
+}
