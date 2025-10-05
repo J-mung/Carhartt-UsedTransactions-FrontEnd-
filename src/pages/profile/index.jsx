@@ -7,6 +7,7 @@ export default function TestProfilePage() {
   function CardLayout({ children }) {
     return (
       <div
+        className={'card-layout'}
         style={{
           border: '1px solid #ddd',
           borderRadius: '8px',
