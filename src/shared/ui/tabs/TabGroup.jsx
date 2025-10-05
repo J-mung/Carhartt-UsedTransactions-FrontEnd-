@@ -2,31 +2,51 @@ import { useRef, useState } from 'react';
 import Tab from './Tab';
 
 export default function TabGroup({ tabGroup }) {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [focusIndex, setFocusIndex] = useState(0);
+  const firstEnabledIndex = tabGroup.findIndex((tab) => !tab.disabled);
+  const [activeIndex, setActiveIndex] = useState(firstEnabledIndex);
+  const [focusIndex, setFocusIndex] = useState(firstEnabledIndex); // focus 상태에서 키보드 선택 처리용 state
+
   const tabRefs = useRef([]);
 
   const handleKeyDown = (e, index) => {
     const length = tabGroup.length;
 
+    const findNextEnabledIndex = (start, direction) => {
+      let newIndex = start;
+      for (let i = 0; i < length; i++) {
+        newIndex = (newIndex + direction + length) % length; // 순환 이동
+        if (!tabGroup[newIndex].disabled) {
+          return newIndex;
+        }
+      }
+      return start; // 모두 disabled면 자기 자신 유지
+    };
+
     if (e.key === 'ArrowRight') {
-      const nextIndex = (index + 1) % length;
+      const nextIndex = findNextEnabledIndex(index, +1);
       setFocusIndex(nextIndex);
-      tabRefs.current[nextIndex].focus();
+      tabRefs.current[nextIndex]?.focus();
       e.preventDefault();
     }
 
     if (e.key === 'ArrowLeft') {
-      const prevIndex = (index - 1 + length) % length;
+      const prevIndex = findNextEnabledIndex(index, -1);
       setFocusIndex(prevIndex);
-      tabRefs.current[prevIndex].focus();
+      tabRefs.current[prevIndex]?.focus();
       e.preventDefault();
     }
 
     if (e.key === 'Enter' || e.key === ' ') {
-      setActiveIndex(index);
+      // Enter로 확정할 때도 disabled 예외 처리
+      if (!tabGroup[index].disabled) {
+        setActiveIndex(index);
+      }
       e.preventDefault();
     }
+  };
+
+  const isActive = () => {
+    return activeIndex > -1;
   };
 
   return (
@@ -46,7 +66,11 @@ export default function TabGroup({ tabGroup }) {
         ))}
       </div>
       <div className="tab-group__content" role="tabpanel">
-        {tabGroup[activeIndex].content}
+        {isActive() ? (
+          tabGroup[activeIndex].content
+        ) : (
+          <div>출력할 화면이 없습니다.</div>
+        )}
       </div>
     </div>
   );
