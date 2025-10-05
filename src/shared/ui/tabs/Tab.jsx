@@ -10,9 +10,9 @@ export default function Tab({
   return (
     <div
       ref={tabRef}
-      className={`tab-group__tab ${isActive ? 'active' : ''} ${
+      className={`tab-group__tab ${isActive ? 'active text-strong' : ''} ${
         tab.disabled ? 'disabled' : ''
-      }`}
+      } text-regular`}
       role="tab"
       tabIndex={isFocused && !tab.disabled ? 0 : -1}
       aria-selected={isActive}
