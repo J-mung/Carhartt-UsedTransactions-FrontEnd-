@@ -21,7 +21,7 @@ $component-border-radius: 0.363rem; // 3px
   @if $position == all {
     border: $width $pattern $color;
   } @else {
-    border-#{$position}: $width $pattenr $color;
+    border-#{$position}: $width $pattern $color;
   }
   @if $clear == none {
     $position: all;
