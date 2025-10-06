@@ -1,3 +1,4 @@
+import kakaoLoginImage from '@/app/assets/images/kakao/login_ko/kakao_login_medium_wide.png';
 import { carHarttApi } from '@/shared/api/axios';
 import { Button } from '@/shared/ui/buttons';
 import { useEffect, useState } from 'react';
@@ -61,11 +62,7 @@ export default function LoginForm() {
         <span className={'login__form__label h2'}>로그인 화면 입니다.</span>
         <div className={'login__form__buttons'}>
           <div className={`btn`} onClick={onKakaoLogin}>
-            <img
-              src={
-                'src/app/assets/images/kakao/login_ko/kakao_login_medium_wide.png'
-              }
-            />
+            <img src={kakaoLoginImage} alt={'카카오 로그인'} />
           </div>
           <Button label={'Naver 추가 예정'} disabled={true} />
         </div>
