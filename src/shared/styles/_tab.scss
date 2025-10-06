@@ -1,0 +1,219 @@
+@use './colors' as *;
+@use './theme' as theme;
+@use './map' as *;
+@use './border' as border;
+
+// 탭 전용 테마 맵
+$tab-group-themes: (
+  light: (
+    selector: theme.$theme-light-selector,
+    states: (
+      default: (
+        background: deep-get($theme-gray, 'light', 'gray-2'),
+        border: deep-get($theme-gray, 'light', 'gray-6'),
+        font: deep-get($theme-gray, 'light', 'gray-11'),
+      ),
+      hover: (
+        background: deep-get($theme-gray, 'light', 'gray-1'),
+        border: deep-get($theme-gray, 'light', 'gray-6'),
+        font: deep-get($theme-blue, 'light', 'blue-5'),
+      ),
+      active: (
+        background: deep-get($theme-gray, 'light', 'gray-1'),
+        border: deep-get($theme-blue, 'light', 'blue-6'),
+        font: deep-get($theme-blue, 'light', 'blue-6'),
+      ),
+      selected: (
+        background: deep-get($theme-gray, 'light', 'gray-1'),
+        border: deep-get($theme-blue, 'light', 'blue-6'),
+        font: deep-get($theme-blue, 'light', 'blue-6'),
+      ),
+      disabled: (
+        background: deep-get($theme-gray, 'light', 'gray-3'),
+        border: deep-get($theme-gray, 'light', 'gray-7'),
+        font: deep-get($theme-gray, 'light', 'gray-7'),
+      ),
+      focus: (
+        background: deep-get($theme-gray, 'light', 'gray-1'),
+        border: deep-get($theme-blue, 'light', 'blue-7'),
+        font: deep-get($theme-blue, 'light', 'blue-6'),
+      ),
+    ),
+  ),
+  dark: (
+    selector: theme.$theme-dark-selector,
+    states: (
+      default: (
+        background: deep-get($theme-gray, 'dark', 'gray-3'),
+        border: deep-get($theme-gray, 'dark', 'gray-6'),
+        font: deep-get($theme-gray, 'dark', 'gray-11'),
+      ),
+      hover: (
+        background: deep-get($theme-gray, 'dark', 'gray-2'),
+        border: deep-get($theme-gray, 'dark', 'gray-6'),
+        font: deep-get($theme-blue, 'dark', 'blue-7'),
+      ),
+      active: (
+        background: deep-get($theme-gray, 'dark', 'gray-2'),
+        border: deep-get($theme-blue, 'dark', 'blue-6'),
+        font: deep-get($theme-blue, 'dark', 'blue-6'),
+      ),
+      selected: (
+        background: deep-get($theme-gray, 'dark', 'gray-1'),
+        border: deep-get($theme-blue, 'dark', 'blue-6'),
+        font: deep-get($theme-blue, 'dark', 'blue-6'),
+      ),
+      disabled: (
+        background: deep-get($theme-gray, 'dark', 'gray-6'),
+        border: deep-get($theme-gray, 'dark', 'gray-7'),
+        font: deep-get($theme-gray, 'dark', 'gray-7'),
+      ),
+      focus: (
+        background: deep-get($theme-gray, 'dark', 'gray-2'),
+        border: deep-get($theme-blue, 'dark', 'blue-7'),
+        font: deep-get($theme-blue, 'dark', 'blue-6'),
+      ),
+    ),
+  ),
+);
+
+.tab-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &__list {
+    display: flex;
+  }
+
+  &__tab {
+    display: inline-flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem; //8px 16px;
+    margin-right: -0.0625rem; // border 겹침 제거
+    @include border.border(0.0625rem, solid, transparent, all);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:last-child {
+      margin-right: 0; // 마지막 탭은 겹침 방지 해제 (4면 유지)
+    }
+
+    &.disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    &:focus-visible {
+      outline: none; // 기본 focus outline 제거
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 0 0 0.135rem rgba(24, 144, 255, 0.4);
+    }
+
+    &.active:focus-visible {
+      box-shadow: 0 0 0 0.135rem rgba(24, 144, 255, 0.6);
+    }
+  }
+
+  &__content {
+    padding: 1rem; // 16px
+    width: auto;
+    min-height: 7.5rem; // 120px
+  }
+}
+
+// 테마별 스타일 적용
+@each $mode, $config in $tab-group-themes {
+  #{deep-get($config, selector)} {
+    .tab-group {
+      &__list {
+        background: deep-get($config, states, 'default', 'background');
+      }
+
+      &__tab {
+        background: deep-get($config, states, 'default', 'background');
+        @include border.border(
+          0.0625rem,
+          solid,
+          deep-get($config, states, 'default', 'border'),
+          all
+        );
+        @include border.border(
+          0.0625rem,
+          solid,
+          deep-get($config, states, 'selected', 'border'),
+          bottom
+        );
+        color: deep-get($config, states, 'default', 'font');
+
+        &:hover {
+          background: deep-get($config, states, 'hover', 'background');
+          @include border.border(
+            0.0625rem,
+            solid,
+            deep-get($config, states, 'default', 'border'),
+            all
+          );
+          @include border.border(
+            0.0625rem,
+            solid,
+            deep-get($config, states, 'selected', 'border'),
+            bottom
+          );
+          color: deep-get($config, states, 'hover', 'font');
+          z-index: 1; // hover된 탭이 위로 올라와 border가 덮이지 않게
+        }
+
+        &:active {
+          background: deep-get($config, states, 'active', 'background');
+          color: deep-get($config, states, 'active', 'font');
+          z-index: 2;
+        }
+
+        &.active {
+          background: deep-get($config, states, 'selected', 'background');
+          @include border.border(
+            0.0625rem,
+            solid,
+            deep-get($config, states, 'selected', 'border'),
+            all
+          );
+          @include border.border(0.0625rem, solid, transparent, bottom);
+          color: deep-get($config, states, 'selected', 'font');
+          z-index: 3; // 푸른색 border가 다른 탭 border 위에 오도록 조정
+        }
+
+        &.disabled {
+          background: deep-get($config, states, 'disabled', 'background');
+          @include border.border(
+            0.0625rem,
+            solid,
+            deep-get($config, states, 'disabled', 'border'),
+            all
+          );
+          color: deep-get($config, states, 'disabled', 'font');
+        }
+
+        &:focus-visible {
+          background: deep-get($config, states, 'focus', 'background');
+          @include border.border(
+            0.0625rem,
+            solid,
+            deep-get($config, states, 'focus', 'border'),
+            all
+          );
+          color: deep-get($config, states, 'focus', 'font');
+          z-index: 4;
+        }
+      }
+
+      &__content {
+        background: deep-get($config, states, 'default', 'background');
+      }
+    }
+  }
+}
