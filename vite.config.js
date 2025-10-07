@@ -25,7 +25,6 @@ export default defineConfig({
     },
   },
   server: {
-    port: '5713',
     proxy: {
       '^/v1': {
         target: 'http://43.203.218.247:8080',
