@@ -1,4 +1,5 @@
 import Button from '@/shared/ui/buttons/Button';
+import IconTextButton from '@/shared/ui/buttons/IconTextButton';
 import { useNavigate } from 'react-router-dom';
 
 /**
@@ -30,44 +31,6 @@ export default function Header({ title }) {
 
   const isLogined = getJSessionId();
 
-  const rightBtnGroup = [
-    {
-      label: '판매하기',
-      variant: 'standard-link',
-      onClick: () => {
-        alert('판매하기 버튼 클릭');
-      },
-      disabled: false,
-    },
-    {
-      label: '관리',
-      variant: 'standard-link',
-      onClick: () => {
-        alert('관리 버튼 클릭');
-      },
-      disabled: false,
-      children: (
-        <>
-          <span className={'ic-user'}></span>
-          <span className={'btn__label text-regular'}>관리</span>
-        </>
-      ),
-    },
-    {
-      label: '채팅',
-      variant: 'standard-link',
-      onClick: () => {
-        alert('채팅 버튼 클릭');
-      },
-      disabled: true,
-    },
-    {
-      label: isLogined ? '로그아웃' : '로그인',
-      variant: 'standard-primary',
-      onClick: isLogined ? handleLogOut : handleLogin,
-      disabled: false,
-    },
-  ];
   return (
     <>
       <Button
@@ -83,13 +46,25 @@ export default function Header({ title }) {
           gap: '2px',
         }}
       >
-        {/* <Button
+        <Button
           label={'판매하기'}
+          variant={'standard-link'}
           onClick={() => alert('판매하기 버튼 클릭')}
         ></Button>
-        <Button label={'관리'} onClick={() => alert('관리 버튼 클릭')}></Button>
+        <IconTextButton
+          label={'관리'}
+          variant={'standard-link'}
+          onClick={() => {
+            alert('관리 버튼 클릭');
+          }}
+          disabled={false}
+        >
+          <span className={'ic-user'}></span>
+          <span className={'btn__label text-regular'}>관리</span>
+        </IconTextButton>
         <Button
           label={'채팅'}
+          variant={'standard-link'}
           onClick={() => alert('채팅 버튼 클릭')}
           disabled={true}
         ></Button>
@@ -97,19 +72,7 @@ export default function Header({ title }) {
           <Button label={'로그아웃'} onClick={handleLogOut}></Button>
         ) : (
           <Button label={'로그인'} onClick={handleLogin}></Button>
-        )} */}
-        {rightBtnGroup.map((_btn) => {
-          return (
-            <Button
-              label={_btn.label}
-              variant={_btn.variant}
-              onClick={_btn.onClick}
-              disabled={_btn.disabled}
-            >
-              {_btn.children ? _btn.children : ''}
-            </Button>
-          );
-        })}
+        )}
         {/* <ThemeToggle /> */}
       </div>
     </>
