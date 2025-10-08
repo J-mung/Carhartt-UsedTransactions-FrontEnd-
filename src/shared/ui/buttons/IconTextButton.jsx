@@ -1,4 +1,4 @@
-export default function IconTextButton(
+export default function IconTextButton({
   label = '',
   variant = 'primary',
   size = '',
@@ -6,8 +6,8 @@ export default function IconTextButton(
   title,
   onClick,
   disabled = false,
-  children
-) {
+  children,
+}) {
   // 허용 tone, variant, size, font 값 세트
   const TONES = ['standard', 'danger', 'ghost'];
   const VARIANTS = ['primary', 'secondary', 'link'];
@@ -23,7 +23,7 @@ export default function IconTextButton(
   };
 
   // variant, size, font 안전 처리 (fallback 적용)
-  const safeVariant = ALLOWED_VARIANTS.include(variant)
+  const safeVariant = ALLOWED_VARIANTS.includes(variant)
     ? variant
     : 'standard-primary';
   const safeSize = SIZES.includes(size) ? size : '';
