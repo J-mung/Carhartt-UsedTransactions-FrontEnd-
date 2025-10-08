@@ -1,3 +1,4 @@
+import kakaoLoginImage from '@/app/assets/images/kakao/login_ko/kakao_login_medium_wide.png';
 import { carHarttApi } from '@/shared/api/axios';
 import { Button } from '@/shared/ui/buttons';
 import { useEffect, useState } from 'react';
@@ -12,45 +13,57 @@ export default function LoginForm() {
   useEffect(() => {
     carHarttApi({
       method: 'GET',
-      url: '/v1/oauth/login',
-      withCredentials: true,
-    }).then((response) => {
-      const { success, data, meta } = response;
-      if (success) {
-        data.providers.map((_provider) => {
-          console.log('provider: ' + _provider.provider);
-          if (_provider.provider === 'kakao')
-            setKakaoLogin(_provider.authorizeUrl);
-          if (_provider.provider === 'naver')
-            setNaverLogin(_provider.authorizeUrl);
-        });
-      }
-    });
+      url: 'v1/oauth/login',
+    })
+      .then((response) => {
+        const { data, meta } = response;
+        if (data) {
+          data.map((_provider) => {
+            console.log('provider: ' + _provider.provider);
+            if (_provider.provider === 'KAKAO')
+              setKakaoLogin(_provider.authorize_url);
+            if (_provider.provider === 'NAVER')
+              setNaverLogin(_provider.authorize_url);
+          });
+        }
+      })
+      .catch((err) => {
+        console.log('OAuth URL fetch error', err);
+      });
   }, []);
 
   const onKakaoLogin = () => {
-    console.log('clicked');
-    sessionStorage.setItem('oauth_state', 'Authorized');
-    navigate(-1);
+    if (!kakaoLogin) {
+      alert('카카오 로그인 URL을 불러오지 못했습니다.');
+      return;
+    }
 
-    // if (!kakaoLogin) {
-    //   alert('카카오 로그인 이용 불가');
-    //   return;
-    // }
-
+    carHarttApi({
+      method: 'GET',
+      url: 'v1/oauth/login/kakao',
+    })
+      .then((response) => {
+        const authUrl = response.data.authorize_kakao_url;
+        // 카카오 authorize_url로 이동
+        window.location.href = authUrl;
+      })
+      .catch((err) => {
+        alert(`kakao_url error : ${err}`);
+        console.log(`kakao_url error : ${err}`);
+      });
     // carHarttApi({
     //   method: 'GET',
-    //   url: '/v1/auth/login/kakao',
-    //   withCredentials: true,
+    //   url: '/v1/oauth/login/kakao',
     // })
     //   .then((response) => {
-    //     const { data, meta, status, headers } = response;
-    //     const { authorizeUrl, state } = data.json();
-    //     sessionStorage.setItem('oauth_state', state);
-    //     window.location.assign(authorizeUrl);
+    //     const { data, meta } = response;
+    //     if (data && data.sessionId) {
+    //       sessionStorage.setItem('oauth_state', data.sessionId);
+    //       navigate('/');
+    //     }
     //   })
-    //   .catch((error) => {
-    //     console.error('Fail login via Kakao');
+    //   .catch((err) => {
+    //     console.error('kakao 로그인 실패');
     //   });
   };
 
@@ -60,11 +73,7 @@ export default function LoginForm() {
         <span className={'login__form__label h2'}>로그인 화면 입니다.</span>
         <div className={'login__form__buttons'}>
           <div className={`btn`} onClick={onKakaoLogin}>
-            <img
-              src={
-                'src/app/assets/images/kakao/login_ko/kakao_login_medium_wide.png'
-              }
-            />
+            <img src={kakaoLoginImage} alt={'카카오 로그인'} />
           </div>
           <Button label={'Naver 추가 예정'} disabled={true} />
         </div>
