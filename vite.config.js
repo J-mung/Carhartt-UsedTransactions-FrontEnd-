@@ -23,12 +23,6 @@ export default defineConfig({
     rollupOptions: {
       external: ['set-cookie-parser'],
     },
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: false, // console.log 유지
-      },
-    },
   },
   server: {
     proxy: {
