@@ -23,11 +23,17 @@ export default defineConfig({
     rollupOptions: {
       external: ['set-cookie-parser'],
     },
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: false, // console.log 유지
+      },
+    },
   },
   server: {
     proxy: {
       '^/v1': {
-        target: 'http://43.203.218.247:8080',
+        target: 'https://carhartt-usedtransactions.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/v1/, '/v1'),
       },
