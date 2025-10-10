@@ -5,6 +5,7 @@ export default function Button({
   onClick,
   disabled = false,
   children,
+  className = '',
 }) {
   // 허용 tone, variant, size, font 값 세트
   const TONES = ['standard', 'danger', 'ghost'];
@@ -27,9 +28,15 @@ export default function Button({
   const safeSize = SIZES.includes(size) ? size : '';
   const safeFont = FONTS[safeSize] || FONTS.default;
 
+  const mergeClassNames = (...names) => names.filter(Boolean).join(' ').trim();
+
   // style 처리
-  const buttonClassName = `btn${safeSize} ${safeVariant}`;
-  const labelClassName = `btn__label ${safeFont}`;
+  const buttonClassName = mergeClassNames(
+    `btn${safeSize}`,
+    safeVariant,
+    className
+  );
+  const labelClassName = mergeClassNames('btn__label', safeFont);
 
   // 함수 안전 처리
   const safeOnClick = typeof onClick === 'function' ? onClick : () => {};
