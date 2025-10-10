@@ -1,7 +1,7 @@
 import { Button } from '@/shared/ui/buttons';
 import TabGroup from '@/shared/ui/tabs/TabGroup';
 import Modal from '@/widgets/modal/Modal';
-import { useModal } from '@/widgets/modal/ModalRoot';
+import { useModal } from '@/widgets/modal/ModalProvider';
 import HomePage from '../home/HomePage';
 import ImageUploader from './ui/ImageUploader';
 
