@@ -9,6 +9,9 @@
 @use './typography';
 @use './icon';
 
+// theme
+@use './theme';
+
 // components
 @use './button';
 @use './input';
@@ -17,6 +20,4 @@
 @use './dropdown';
 @use './radio';
 @use './tab';
-
-// theme
-@use './theme';
+@use './modal';
