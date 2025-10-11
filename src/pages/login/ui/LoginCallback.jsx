@@ -22,8 +22,8 @@ export default function LoginCallback() {
       url: 'v1/oauth/login/check',
     })
       .then((response) => {
-        const { success, data, meta } = response;
-        if (success) {
+        const { status, data, error, meta } = response;
+        if (status === 200 && !!data) {
           handleOpenModal('로그인에 성공했습니다.');
           sessionStorage.setItem('user_info', data);
           navigate('/');
