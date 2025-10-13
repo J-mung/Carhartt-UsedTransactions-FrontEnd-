@@ -1,10 +1,28 @@
 import { carHarttApi } from '@/shared/api/axios';
 import { useEffect, useState } from 'react';
 
+const mockAddresses = [
+  {
+    key: 'add1',
+    value: '주소1',
+    alias: '집',
+    label: '집: 주소1',
+  },
+  {
+    key: 'add2',
+    value: '주소2',
+    alias: '본가',
+    label: '본가: 주소2',
+  },
+];
+
 export function useAddresses(userId) {
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(undefined);
+  const [reloadTrigger, setReloadTrigger] = useState(0);
+
+  const refresh = () => setReloadTrigger((prev) => prev + 1);
 
   useEffect(() => {
     let isMounted = true; // 언마운트 시 setState 방지
@@ -13,20 +31,7 @@ export function useAddresses(userId) {
 
     if (!userId) {
       // API 준비 전: mock 데이터
-      setAddresses([
-        {
-          key: 'add1',
-          value: '주소1',
-          alias: '집',
-          label: '집: 주소1',
-        },
-        {
-          key: 'add2',
-          value: '주소2',
-          alias: '본가',
-          label: '본가: 주소2',
-        },
-      ]);
+      setAddresses(mockAddresses);
       setLoading(false);
       return;
     }
@@ -57,7 +62,7 @@ export function useAddresses(userId) {
     return () => {
       isMounted = false;
     };
-  }, [userId]);
+  }, [userId, reloadTrigger]);
 
-  return { addresses, loading, error };
+  return { addresses, loading, error, refresh };
 }

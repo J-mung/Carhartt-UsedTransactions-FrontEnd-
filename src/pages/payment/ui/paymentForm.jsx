@@ -1,10 +1,10 @@
 import { useProducts } from '@/entities/product/hooks/useProduct';
-import { useAddresses } from '@/entities/user/hooks/useAddresses';
 import { Button } from '@/shared/ui/buttons';
 import RadioGroup from '@/shared/ui/Radio';
 import Modal from '@/widgets/modal/Modal';
 import { useModal } from '@/widgets/modal/ModalProvider';
 import { useEffect, useRef, useState } from 'react';
+import AddressRadioGroup from './AddressRadioGroup';
 
 export default function PaymentForm() {
   const formRef = useRef(null);
@@ -15,15 +15,10 @@ export default function PaymentForm() {
     loading: productLoading,
     error: productError,
   } = useProducts();
-  const {
-    addresses,
-    loading: addressesLoading,
-    error: addressesError,
-  } = useAddresses();
 
-  const [curAddress, setCurAddress] = useState(undefined);
   const [msgToSeller, setMsgToSeller] = useState('');
   const [method, setMethod] = useState(undefined);
+
   const payOptions = [
     {
       key: 'pay1',
@@ -36,9 +31,17 @@ export default function PaymentForm() {
       label: '네이버페이',
     },
   ];
+
+  useEffect(() => {
+    if (payOptions && payOptions.length > 0) {
+      setMethod({ ...payOptions[0] });
+    }
+  }, []); // 최초 1회만 실행
+
   const handleInputMsg = (e) => {
     setMsgToSeller(e.target.value);
   };
+
   const handlePayment = (e) => {
     e.preventDefault();
     openModal(Modal, {
@@ -47,18 +50,7 @@ export default function PaymentForm() {
     });
   };
 
-  // 주소지 조회
-  useEffect(() => {
-    // 주소지 조회 성공 시
-    if (!addressesLoading && addresses.length > 0) {
-      setCurAddress({ ...addresses[0] });
-    }
-    if (payOptions && payOptions.length > 0) {
-      setMethod({ ...payOptions[0] });
-    }
-  }, [addressesLoading, addresses]);
-
-  const isLoading = productLoading || addressesLoading;
+  const isLoading = productLoading;
 
   // loading 중
   if (isLoading) {
@@ -66,7 +58,7 @@ export default function PaymentForm() {
   }
 
   // 구매 페이지 구성 중 에러 발생
-  if (productError || addressesError) {
+  if (productError) {
     return <p>에러가 발생했습니다.</p>;
   }
 
@@ -75,24 +67,7 @@ export default function PaymentForm() {
       <p>결제 요청 신청서 화면입니다.</p>
       <p>상품명: {product.name}</p>
       <form ref={formRef} onSubmit={handlePayment}>
-        {curAddress ? (
-          <RadioGroup
-            label={'배송지'}
-            name={'addressList'}
-            value={curAddress?.value}
-            onChange={(e) => {
-              const selected = addresses.find(
-                (_addr) => _addr.key === e.target.key
-              );
-              setCurAddress(selected);
-            }}
-            variant={'radio'}
-            options={addresses}
-          />
-        ) : (
-          <p>주소지가 없습니다.</p>
-        )}
-
+        <AddressRadioGroup userId={''} />
         <span>판매자에게 전달할 요청사항</span>
         <input onChange={handleInputMsg}></input>
         <br />
