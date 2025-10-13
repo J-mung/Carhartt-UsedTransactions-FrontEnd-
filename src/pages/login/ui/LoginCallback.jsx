@@ -24,7 +24,6 @@ export default function LoginCallback() {
       .then((response) => {
         const { status, data, error, meta } = response;
         if (status === 200 && !!data) {
-          handleOpenModal('로그인에 성공했습니다.');
           sessionStorage.setItem('user_info', data);
           navigate('/');
         } else {
@@ -32,8 +31,8 @@ export default function LoginCallback() {
           navigate('/login?error=oauth_failed');
         }
       })
-      .catch(() => {
-        alert('로그인 상태 확인 중 오류가 발생했습니다.');
+      .catch((error) => {
+        handleOpenModal(`로그인 상태 확인 중 오류가 발생했습니다.\n${error}`);
         navigate('/login?error=oauth_failed');
       });
   }, [navigate]);

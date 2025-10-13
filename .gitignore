@@ -39,3 +39,6 @@ cypress/downloads/
 *.log
 *.swp
 *.swo
+
+# --- SSL Certification ---
+*.pem
