@@ -4,6 +4,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import HomePage from '../pages/home/HomePage';
 import TestProfilePage from '../pages/profile';
 import MainLayout from './layouts/MainLayout';
+import SingleProductPage from '../pages/product';
 
 export const router = createBrowserRouter(
   [
@@ -15,6 +16,7 @@ export const router = createBrowserRouter(
         { path: 'profile', element: <TestProfilePage /> },
         { path: 'login', element: <LoginPage /> },
         { path: 'login/callback', element: <LoginCallback /> },
+        { path: 'single-product', element: <SingleProductPage /> },
       ],
     },
   ],
