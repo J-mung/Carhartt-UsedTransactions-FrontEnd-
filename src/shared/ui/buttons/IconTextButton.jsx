@@ -1,11 +1,12 @@
-export default function Button({
+export default function IconTextButton({
   label = '',
   variant = 'primary',
   size = '',
+  iconClass = 'ic-close',
+  title,
   onClick,
   disabled = false,
   children,
-  className = '',
 }) {
   // 허용 tone, variant, size, font 값 세트
   const TONES = ['standard', 'danger', 'ghost'];
@@ -28,15 +29,9 @@ export default function Button({
   const safeSize = SIZES.includes(size) ? size : '';
   const safeFont = FONTS[safeSize] || FONTS.default;
 
-  const mergeClassNames = (...names) => names.filter(Boolean).join(' ').trim();
-
   // style 처리
-  const buttonClassName = mergeClassNames(
-    `btn${safeSize}`,
-    safeVariant,
-    className
-  );
-  const labelClassName = mergeClassNames('btn__label', safeFont);
+  const buttonClassName = `btn--ic-text${safeSize} ${safeVariant}`;
+  const labelClassName = `btn__label ${safeFont}`;
 
   // 함수 안전 처리
   const safeOnClick = typeof onClick === 'function' ? onClick : () => {};
@@ -44,15 +39,27 @@ export default function Button({
   // 라벨 안전 처리
   const renderLabel = () => {
     if (children) return children;
-    if (label) return <span className={labelClassName}>{label}</span>;
-    return <span className={labelClassName}>fall back</span>;
+    if (label)
+      return (
+        <>
+          <span className={iconClass}></span>
+          <span className={labelClassName}>{label}</span>
+        </>
+      );
+    return (
+      <>
+        <span className={iconClass}></span>
+        <span className={labelClassName}>fall back</span>
+      </>
+    );
   };
 
   return (
     <button
-      type="button"
+      type={'button'}
       className={buttonClassName}
       onClick={safeOnClick}
+      title={title}
       {...(disabled && { disabled: true })}
     >
       {renderLabel()}

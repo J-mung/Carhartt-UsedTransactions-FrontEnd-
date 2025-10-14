@@ -15,6 +15,7 @@ $theme-group: (
 $theme-light: (
   bg: map.get($theme-gray, 'light', 'gray-3'),
   surface: map.get($theme-gray, 'light', 'gray-1'),
+  mask: map.get($theme-gray, 'light', 'gray-13'),
   text: map.get($theme-gray, 'light', 'gray-10'),
   border: map.get($theme-gray, 'light', 'gray-5'),
   focus: map.get($theme-blue, 'light', 'blue-6'),
@@ -23,6 +24,7 @@ $theme-light: (
 $theme-dark: (
   bg: map.get($theme-gray, 'dark', 'gray-3'),
   surface: map.get($theme-gray, 'dark', 'gray-1'),
+  mask: map.get($theme-gray, 'dark', 'gray-8'),
   text: map.get($theme-gray, 'dark', 'gray-11'),
   border: map.get($theme-gray, 'dark', 'gray-5'),
   focus: map.get($theme-blue, 'dark', 'blue-6'),
@@ -32,6 +34,7 @@ $theme-dark: (
 @mixin export-theme($theme) {
   --color-bg: #{map.get($theme, bg)};
   --color-surface: #{map.get($theme, surface)};
+  --color-mask: #{map.get($theme, mask)};
   --color-text: #{map.get($theme, text)};
   --color-border: #{map.get($theme, border)};
   --color-focus: #{map.get($theme, focus)};

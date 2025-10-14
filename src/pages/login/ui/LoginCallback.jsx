@@ -1,9 +1,19 @@
 import { carHarttApi } from '@/shared/api/axios';
+import Modal from '@/widgets/modal/Modal';
+import { useModal } from '@/widgets/modal/ModalProvider';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function LoginCallback() {
   const navigate = useNavigate();
+  const { openModal } = useModal();
+
+  const handleOpenModal = (message) => {
+    openModal(Modal, {
+      title: '로그인',
+      children: <span className={'text-regular'}>{message}</span>,
+    });
+  };
 
   useEffect(() => {
     // 서버에 로그인 상태 확인 요청 (쿠키 자동 전송)
@@ -12,12 +22,13 @@ export default function LoginCallback() {
       url: 'v1/oauth/login/check',
     })
       .then((response) => {
-        const { data } = response;
-        if (data.authenticated) {
-          alert('로그인에 성공했습니다.');
+        const { status, data, error, meta } = response;
+        if (status === 200 && !!data) {
+          handleOpenModal('로그인에 성공했습니다.');
+          sessionStorage.setItem('user_info', data);
           navigate('/');
         } else {
-          alert('로그인에 실패했습니다.');
+          handleOpenModal('로그인에 실패했습니다. 다시 시도해 주세요.');
           navigate('/login?error=oauth_failed');
         }
       })
