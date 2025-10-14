@@ -1,4 +1,6 @@
 import Button from '@/shared/ui/buttons/Button';
+import { useModal } from '@/widgets/modal/ModalProvider';
+import Modal from '@/widgets/modal/Modal';
 import { useState } from 'react';
 
 export default function ProductInfo({
@@ -9,15 +11,31 @@ export default function ProductInfo({
   onEdit,
   isSeller,
 }) {
-  const [showSizeGuide, setShowSizeGuide] = useState(false);
+  const { openModal } = useModal();
 
   if (!product) return null;
+
+  // Size guide modal handler
+  const handleOpenSizeGuide = () => {
+    openModal(Modal, {
+      title: '사이즈 측정 기준',
+      children: (
+        <div className="size-guide">
+          <img
+            src="https://placeholder.pics/svg/300/000000/FFFFFF/Placeholder%20Image"
+            alt="사이즈 측정 가이드"
+          />
+        </div>
+      ),
+      buttons: [],
+    });
+  };
 
   return (
     <>
       <div className="product-info__basic">
         <div className="product-info__heading">
-          {/* 상품명 */}
+          {/* 상품명 */}
           <h1 className="title">{product.item_name}</h1>
 
           {/* 수정 버튼 (게시글 작성자에게만 표시) */}
@@ -58,7 +76,9 @@ export default function ProductInfo({
                 {product.sizes.shoulder && <td>{product.sizes.shoulder}cm</td>}
               </tr>
             </table>
-            {/* 사이즈 측정 기준 보기 Modal */}
+            <button className="size-guide-btn" onClick={handleOpenSizeGuide}>
+              사이즈 측정 기준 보기
+            </button>
           </div>
         )}
 

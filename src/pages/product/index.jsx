@@ -1,6 +1,9 @@
 import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { productData } from './model/mockProductData'; // temporary mock data
 // import { useProductDetail } from './model/useProductDetail';
+import { useModal } from '@/widgets/modal/ModalProvider';
+import Modal from '@/widgets/modal/Modal';
 import ImageCarousel from './ui/ImageCarousel';
 import ProductInfo from './ui/ProductInfo';
 import './ui/productDetail.scss';
@@ -8,18 +11,39 @@ import './ui/productDetail.scss';
 export default function ProductPage() {
   const { itemId } = useParams();
   const navigate = useNavigate();
+  const { openModal } = useModal();
 
   // Temporary mock data
   const product = productData;
   const isLoading = false;
   const isError = false;
+  const error = null;
 
-  // For when api is in
-  // const { data: product, isLoading, isError, error } = useProductDetail(itemId);
-
-  // Get current user from auth context
+  // Temporary user data -> Get current user from auth context
   const currentUserId = 'user123';
   const isSeller = product?.seller_id === currentUserId;
+
+  // Error modal
+  useEffect(() => {
+    if (isError) {
+      openModal(Modal, {
+        title: '오류 발생',
+        children: (
+          <div>
+            <p>{error?.message || '상품을 불러올 수 없습니다.'}</p>
+            <p>잠시 후 다시 시도해주세요.</p>
+          </div>
+        ),
+        buttons: [
+          {
+            label: '홈으로 돌아가기',
+            variant: 'standard-primary',
+            onClick: () => navigate('/'),
+          },
+        ],
+      });
+    }
+  }, [isError, error, openModal, navigate]);
 
   // Handlers
   const handleWishlist = () => {
