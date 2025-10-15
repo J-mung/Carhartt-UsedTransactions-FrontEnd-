@@ -1,0 +1,15 @@
+@use '@styles/border' as border;
+
+.payment-form {
+  width: 65%;
+
+  .form-btn__flex {
+    flex: 1 1 auto;
+  }
+}
+
+.content--wrapper {
+  @include border.borderRadius(border.$component-border-radius);
+  background: var(--color-surface);
+  padding: var(--space-4);
+}
