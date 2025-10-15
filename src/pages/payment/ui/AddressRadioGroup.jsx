@@ -1,9 +1,11 @@
 import { useAddresses } from '@/entities/user/hooks/useAddresses';
 import { carHarttApi } from '@/shared/api/axios';
+import { Button } from '@/shared/ui/buttons';
 import RadioGroup from '@/shared/ui/Radio';
 import Modal from '@/widgets/modal/Modal';
 import { useModal } from '@/widgets/modal/ModalProvider';
 import { useEffect, useState } from 'react';
+import './paymentForm.scss';
 
 export default function AddressRadioGroup({ userId = '' }) {
   const { openModal } = useModal();
@@ -102,16 +104,34 @@ export default function AddressRadioGroup({ userId = '' }) {
   };
 
   return (
-    <RadioGroup
-      label={'배송지'}
-      name={'addressList'}
-      value={curAddress?.value}
-      onChange={(e) => {
-        const selected = addresses.find((_addr) => _addr.key === e.target.key);
-        setCurAddress(selected);
-      }}
-      variant={'radio'}
-      options={customOptions()}
-    />
+    <>
+      <span className={'h4 mb-2'}>배송지</span>
+      <div className={'content--wrapper mt-2 mb-4'}>
+        <div className={'mb-3'}>
+          <RadioGroup
+            label={''}
+            name={'addressList'}
+            value={curAddress?.value}
+            onChange={(e) => {
+              const selected = addresses.find(
+                (_addr) => _addr.key === e.target.key
+              );
+              setCurAddress(selected);
+            }}
+            variant={'radio'}
+            options={customOptions()}
+          />
+        </div>
+        <div className={'ml-auto'}>
+          <Button
+            label={'배송지 추가 등록'}
+            variant={'standard-link'}
+            onClick={() => {
+              console.log('배송지 추가 등록 클릭');
+            }}
+          />
+        </div>
+      </div>
+    </>
   );
 }

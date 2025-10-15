@@ -1,10 +1,12 @@
 import { useProducts } from '@/entities/product/hooks/useProduct';
 import { Button } from '@/shared/ui/buttons';
+import InputBox from '@/shared/ui/InputBox';
 import RadioGroup from '@/shared/ui/Radio';
 import Modal from '@/widgets/modal/Modal';
 import { useModal } from '@/widgets/modal/ModalProvider';
 import { useEffect, useRef, useState } from 'react';
 import AddressRadioGroup from './AddressRadioGroup';
+import './paymentForm.scss';
 
 export default function PaymentForm() {
   const formRef = useRef(null);
@@ -16,7 +18,7 @@ export default function PaymentForm() {
     error: productError,
   } = useProducts();
 
-  const [msgToSeller, setMsgToSeller] = useState('');
+  const [buyerMessage, setBuyerMessage] = useState('');
   const [method, setMethod] = useState(undefined);
 
   const payOptions = [
@@ -39,7 +41,7 @@ export default function PaymentForm() {
   }, []); // 최초 1회만 실행
 
   const handleInputMsg = (e) => {
-    setMsgToSeller(e.target.value);
+    setBuyerMessage(e.target.value);
   };
 
   const handlePayment = (e) => {
@@ -48,6 +50,15 @@ export default function PaymentForm() {
       title: '알림',
       children: <span className={'text-regular'}>결제하기 버튼</span>,
     });
+  };
+
+  const contentWrapper = (title, children) => {
+    return (
+      <>
+        <span className={'h4'}>{title}</span>
+        <div className={'content--wrapper mt-2 mb-4'}>{children}</div>
+      </>
+    );
   };
 
   const isLoading = productLoading;
@@ -63,34 +74,53 @@ export default function PaymentForm() {
   }
 
   return (
-    <div>
-      <p>결제 요청 신청서 화면입니다.</p>
-      <p>상품명: {product.name}</p>
+    <div className={'payment-form ml-auto mr-auto'}>
+      {contentWrapper(
+        '상품정보',
+        <span className={'text-regular'}>상품명: {product.name}</span>
+      )}
       <form ref={formRef} onSubmit={handlePayment}>
         <AddressRadioGroup userId={''} />
-        <span>판매자에게 전달할 요청사항</span>
-        <input onChange={handleInputMsg}></input>
-        <br />
-        <RadioGroup
-          label={'결제 수단'}
-          name={'paymentMethod'}
-          value={method.value}
-          onChange={(e) => {
-            const selected = payOptions.find(
-              (_opt) => _opt.key === e.target.key
-            );
-            setMethod(selected);
-          }}
-          options={payOptions}
-        />
-        {productLoading ? (
-          <p>상품 정보 로딩 중...</p>
-        ) : (
-          <Button
-            label={`${product.price} 결제하기`}
-            onClick={() => formRef.current?.requestSubmit?.()}
+        {contentWrapper(
+          '요청사항',
+          <InputBox
+            label={''}
+            name={'buyer_msg'}
+            variant={'default'}
+            placeholder={'판매자에게 전달할 요청사항'}
+            value={buyerMessage}
+            onChange={(e) => setBuyerMessage(e.target.value)}
+            clear={true}
           />
         )}
+        {contentWrapper(
+          '결제수단',
+          <RadioGroup
+            label={''}
+            name={'paymentMethod'}
+            value={method.value}
+            onChange={(e) => {
+              const selected = payOptions.find(
+                (_opt) => _opt.key === e.target.key
+              );
+              setMethod(selected);
+            }}
+            options={payOptions}
+            variant={'button'}
+          />
+        )}
+        <div className={'flex'}>
+          {productLoading ? (
+            <p>상품 정보 로딩 중...</p>
+          ) : (
+            <Button
+              label={`${product.price} 결제하기`}
+              onClick={() => formRef.current?.requestSubmit?.()}
+              size={'--l'}
+              className={'form-btn__flex'}
+            />
+          )}
+        </div>
       </form>
     </div>
   );
