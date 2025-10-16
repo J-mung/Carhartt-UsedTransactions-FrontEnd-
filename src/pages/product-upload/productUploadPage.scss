@@ -1,0 +1,95 @@
+@use '@styles/typography' as *;
+@use '@styles/border' as *;
+
+.product-form {
+  width: 100%;
+
+  div:not(:first-of-type),
+  .select-box,
+  .text-area {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    label:not(.radio__radio-label) {
+      width: 6rem;
+      flex-shrink: 0;
+      margin: 0;
+    }
+
+    .textarea__label {
+      align-self: flex-start;
+      padding-top: 1rem;
+    }
+
+    .input-box__container,
+    .textarea__wrapper {
+      flex: 1 1 auto;
+    }
+
+    .select-box__container {
+      width: 10rem;
+    }
+  }
+
+  &__category .select-box:not(:first-of-type) {
+    flex: 0 0 auto;
+    margin-left: 2rem;
+  }
+
+  &__measurement-inputs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 2rem;
+
+    @media (max-width: 48em) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 30em) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .radio {
+    margin-top: 2rem;
+  }
+
+  &__submit {
+    justify-content: flex-end;
+
+    button {
+      padding: 0.5rem 2rem;
+    }
+  }
+
+  @media (max-width: 48em) {
+    div:not(:first-of-type):not(.radio__option),
+    .select-box,
+    .text-area,
+    .radio {
+      flex-direction: column;
+      align-items: flex-start;
+
+      label:not(.radio__radio-label) {
+        width: 100%;
+        margin-bottom: var(--space-2);
+      }
+
+      .select-box__container,
+      .textarea__wrapper {
+        width: 100%;
+      }
+    }
+
+    &__category {
+      .select-box:not(:first-of-type) {
+        margin: 0;
+      }
+    }
+
+    &__measurements .input-box {
+      margin-top: 0;
+    }
+  }
+}
