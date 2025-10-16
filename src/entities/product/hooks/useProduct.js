@@ -14,6 +14,7 @@ export function useProducts(productId) {
     if (!productId) {
       // API 준비 전: mock 데이터
       setProduct({
+        id: 1,
         name: '고성능 보조배터리 - 묠니르',
         price: 9900,
       });
