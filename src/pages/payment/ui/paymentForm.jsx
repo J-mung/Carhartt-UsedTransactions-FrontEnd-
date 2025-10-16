@@ -46,9 +46,18 @@ export default function PaymentForm() {
 
   const handlePayment = (e) => {
     e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const address = formData.get('addressList');
+    const payment = formData.get('paymentMethod');
+    const message = formData.get('buyerMsg');
+
     openModal(Modal, {
       title: '알림',
-      children: <span className={'text-regular'}>결제하기 버튼</span>,
+      children: (
+        <span className={'text-regular'}>
+          {product.name}, {product.price}, {address}, {payment}, {message}
+        </span>
+      ),
     });
   };
 
@@ -61,16 +70,20 @@ export default function PaymentForm() {
     );
   };
 
-  const isLoading = productLoading;
-
   // loading 중
-  if (isLoading) {
-    return <p>로딩 중...</p>;
+  if (productLoading) {
+    return <span className={'text-strong'}>로딩 중...</span>;
   }
 
   // 구매 페이지 구성 중 에러 발생
   if (productError) {
-    return <p>에러가 발생했습니다.</p>;
+    return (
+      <>
+        <span className={'text-strong'}>에러가 발생했습니다.</span>;
+        <span className={'text-regular'}>{productError}</span>;
+        <span className={'text-regular'}>잠시 후, 다시 시도해주세요.</span>;
+      </>
+    );
   }
 
   return (
@@ -85,7 +98,7 @@ export default function PaymentForm() {
           '요청사항',
           <InputBox
             label={''}
-            name={'buyer_msg'}
+            name={'buyerMsg'}
             variant={'default'}
             placeholder={'판매자에게 전달할 요청사항'}
             value={buyerMessage}
