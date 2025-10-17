@@ -4,6 +4,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import HomePage from '../pages/home/HomePage';
 import TestProfilePage from '../pages/profile';
 import MainLayout from './layouts/MainLayout';
+import ProductsPage from '@/pages/home/ProductsPage';
 
 export const router = createBrowserRouter(
   [
@@ -11,7 +12,8 @@ export const router = createBrowserRouter(
       path: '/',
       element: <MainLayout stickyFooter={false} />,
       children: [
-        { index: true, element: <HomePage /> },
+        // { index: true, element: <HomePage /> },
+        { index: true, element: <ProductsPage /> },
         { path: 'profile', element: <TestProfilePage /> },
         { path: 'login', element: <LoginPage /> },
         { path: 'login/callback', element: <LoginCallback /> },
