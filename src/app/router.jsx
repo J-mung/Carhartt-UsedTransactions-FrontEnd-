@@ -5,6 +5,8 @@ import HomePage from '../pages/home/HomePage';
 import TestProfilePage from '../pages/profile';
 import MainLayout from './layouts/MainLayout';
 import SingleProductPage from '../pages/product';
+// import ProductUploadPage from '@/pages/product-upload';
+// import ProductsPage from '@/pages/home/ProductsPage';
 
 export const router = createBrowserRouter(
   [
@@ -13,10 +15,13 @@ export const router = createBrowserRouter(
       element: <MainLayout stickyFooter={false} />,
       children: [
         { index: true, element: <HomePage /> },
+        // { index: true, element: <ProductsPage /> },
         { path: 'profile', element: <TestProfilePage /> },
         { path: 'login', element: <LoginPage /> },
         { path: 'login/callback', element: <LoginCallback /> },
         { path: 'single-product', element: <SingleProductPage /> },
+        // { path: '/product/new', element: <ProductUploadPage /> },
+        // { path: '/product/:itemId/edit', element: <ProductUploadPage /> },
       ],
     },
   ],
