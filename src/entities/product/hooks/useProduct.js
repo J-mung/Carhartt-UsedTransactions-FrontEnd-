@@ -1,3 +1,4 @@
+import AlternativeImage from '@/app/assets/images/AlternativeImage.jpg';
 import { carHarttApi } from '@/shared/api/axios'; // 커스텀 axios 인스턴스
 import { useEffect, useState } from 'react';
 
@@ -16,6 +17,7 @@ export function useProducts(productId) {
       setProduct({
         id: 1,
         name: '고성능 보조배터리 - 묠니르',
+        img: AlternativeImage,
         price: 9900,
       });
       setLoading(false);
