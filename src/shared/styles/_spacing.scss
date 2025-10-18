@@ -35,3 +35,70 @@ $space-20: 5rem; // 80px
 $space-24: 6rem; // 96px
 $space-28: 7rem; // 112px
 $space-32: 8rem; // 128px
+
+// padding
+.p-0 {
+  padding: 0 !important;
+}
+@for $i from 0 through 10 {
+  $padding: $i * 0.25rem; // 4px씩 증가
+  .pt-#{$i} {
+    padding-top: $padding !important;
+  }
+  .pr-#{$i} {
+    padding-right: $padding !important;
+  }
+  .pb-#{$i} {
+    padding-bottom: $padding !important;
+  }
+  .pl-#{$i} {
+    padding-left: $padding !important;
+  }
+}
+
+// margin
+.m-0 {
+  margin: 0 !important;
+}
+.m-auto {
+  margin: auto !important;
+}
+.m-center {
+  margin: 0 auto;
+}
+@for $i from 0 through 10 {
+  $margin: $i * 0.25rem; // 4px씩 증가
+  .mt-#{$i} {
+    margin-top: $margin !important;
+  }
+  .mr-#{$i} {
+    margin-right: $margin !important;
+  }
+  .mb-#{$i} {
+    margin-bottom: $margin !important;
+  }
+  .ml-#{$i} {
+    margin-left: $margin !important;
+  }
+}
+
+.mt-auto {
+  margin-top: auto !important;
+}
+.mr-auto {
+  margin-right: auto !important;
+}
+.mb-auto {
+  margin-bottom: auto !important;
+}
+.ml-auto {
+  margin-left: auto !important;
+}
+
+// flex
+.flex {
+  display: flex;
+}
+.flex--inline {
+  display: inline-flex;
+}

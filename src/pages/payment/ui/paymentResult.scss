@@ -1,0 +1,62 @@
+@use '@styles/border' as border;
+@use '@styles/theme' as *;
+@use '@styles/colors' as *;
+@use '@styles/map' as *;
+
+$shadow-themes: (
+  light: (
+    selector: $theme-light-selector,
+    shadow: deep-get($theme-gray, 'light', 'gray-7'),
+  ),
+  dark: (
+    selector: $theme-dark-selector,
+    shadow: deep-get($theme-gray, 'dark', 'gray-7'),
+  ),
+);
+
+.payment-result {
+  &--wrapper {
+    width: 65%;
+  }
+
+  &--content {
+    // width: 65%;
+    @include border.borderRadius(border.$component-border-radius);
+    background: var(--color-surface);
+    padding: var(--space-4);
+    margin-top: 0.5rem;
+
+    > .product--info {
+      display: flex;
+      flex-direction: row;
+
+      > .info--image {
+        width: 18.75rem;
+        height: 15.625rem;
+        @include border.borderRadius(border.$component-border-radius);
+      }
+
+      > .info--table {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 0.5rem 0rem 0.5rem 1.5rem;
+      }
+    }
+
+    // box-shadow
+    @each $mode, $config in $shadow-themes {
+      $selector: deep-get($config, 'selector');
+      $shadow-color: deep-get($config, 'shadow');
+
+      #{$selector} & {
+        box-shadow: 0 2px 8px #{$shadow-color};
+      }
+    }
+
+    > .product--price {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}

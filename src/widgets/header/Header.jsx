@@ -38,7 +38,6 @@ export default function Header({ title }) {
         variant={'standard-link'}
         onClick={handleHome}
       ></Button>
-
       <div
         style={{
           display: 'grid',
