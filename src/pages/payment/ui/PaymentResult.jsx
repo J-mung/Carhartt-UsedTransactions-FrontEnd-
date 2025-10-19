@@ -1,5 +1,5 @@
 import AlternativeImage from '@/app/assets/images/AlternativeImage.jpg';
-import '@/pages/payment/ui/PaymentResult.scss';
+import '@/pages/payment/ui/paymentResult.scss';
 import { carHarttApi } from '@/shared/api/axios';
 import Modal from '@/widgets/modal/Modal';
 import { useModal } from '@/widgets/modal/ModalProvider';
