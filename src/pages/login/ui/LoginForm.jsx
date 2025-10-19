@@ -1,12 +1,11 @@
 import kakaoLoginImage from '@/app/assets/images/kakao/login_ko/kakao_login_medium_wide.png';
 import { makeUserAvatar } from '@/entities/user/lib/avatar';
 import { carHarttApi } from '@/shared/api/axios';
+import { useMockConfig } from '@/shared/config/mockConfig.jsx';
 import { Button } from '@/shared/ui/buttons';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './loginForm.scss';
-
-const useMockLogin = true;
 
 const mockOAuthProviders = [
   {
@@ -32,6 +31,8 @@ export default function LoginForm() {
   const [kakaoLogin, setKakaoLogin] = useState('');
   const [naverLogin, setNaverLogin] = useState('');
   const navigate = useNavigate();
+  const { isMockConfig: isMockConfigFromContext } = useMockConfig();
+  const mockDataMode = Boolean(isMockConfigFromContext);
 
   useEffect(() => {
     let isMounted = true;
@@ -49,7 +50,10 @@ export default function LoginForm() {
       });
     };
 
-    if (useMockLogin) {
+    setKakaoLogin('');
+    setNaverLogin('');
+
+    if (mockDataMode) {
       applyProviders(mockOAuthProviders);
       return () => {
         isMounted = false;
@@ -73,7 +77,7 @@ export default function LoginForm() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [mockDataMode]);
 
   const onKakaoLogin = () => {
     if (!kakaoLogin) {
@@ -81,7 +85,7 @@ export default function LoginForm() {
       return;
     }
 
-    if (useMockLogin) {
+    if (mockDataMode) {
       const userInfo = getMockUserInfo();
       sessionStorage.setItem('oauth_state', 'Authorized');
       sessionStorage.setItem('user_info', JSON.stringify(userInfo));

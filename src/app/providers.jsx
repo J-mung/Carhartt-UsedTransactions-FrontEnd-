@@ -1,3 +1,4 @@
+import { MockConfigProvider } from '@/shared/config/mockConfig.jsx';
 import { ThemeProvider } from '@/shared/lib/theme';
 import '@/shared/styles/global.scss'; // 전역 스타일/토큰
 import ModalProvider from '@/widgets/modal/ModalProvider';
@@ -10,7 +11,9 @@ import ModalProvider from '@/widgets/modal/ModalProvider';
 export default function Providers({ children }) {
   return (
     <ThemeProvider initial="system">
-      <ModalProvider>{children}</ModalProvider>
+      <MockConfigProvider>
+        <ModalProvider>{children}</ModalProvider>
+      </MockConfigProvider>
     </ThemeProvider>
   );
 }
