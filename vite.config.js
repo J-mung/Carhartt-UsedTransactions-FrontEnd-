@@ -65,11 +65,10 @@ export default defineConfig(({ mode }) => {
               if (cookies) {
                 // 원본 쿠키 헤더를 localhost 기준으로 변경
                 const newCookies = cookies.map((cookie) => {
-                  // domain 재설정
-                  let modified = cookie.replace(
-                    /Domain=[^;]+/i,
-                    'Domain=localhost'
-                  );
+                  // domain 재설정 / 프록시 쿠키를 localhost로 저장
+                  let modified = cookie
+                    .replace(/Domain=[^;]+/i, 'Domain=localhost')
+                    .replace(/SameSite=[^;]+/i, 'SameSite=None');
 
                   // 개발환경에서 secure 제거 가능 (HTTP로 테스트 시)
                   if (!useHttps) {
