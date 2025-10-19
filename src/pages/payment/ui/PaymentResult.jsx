@@ -1,9 +1,9 @@
 import AlternativeImage from '@/app/assets/images/AlternativeImage.jpg';
+import '@/pages/payment/ui/PaymentResult.scss';
 import { carHarttApi } from '@/shared/api/axios';
 import Modal from '@/widgets/modal/Modal';
 import { useModal } from '@/widgets/modal/ModalProvider';
 import { useEffect, useState } from 'react';
-import './PaymentResult.scss';
 
 export default function PaymentResult() {
   const [paymentResult, setPaymentResult] = useState(false);
