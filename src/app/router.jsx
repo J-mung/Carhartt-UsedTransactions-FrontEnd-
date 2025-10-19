@@ -1,10 +1,10 @@
+import HomePage from '@/pages/home/HomePage';
 import LoginPage from '@/pages/login';
 import LoginCallback from '@/pages/login/ui/LoginCallback';
+import MyPage from '@/pages/mypage';
 import PaymentPage from '@/pages/payment';
 import PaymentResult from '@/pages/payment/ui/PaymentResult';
 import { createBrowserRouter } from 'react-router-dom';
-import HomePage from '../pages/home/HomePage';
-import MyPage from '../pages/mypage';
 import MainLayout from './layouts/MainLayout';
 
 export const router = createBrowserRouter(
