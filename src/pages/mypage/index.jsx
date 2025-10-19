@@ -6,7 +6,7 @@ import { useModal } from '@/widgets/modal/ModalProvider';
 import HomePage from '../home/HomePage';
 import ImageUploader from './ui/ImageUploader';
 
-export default function TestProfilePage() {
+export default function MyPage() {
   const { openModal } = useModal();
 
   // 외부에서 정의한 Layout 컴포넌트

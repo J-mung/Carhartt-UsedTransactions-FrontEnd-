@@ -4,7 +4,7 @@ import PaymentPage from '@/pages/payment';
 import PaymentResult from '@/pages/payment/ui/PaymentResult';
 import { createBrowserRouter } from 'react-router-dom';
 import HomePage from '../pages/home/HomePage';
-import TestProfilePage from '../pages/profile';
+import MyPage from '../pages/mypage';
 import MainLayout from './layouts/MainLayout';
 
 export const router = createBrowserRouter(
@@ -14,7 +14,7 @@ export const router = createBrowserRouter(
       element: <MainLayout stickyFooter={false} />,
       children: [
         { index: true, element: <HomePage /> },
-        { path: 'profile', element: <TestProfilePage /> },
+        { path: 'mypage', element: <MyPage /> },
         { path: 'login', element: <LoginPage /> },
         { path: 'login/callback', element: <LoginCallback /> },
         { path: 'payment', element: <PaymentPage /> },
