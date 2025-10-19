@@ -16,17 +16,23 @@ export default function Header({ title }) {
   };
   const handleLogOut = () => {
     sessionStorage.removeItem('oauth_state');
+    sessionStorage.removeItem('user_info');
     navigate('/');
   };
   // const isLogined = sessionStorage.getItem('oauth_state') === 'Authorized';
   // 쿠키에서 session id get
   const getJSessionId = () => {
-    var jsId = document.cookie.match(/JSESSIONID=[^;]+/);
+    let jsId = document.cookie.match(/JSESSIONID=[^;]+/);
+    let mockData = sessionStorage.getItem('user_info');
     if (jsId != null) {
       if (jsId instanceof Array) jsId = jsId[0].substring(11);
       else jsId = jsId.substring(11);
+      return jsId;
     }
-    return jsId;
+    if (mockData != null) {
+      return true;
+    }
+    return false;
   };
 
   const isLogined = getJSessionId();
