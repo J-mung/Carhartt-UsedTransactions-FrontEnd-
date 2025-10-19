@@ -1,4 +1,5 @@
 import kakaoLoginImage from '@/app/assets/images/kakao/login_ko/kakao_login_medium_wide.png';
+import { makeUserAvatar } from '@/entities/user/lib/avatar';
 import { carHarttApi } from '@/shared/api/axios';
 import { Button } from '@/shared/ui/buttons';
 import { useEffect, useState } from 'react';
@@ -18,11 +19,14 @@ const mockOAuthProviders = [
   },
 ];
 
-const mockUserInfo = {
+const baseMockUserInfo = {
   id: 'mock-user',
   name: '우직한 감자칩',
   email: 'mock-user@example.com',
+  profileImage: null,
 };
+
+const getMockUserInfo = () => makeUserAvatar({ ...baseMockUserInfo });
 
 export default function LoginForm() {
   const [kakaoLogin, setKakaoLogin] = useState('');
@@ -78,8 +82,9 @@ export default function LoginForm() {
     }
 
     if (useMockLogin) {
+      const userInfo = getMockUserInfo();
       sessionStorage.setItem('oauth_state', 'Authorized');
-      sessionStorage.setItem('user_info', JSON.stringify(mockUserInfo));
+      sessionStorage.setItem('user_info', JSON.stringify(userInfo));
       navigate('/');
       return;
     }

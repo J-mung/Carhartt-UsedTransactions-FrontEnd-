@@ -1,3 +1,4 @@
+import { makeUserAvatar } from '@/entities/user/lib/avatar';
 import { carHarttApi } from '@/shared/api/axios';
 import Modal from '@/widgets/modal/Modal';
 import { useModal } from '@/widgets/modal/ModalProvider';
@@ -16,16 +17,31 @@ export default function LoginCallback() {
   };
 
   useEffect(() => {
+    const parseUserPayload = (payload) => {
+      if (typeof payload !== 'string') return payload;
+      try {
+        return JSON.parse(payload);
+      } catch {
+        return undefined;
+      }
+    };
+
     // 서버에 로그인 상태 확인 요청 (쿠키 자동 전송)
     carHarttApi({
       method: 'GET',
       url: 'v1/oauth/login/check',
     })
       .then((response) => {
-        const { status, data, error, meta } = response;
+        const { status, data } = response;
         if (status === 200 && !!data) {
+          const normalizedData = parseUserPayload(data);
+
+          const userInfo = makeUserAvatar(
+            normalizedData || { raw: data ?? null }
+          );
+
           handleOpenModal('로그인에 성공했습니다.');
-          sessionStorage.setItem('user_info', data);
+          sessionStorage.setItem('user_info', JSON.stringify(userInfo));
           navigate('/');
         } else {
           handleOpenModal('로그인에 실패했습니다. 다시 시도해 주세요.');
