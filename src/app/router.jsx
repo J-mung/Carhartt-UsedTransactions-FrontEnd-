@@ -1,5 +1,7 @@
 import LoginPage from '@/pages/login';
 import LoginCallback from '@/pages/login/ui/LoginCallback';
+import PaymentPage from '@/pages/payment';
+import PaymentResult from '@/pages/payment/ui/PaymentResult';
 import { createBrowserRouter } from 'react-router-dom';
 import HomePage from '../pages/home/HomePage';
 import TestProfilePage from '../pages/profile';
@@ -15,6 +17,8 @@ export const router = createBrowserRouter(
         { path: 'profile', element: <TestProfilePage /> },
         { path: 'login', element: <LoginPage /> },
         { path: 'login/callback', element: <LoginCallback /> },
+        { path: 'payment', element: <PaymentPage /> },
+        { path: 'payment/result', element: <PaymentResult /> },
       ],
     },
   ],
