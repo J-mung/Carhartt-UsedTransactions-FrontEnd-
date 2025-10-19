@@ -1,4 +1,4 @@
-import PaymentForm from './ui/PaymentForm';
+import PaymentForm from '@/pages/payment/ui/PaymentForm';
 export default function PaymentPage() {
-  return <PaymentForm></PaymentForm>;
+  return <PaymentForm />;
 }
