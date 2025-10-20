@@ -1,0 +1,39 @@
+@use '@styles/border' as border;
+@use '@styles/theme' as *;
+@use '@styles/colors' as *;
+@use '@styles/map' as *;
+
+$shadow-themes: (
+  light: (
+    selector: $theme-light-selector,
+    shadow: deep-get($theme-gray, 'light', 'gray-7'),
+  ),
+  dark: (
+    selector: $theme-dark-selector,
+    shadow: deep-get($theme-gray, 'dark', 'gray-7'),
+  ),
+);
+
+.payment-form {
+  width: 65%;
+
+  .form-btn__flex {
+    flex: 1 1 auto;
+  }
+}
+
+.content--wrapper {
+  @include border.borderRadius(border.$component-border-radius);
+  background: var(--color-surface);
+  padding: var(--space-4);
+
+  // box-shadow
+  @each $mode, $config in $shadow-themes {
+    $selector: deep-get($config, 'selector');
+    $shadow-color: deep-get($config, 'shadow');
+
+    #{$selector} & {
+      box-shadow: 0 2px 8px #{$shadow-color};
+    }
+  }
+}
