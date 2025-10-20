@@ -1,5 +1,7 @@
 import LoginPage from '@/pages/login';
 import LoginCallback from '@/pages/login/ui/LoginCallback';
+import PaymentPage from '@/pages/payment';
+import PaymentResult from '@/pages/payment/ui/PaymentResult';
 import { createBrowserRouter } from 'react-router-dom';
 import HomePage from '../pages/home/HomePage';
 import TestProfilePage from '../pages/profile';
@@ -22,6 +24,8 @@ export const router = createBrowserRouter(
         { path: 'single-product', element: <SingleProductPage /> },
         // { path: '/product/new', element: <ProductUploadPage /> },
         // { path: '/product/:itemId/edit', element: <ProductUploadPage /> },
+        { path: 'payment', element: <PaymentPage /> },
+        { path: 'payment/result', element: <PaymentResult /> },
       ],
     },
   ],
