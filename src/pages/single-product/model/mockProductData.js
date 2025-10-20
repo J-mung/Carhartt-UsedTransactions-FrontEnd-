@@ -1,6 +1,4 @@
-/**
- *  게시글 데이터 예시
- */
+// Mock 아이템 데이터
 export const productData = {
   item_id: 1101,
   item_name: 'Product name',
@@ -66,4 +64,44 @@ export const productData = {
     sales_count: 2,
     purchase_count: 5,
   },
+};
+
+// Mock 카테고리 데이터
+export const mockCategories = [
+  {
+    category_id: 0,
+    category_name: '전체',
+    children: [
+      {
+        p_id: 0,
+        category_id: 1,
+        category_name: '산타페 WIP OG',
+        children: [
+          { p_id: 1, category_id: 10, category_name: 'J14' },
+          { p_id: 1, category_id: 11, category_name: 'J102' },
+        ],
+      },
+      {
+        p_id: 0,
+        category_id: 2,
+        category_name: '디트로이트 OG',
+        children: [
+          { p_id: 2, category_id: 12, category_name: 'J01' },
+          { p_id: 2, category_id: 13, category_name: 'J97' },
+          { p_id: 2, category_id: 14, category_name: 'J001' },
+        ],
+      },
+      {
+        p_id: 0,
+        category_id: 3,
+        category_name: '액티브 WIP OG',
+        children: [],
+      },
+    ],
+  },
+];
+
+// Mock 찜 목록 status data
+export const mockWishlistStatus = {
+  wished: false,
 };

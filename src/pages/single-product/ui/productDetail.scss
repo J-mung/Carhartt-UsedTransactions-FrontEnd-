@@ -8,10 +8,6 @@
   margin: 0 auto;
   padding: 2rem 0;
 
-  &__breadcrumb {
-    margin-bottom: 1.5rem;
-  }
-
   &__wrapper {
     max-width: 65rem;
     display: grid;
@@ -24,12 +20,43 @@
     }
   }
 
-  // Loading state
   &__loading {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 60vh;
+  }
+}
+
+.breadcrumb {
+  margin-bottom: 1.5rem;
+
+  &__link {
+    color: map.get($theme-gray, 'light', 'gray-11');
+    text-decoration: none;
+    transition: color 0.2s;
+
+    &:hover {
+      color: map.get($theme-gray, 'light', 'gray-9');
+      text-decoration: underline;
+    }
+
+    // Dark theme
+    [data-theme='dark'] & {
+      color: map.get($theme-gray, 'dark', 'gray-11');
+
+      &:hover {
+        color: map.get($theme-gray, 'dark', 'gray-9');
+      }
+    }
+  }
+
+  &__separator {
+    margin: 0 0.25rem; // 4px
+  }
+
+  &__current {
+    font-weight: 800;
   }
 }
 

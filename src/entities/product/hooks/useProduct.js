@@ -1,6 +1,11 @@
 import AlternativeImage from '@/app/assets/images/AlternativeImage.jpg';
 import { carHarttApi } from '@/shared/api/axios'; // 커스텀 axios 인스턴스
 import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import {
+  productData,
+  mockCategories,
+} from '@/pages/single-product/model/mockProductData';
 
 export function useProducts(productId) {
   const [product, setProduct] = useState(undefined);
@@ -53,4 +58,51 @@ export function useProducts(productId) {
   }, [productId]);
 
   return { product, loading, error };
+}
+
+const USE_MOCK_DATA = true;
+
+// Fetch single product detail
+export function useProductDetail(itemId) {
+  return useQuery({
+    queryKey: ['product', itemId],
+    queryFn: async () => {
+      // Mock data
+      if (USE_MOCK_DATA) {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        return productData;
+      }
+
+      // Real API
+      const response = await carHarttApi({
+        method: 'GET',
+        url: `/v1/items/${itemId}`,
+        withCredentials: true,
+      });
+      return response.data;
+    },
+    enabled: !!itemId,
+  });
+}
+
+// Fetch categories - breadcrumb/카테고리 필터
+export function useCategories() {
+  return useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      // Mock data
+      if (USE_MOCK_DATA) {
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        return mockCategories;
+      }
+
+      // Real API
+      const response = await carHarttApi({
+        method: 'GET',
+        url: '/v1/categories',
+        withCredentials: true,
+      });
+      return response.data;
+    },
+  });
 }

@@ -1,7 +1,6 @@
 import Button from '@/shared/ui/buttons/Button';
 import { useModal } from '@/widgets/modal/ModalProvider';
 import Modal from '@/widgets/modal/Modal';
-import { useState } from 'react';
 
 export default function ProductInfo({
   product,
@@ -10,17 +9,20 @@ export default function ProductInfo({
   onChat,
   onEdit,
   isSeller,
+  isWishlisted,
+  isWishlistLoading,
 }) {
   const { openModal } = useModal();
 
   if (!product) return null;
 
-  // Size guide modal handler
+  // 사이즈 가이드 모달 handler
   const handleOpenSizeGuide = () => {
     openModal(Modal, {
       title: '사이즈 측정 기준',
       children: (
         <div className="size-guide">
+          <p>사이즈 가이드 차트 이미지 제작 & 대체 예정</p>
           <img
             src="https://placeholder.pics/svg/300/000000/FFFFFF/Placeholder%20Image"
             alt="사이즈 측정 가이드"
@@ -40,41 +42,45 @@ export default function ProductInfo({
 
           {/* 수정 버튼 (게시글 작성자에게만 표시) */}
           {isSeller && (
-            <div>
-              <Button
-                label="게시물 수정"
-                variant="standard-secondary"
-                size="--s"
-                onClick={onEdit}
-              />
-            </div>
+            <Button
+              label="게시물 수정"
+              variant="standard-secondary"
+              size="--s"
+              onClick={onEdit}
+            />
           )}
         </div>
-        {/* Price */}
+        {/* 가격 */}
         <div className="product-info__price">
           {product.item_price?.toLocaleString()}원
         </div>
 
-        {/* Size Information - 사이즈 가이드 모달 추가 */}
+        {/* 사이즈 정보 */}
         {product.sizes && (
           <div className="product-info__size">
             <h3>사이즈 정보</h3>
-            {/* Size Table */}
+            {/* 사이즈 테이블 */}
             <table className="product-info__size-chart">
-              <tr>
-                <th>총장</th>
-                <th>소매</th>
-                <th>가슴</th>
-                <th>어깨</th>
-              </tr>
-              <tr>
-                {product.sizes.total_length && (
-                  <td>{product.sizes.total_length}cm</td>
-                )}
-                {product.sizes.sleeve && <td>{product.sizes.sleeve}cm</td>}
-                {product.sizes.chest && <td>{product.sizes.chest}cm</td>}
-                {product.sizes.shoulder && <td>{product.sizes.shoulder}cm</td>}
-              </tr>
+              <thead>
+                <tr>
+                  <th>총장</th>
+                  <th>소매</th>
+                  <th>가슴</th>
+                  <th>어깨</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  {product.sizes.total_length && (
+                    <td>{product.sizes.total_length}cm</td>
+                  )}
+                  {product.sizes.sleeve && <td>{product.sizes.sleeve}cm</td>}
+                  {product.sizes.chest && <td>{product.sizes.chest}cm</td>}
+                  {product.sizes.shoulder && (
+                    <td>{product.sizes.shoulder}cm</td>
+                  )}
+                </tr>
+              </tbody>
             </table>
             <button className="size-guide-btn" onClick={handleOpenSizeGuide}>
               사이즈 측정 기준 보기
@@ -82,7 +88,7 @@ export default function ProductInfo({
           </div>
         )}
 
-        {/* Action Buttons */}
+        {/* 버튼 - 찜/구매/채팅하기 */}
         <div className="product-info__actions">
           <Button
             label="찜"
@@ -116,7 +122,8 @@ export default function ProductInfo({
         {product.seller && (
           <div className="seller-info">
             <h3>판매자 기록</h3>
-            <div classname="seller-history">
+            <p>{product.seller.nickname}</p>
+            <div className="seller-history">
               <div>
                 <span>판매 </span>
                 <span>{product.seller.sales_count || 0}</span>
