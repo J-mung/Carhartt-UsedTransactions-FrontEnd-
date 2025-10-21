@@ -51,7 +51,7 @@ export default defineConfig(({ mode }) => {
             },
           }
         : {}), // HTTPS 비활성화 시 옵션 제거
-      host: 'localhost',
+      host: 'carhartt-local.com',
       proxy: {
         '^/v1': {
           target: 'https://carhartt-usedtransactions.com',

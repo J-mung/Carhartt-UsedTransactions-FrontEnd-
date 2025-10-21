@@ -13,7 +13,7 @@ export default function LoginForm() {
   useEffect(() => {
     carHarttApi({
       method: 'GET',
-      url: 'v1/oauth/login',
+      url: '/oauth/login',
     })
       .then((response) => {
         const { data, meta } = response;
@@ -40,7 +40,7 @@ export default function LoginForm() {
 
     carHarttApi({
       method: 'GET',
-      url: 'v1/oauth/login/kakao',
+      url: '/oauth/login/kakao',
     })
       .then((response) => {
         const authUrl = response.data.authorize_url;

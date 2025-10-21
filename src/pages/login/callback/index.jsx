@@ -20,7 +20,7 @@ export default function KakaoCallback() {
 
     carHarttApi({
       method: 'POST',
-      url: '/v1/auth/callback/kakao',
+      url: '/auth/callback/kakao',
       credentials: 'include', // 서버 세션/쿠키 수신
       body: JSON.stringify({ provider, code, state }),
     })

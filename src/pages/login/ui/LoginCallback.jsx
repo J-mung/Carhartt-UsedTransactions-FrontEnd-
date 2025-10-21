@@ -19,7 +19,7 @@ export default function LoginCallback() {
     // 서버에 로그인 상태 확인 요청 (쿠키 자동 전송)
     carHarttApi({
       method: 'GET',
-      url: 'v1/oauth/login/check',
+      url: '/oauth/login/check',
     })
       .then((response) => {
         const { status, data, error, meta } = response;
