@@ -81,8 +81,6 @@ export default function MyPage() {
 
   return (
     <div>
-      <p>router 테스트를 위한</p>
-      <p>임시 페이지 입니다.</p>
       <ThemeToggle />
       <Button
         label={'테스트 모달 열기'}
