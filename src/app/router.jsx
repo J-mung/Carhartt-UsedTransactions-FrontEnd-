@@ -18,7 +18,6 @@ export const router = createBrowserRouter(
       children: [
         { index: true, element: <HomePage /> },
         // { index: true, element: <ProductsPage /> },
-        { path: 'profile', element: <TestProfilePage /> },
         { path: 'mypage', element: <MyPage /> },
         { path: 'login', element: <LoginPage /> },
         { path: 'login/callback', element: <LoginCallback /> },

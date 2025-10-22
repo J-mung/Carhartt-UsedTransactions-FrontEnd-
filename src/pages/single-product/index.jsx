@@ -1,14 +1,14 @@
-import { useParams, useNavigate } from 'react-router-dom';
 import {
-  useProductDetail,
   useCategories,
+  useProductDetail,
 } from '@/entities/product/hooks/useProduct';
 import {
-  useWishlistStatus,
   useToggleWishlist,
+  useWishlistStatus,
 } from '@/entities/user/hooks/useWishList';
-import { useModal } from '@/widgets/modal/ModalProvider';
 import Modal from '@/widgets/modal/Modal';
+import { useModal } from '@/widgets/modal/ModalProvider';
+import { useNavigate, useParams } from 'react-router-dom';
 import Breadcrumb from './ui/Breadcrumb';
 import ImageCarousel from './ui/ImageCarousel';
 import ProductInfo from './ui/ProductInfo';
@@ -70,7 +70,7 @@ export default function ProductPage() {
               label: '찜 목록 보기',
               variant: 'standard-primary',
               onClick: () => alert('찜 목록 페이지로 이동'),
-              // onClick: () => navigate('/profile/wishlist'),
+              // onClick: () => navigate('/mypage/wishlist'),
             },
             {
               label: '계속 쇼핑하기',
