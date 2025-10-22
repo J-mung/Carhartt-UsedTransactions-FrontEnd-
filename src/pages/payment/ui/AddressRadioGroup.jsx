@@ -1,5 +1,7 @@
-import { useAddresses } from '@/entities/user/hooks/useAddresses';
-import { carHarttApi } from '@/shared/api/axios';
+import {
+  useAddresses,
+  useRemoveAddresses,
+} from '@/entities/user/hooks/useAddresses';
 import { Button } from '@/shared/ui/buttons';
 import RadioGroup from '@/shared/ui/Radio';
 import Modal from '@/widgets/modal/Modal';
@@ -9,24 +11,25 @@ import './paymentForm.scss';
 
 export default function AddressRadioGroup({ userId = '' }) {
   const { openModal } = useModal();
-  const { addresses, loading, error, refresh } = useAddresses();
+  const { data: addresses, isLoading, isError, refetch } = useAddresses();
+  const removeAddress = useRemoveAddresses();
   const [curAddress, setCurAddress] = useState(undefined);
 
   // 주소지 조회
   useEffect(() => {
     // 주소지 조회 성공 시
-    if (!loading && addresses.length > 0) {
-      setCurAddress({ ...addresses[0] });
+    if (!isLoading && addresses?.length > 0) {
+      setCurAddress(addresses[0]);
     }
-  }, [loading, addresses]);
+  }, [isLoading, addresses]);
 
-  if (loading)
+  if (isLoading)
     return (
       <div>
         <span className={'text-regular'}>주소 불러오는 중...</span>
       </div>
     );
-  if (error)
+  if (isError)
     return (
       <div>
         <span className={'text-regular'}>주소를 불러올 수 없습니다.</span>
@@ -34,28 +37,7 @@ export default function AddressRadioGroup({ userId = '' }) {
     );
 
   const handleClickDelete = (addr) => {
-    carHarttApi({
-      method: 'DELETE',
-      url: `/v1/orders/address/${addr.key}`,
-    })
-      .then((response) => {
-        const { success, data, meta } = response;
-        if (success) {
-          // window.location.reload();
-          refresh();
-        }
-      })
-      .catch((err) => {
-        console.error(`배송지 삭제 실패 : ${err}`);
-        openModal(Modal, {
-          title: '배송지 삭제 실패',
-          children: (
-            <span className={'text-regular'}>
-              배송지 삭제에 실패 했습니다. {err}
-            </span>
-          ),
-        });
-      });
+    removeAddress.mutate(addr.key);
   };
 
   const handleDelete = (addr) => {
@@ -68,39 +50,50 @@ export default function AddressRadioGroup({ userId = '' }) {
       ),
       buttons: [
         {
-          label: '삭제',
+          label: removeAddress.isPending ? '삭제 중...' : '삭제',
           variant: 'danger-primary',
-          onClick: () => {
-            handleClickDelete(addr);
-          },
+          onClick: () => handleClickDelete(addr),
         },
       ],
     });
   };
 
+  const normalizeAddress = (addr) => {
+    const { address_id, address_name, zip_code, road_address, detail_address } =
+      addr;
+    return {
+      key: address_id ?? '오류',
+      value: `${road_address} ${detail_address}`,
+      alias: address_name ?? '오류',
+      label: `${address_name} : ${road_address} ${detail_address}`,
+    };
+  };
+
   const customOptions = () => {
-    return addresses.map((_addr) => ({
-      ..._addr,
-      label: (
-        <div className={'radio__button-label-with-delete'}>
-          <span
-            className={'radio__button_label text-regular'}
-          >{`${_addr.alias}: ${_addr.value}`}</span>
-          {/*IconButton 컴포넌트 대체 가능해 보임*/}
-          <button
-            type={'button'}
-            className={'radio-delete-btn'}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleDelete(_addr);
-            }}
-          >
-            X
-          </button>
-        </div>
-      ),
-    }));
+    return addresses.map((_addr) => {
+      const normalized = normalizeAddress(_addr);
+      return {
+        ...normalized,
+        label: (
+          <div className={'radio__button-label-with-delete'}>
+            <span className={'radio__button_label text-regular'}>
+              {`${normalized.alias}: ${normalized.value}`}
+            </span>
+            <button
+              type="button"
+              className="radio-delete-btn"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleDelete(normalized);
+              }}
+            >
+              X
+            </button>
+          </div>
+        ),
+      };
+    });
   };
 
   return (
