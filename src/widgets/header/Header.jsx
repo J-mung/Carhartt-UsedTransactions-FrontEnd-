@@ -15,10 +15,10 @@ export default function Header({ title }) {
     navigate('/login', { replace: true });
   };
   const handleLogOut = () => {
-    sessionStorage.removeItem('oauth_state');
+    sessionStorage.removeItem('user_info');
     navigate('/');
   };
-  // const isLogined = sessionStorage.getItem('oauth_state') === 'Authorized';
+  // const isLogined = sessionStorage.getItem('user_info') === 'Authorized';
   // 쿠키에서 session id get
   const getJSessionId = () => {
     var jsId = document.cookie.match(/JSESSIONID=[^;]+/);
