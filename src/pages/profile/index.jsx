@@ -1,5 +1,6 @@
 import { Button } from '@/shared/ui/buttons';
 import TabGroup from '@/shared/ui/tabs/TabGroup';
+import ThemeToggle from '@/shared/ui/ThemeToggle';
 import Modal from '@/widgets/modal/Modal';
 import { useModal } from '@/widgets/modal/ModalProvider';
 import HomePage from '../home/HomePage';
@@ -82,6 +83,7 @@ export default function TestProfilePage() {
     <div>
       <p>router 테스트를 위한</p>
       <p>임시 페이지 입니다.</p>
+      <ThemeToggle />
       <Button
         label={'테스트 모달 열기'}
         variant={'primary-standard'}
