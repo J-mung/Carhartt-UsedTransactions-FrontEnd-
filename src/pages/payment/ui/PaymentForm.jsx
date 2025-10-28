@@ -4,7 +4,7 @@ import InputBox from '@/shared/ui/InputBox';
 import RadioGroup from '@/shared/ui/Radio';
 import Modal from '@/widgets/modal/Modal';
 import { useModal } from '@/widgets/modal/ModalProvider';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import AddressRadioGroup from './AddressRadioGroup';
 import './paymentForm.scss';
@@ -21,7 +21,11 @@ export default function PaymentForm() {
   const { openModal } = useModal();
 
   const [buyerMessage, setBuyerMessage] = useState('');
-  const [method, setMethod] = useState(undefined);
+  const [method, setMethod] = useState({
+    key: 'pay1',
+    value: 'kakaoPay',
+    label: '카카오페이',
+  });
 
   const payOptions = [
     {
@@ -35,12 +39,6 @@ export default function PaymentForm() {
       label: '네이버페이',
     },
   ];
-
-  useEffect(() => {
-    if (payOptions && payOptions.length > 0) {
-      setMethod({ ...payOptions[0] });
-    }
-  }, []); // 최초 1회만 실행
 
   const handleInputMsg = (e) => {
     setBuyerMessage(e.target.value);
