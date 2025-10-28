@@ -1,68 +1,52 @@
 import { carHarttApi } from '@/shared/api/axios';
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 const mockAddresses = [
   {
-    key: 'add1',
+    key: '101',
     value: '주소1',
     alias: '집',
     label: '집: 주소1',
   },
   {
-    key: 'add2',
+    key: '102',
     value: '주소2',
     alias: '본가',
     label: '본가: 주소2',
   },
 ];
 
-export function useAddresses(userId) {
-  const [addresses, setAddresses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(undefined);
-  const [reloadTrigger, setReloadTrigger] = useState(0);
+const USE_MOCK_DATA = true;
 
-  const refresh = () => setReloadTrigger((prev) => prev + 1);
+export function useAddressesQuery(userId) {
+  console.log('[useAddressesQuery] called with userId:', userId);
 
-  useEffect(() => {
-    let isMounted = true; // 언마운트 시 setState 방지
-
-    setLoading(true);
-
-    if (!userId) {
-      // API 준비 전: mock 데이터
-      setAddresses(mockAddresses);
-      setLoading(false);
-      return;
-    }
-
-    carHarttApi({
-      method: 'GET',
-      url: `/v1/orders/address?member_id=${userId}`,
-      responseType: 'application/json',
-    })
-      .then((response) => {
-        if (isMounted) {
-          // API 응답 구조에 맞게 조정 필요
-          // 필요 시, model 디렉터리 추가 후 타입/DTO/도메인 로직 등 정의
-          setAddresses([...response.data]);
-        }
-      })
-      .catch((err) => {
-        if (isMounted) {
-          setError(err);
-        }
-      })
-      .finally(() => {
-        if (isMounted) {
-          setLoading(false);
-        }
+  return useQuery({
+    queryKey: ['addresses', userId],
+    queryFn: async () => {
+      console.log('[useAddressesQuery] queryFn called', {
+        USE_MOCK_DATA,
+        userId,
       });
+      // Mock data
+      if (USE_MOCK_DATA) {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        return mockAddresses;
+      }
 
-    return () => {
-      isMounted = false;
-    };
-  }, [userId, reloadTrigger]);
+      // API 요청
+      try {
+        const response = await carHarttApi({
+          method: 'GET',
+          url: `/v1/orders/address?member_id=${userId}`,
+          responseType: 'application/json',
+        });
 
-  return { addresses, loading, error, refresh };
+        return response.data; // 데이터 반환
+      } catch (error) {
+        console.error(`주소지 목록 조회 API 에러 : ${error}`);
+        throw error;
+      }
+    },
+  });
 }

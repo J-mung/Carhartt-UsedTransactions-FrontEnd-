@@ -1,4 +1,4 @@
-import { useAddresses } from '@/entities/user/hooks/useAddresses';
+import { useAddressesQuery } from '@/entities/user/hooks/useAddresses';
 import { carHarttApi } from '@/shared/api/axios';
 import { Button } from '@/shared/ui/buttons';
 import RadioGroup from '@/shared/ui/Radio';
@@ -9,18 +9,25 @@ import './paymentForm.scss';
 
 export default function AddressRadioGroup({ userId = '' }) {
   const { openModal } = useModal();
-  const { addresses, loading, error, refresh } = useAddresses();
+  const memberId =
+    JSON.parse(sessionStorage.getItem('user_info') || '{}')?.memberId || '';
+  const {
+    data: addresses,
+    isLoading,
+    error,
+    refetch,
+  } = useAddressesQuery(memberId);
   const [curAddress, setCurAddress] = useState(undefined);
 
   // 주소지 조회
   useEffect(() => {
     // 주소지 조회 성공 시
-    if (!loading && addresses.length > 0) {
+    if (!isLoading && addresses.length > 0) {
       setCurAddress({ ...addresses[0] });
     }
-  }, [loading, addresses]);
+  }, [isLoading, addresses]);
 
-  if (loading)
+  if (isLoading)
     return (
       <div>
         <span className={'text-regular'}>주소 불러오는 중...</span>
@@ -79,7 +86,7 @@ export default function AddressRadioGroup({ userId = '' }) {
   };
 
   const customOptions = () => {
-    return addresses.map((_addr) => ({
+    return (addresses ?? []).map((_addr) => ({
       ..._addr,
       label: (
         <div className={'radio__button-label-with-delete'}>
