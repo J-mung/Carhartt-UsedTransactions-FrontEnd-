@@ -1,22 +1,24 @@
-import { useProducts } from '@/entities/product/hooks/useProduct';
+import { useProductDetail } from '@/entities/product/hooks/useProduct';
 import { Button } from '@/shared/ui/buttons';
 import InputBox from '@/shared/ui/InputBox';
 import RadioGroup from '@/shared/ui/Radio';
 import Modal from '@/widgets/modal/Modal';
 import { useModal } from '@/widgets/modal/ModalProvider';
 import { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import AddressRadioGroup from './AddressRadioGroup';
 import './paymentForm.scss';
 
 export default function PaymentForm() {
   const formRef = useRef(null);
 
-  const { openModal } = useModal();
+  const { itemId } = useParams();
   const {
-    product,
-    loading: productLoading,
+    data: product,
+    isLoading: productLoading,
     error: productError,
-  } = useProducts();
+  } = useProductDetail(itemId);
+  const { openModal } = useModal();
 
   const [buyerMessage, setBuyerMessage] = useState('');
   const [method, setMethod] = useState(undefined);
@@ -55,7 +57,8 @@ export default function PaymentForm() {
       title: '알림',
       children: (
         <span className={'text-regular'}>
-          {product.name}, {product.price}, {address}, {payment}, {message}
+          {product.item_name}, {product.item_price}, {address}, {payment},{' '}
+          {message}
         </span>
       ),
     });
@@ -90,7 +93,7 @@ export default function PaymentForm() {
     <div className={'payment-form ml-auto mr-auto'}>
       {contentWrapper(
         '상품정보',
-        <span className={'text-regular'}>상품명: {product.name}</span>
+        <span className={'text-regular'}>상품명: {product.item_name}</span>
       )}
       <form ref={formRef} onSubmit={handlePayment}>
         <AddressRadioGroup userId={''} />
@@ -127,7 +130,7 @@ export default function PaymentForm() {
             <p>상품 정보 로딩 중...</p>
           ) : (
             <Button
-              label={`${product.price} 결제하기`}
+              label={`${product.item_price} 결제하기`}
               onClick={() => formRef.current?.requestSubmit?.()}
               size={'--l'}
               className={'form-btn__flex'}
