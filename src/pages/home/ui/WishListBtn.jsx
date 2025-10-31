@@ -1,51 +1,53 @@
-import { useState } from 'react';
-// import { carHarttApi } from '@/shared/api/axios';
+import { useQueryClient } from '@tanstack/react-query';
+import {
+  useWishlistStatus,
+  useAddWishlist,
+  useRemoveWishlist,
+} from '@/entities/user/hooks/useWishList';
 
-/**
- * 상품 카드 컴포넌트에 표시되는 찜하기 버튼
- *
- * @param {Object} product - Product data
- * @param {number} product.item_id - Product ID
- */
-export default function WishlistBtn({ product }) {
-  // Get from global context or React Query
-  // For now, use local state
-  const [isWishlisted, setIsWishlisted] = useState(false);
+// 상품 카드 컴포넌트에 표시되는 찜하기 버튼
+export default function WishListBtn({ product }) {
+  const queryClient = useQueryClient();
 
-  // 찜 목록에 상품 포함 여부
-  // const isWishlisted = wishlist.find((item) => {
-  //   return item.item_id === product.item_id;
-  // });
+  // Wishlist status 조회
+  const { data: wishlistStatus } = useWishlistStatus(product.item_id);
+  const isWishlisted = wishlistStatus?.wished || false;
 
-  // 클릭 > 찜 목록에 추가
-  function handleWishlistClick(e) {
-    e.stopPropagation();
+  const addWishlist = useAddWishlist();
+  const removeWishlist = useRemoveWishlist();
 
-    // API call로 변경
+  // Loading state
+  const isLoading = addWishlist.isPending || removeWishlist.isPending;
+
+  // 찜하기 버튼 클릭 핸들러
+  const handleWishlistClick = (e) => {
+    e.preventDefault(); // Prevent card click
+    e.stopPropagation(); // Prevent event bubbling
+
+    if (isLoading) return; // Prevent double-click
+
     if (isWishlisted) {
-      // 찜 목록에서 제거
-      // await carHarttApi({
-      //   method: 'DELETE',
-      //   url: `/v1/wishlist/${product.item_id}`,
-      //   withCredentials: true,
-      // });
-      setIsWishlisted(false);
+      removeWishlist.mutate(product.item_id, {
+        onError: (error) => {
+          console.error('찜 해제 실패:', error);
+        },
+      });
     } else {
-      // 찜 목록에 추가
-      // await carHarttApi({
-      //   method: 'POST',
-      //   url: `/v1/wishlist/${product.item_id}`,
-      //   withCredentials: true,
-      // });
-      setIsWishlisted(true);
+      addWishlist.mutate(product.item_id, {
+        onError: (error) => {
+          console.error('찜 추가 실패:', error);
+        },
+      });
     }
-  }
+  };
 
   return (
     <button
       onClick={handleWishlistClick}
-      className={`wishlist-btn ${isWishlisted ? 'wishlist-btn--active' : ''}`}
+      className={`wishlist-btn ${isWishlisted ? 'wishlist-btn--active' : ''} ${isLoading ? 'wishlist-btn--loading' : ''}`}
       aria-label={isWishlisted ? '찜 해제' : '찜하기'}
+      disabled={isLoading}
+      type="button"
     >
       <span className="ic-wish-list"></span>
     </button>

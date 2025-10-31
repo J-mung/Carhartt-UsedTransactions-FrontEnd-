@@ -66,6 +66,35 @@ export const productData = {
   },
 };
 
+// Mock 아이템 리스트 (전체 상품 페이지)
+export const mockProductsList = Array.from({ length: 50 }, (_, i) => ({
+  item_id: 1000 + i + 1,
+  item_name: `제품명 ${i + 1}`,
+  item_price: Math.floor(Math.random() * 500000) + 50000,
+  category_ids: [
+    Math.floor(Math.random() * 3) + 1,
+    Math.floor(Math.random() * 6) + 10,
+  ],
+  direct_trade: Math.random() > 0.5,
+  images: [
+    {
+      image_id: 5000 + i * 3 + 1,
+      image_url: `https://placeholder.pics/svg/300/CCCCCC/333333/Product ${i + 1}`,
+      is_represent: 1,
+    },
+    ...(Math.random() > 0.5
+      ? [
+          {
+            image_id: 5000 + i * 3 + 2,
+            image_url: `https://placeholder.pics/svg/300/DDDDDD/333333/Product ${i + 1} - 2`,
+            is_represent: 0,
+          },
+        ]
+      : []),
+  ],
+  createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000),
+}));
+
 // Mock 카테고리 데이터
 export const mockCategories = [
   {

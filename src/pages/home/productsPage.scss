@@ -18,15 +18,11 @@
 }
 
 .products-list {
-  // 카테고리 v1 - 버튼
+  // 카테고리 버튼
   &__categories {
     .radio__container {
       justify-content: center;
       flex-wrap: wrap;
-    }
-
-    .select-box__container {
-      width: 10rem;
     }
   }
 
@@ -39,6 +35,7 @@
 
     .sorting_dropdown {
       width: 10rem;
+      z-index: 100;
     }
   }
 

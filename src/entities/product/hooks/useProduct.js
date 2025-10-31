@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
   productData,
   mockCategories,
+  mockProductsList,
 } from '@/pages/single-product/model/mockProductData';
 
 export function useProducts(productId) {
@@ -62,7 +63,8 @@ export function useProducts(productId) {
 
 const USE_MOCK_DATA = true;
 
-// Fetch single product detail
+// Fetch 상품 상세 정보
+// GET /v1/items/{itemId}
 export function useProductDetail(itemId) {
   return useQuery({
     queryKey: ['product', itemId],
@@ -79,13 +81,14 @@ export function useProductDetail(itemId) {
         url: `/v1/items/${itemId}`,
         withCredentials: true,
       });
-      return response.data;
+      return response.data?.data;
     },
     enabled: !!itemId,
   });
 }
 
-// Fetch categories - breadcrumb/카테고리 필터
+// Fetch 카테고리 목록
+// GET /v1/categories
 export function useCategories() {
   return useQuery({
     queryKey: ['categories'],
@@ -102,7 +105,107 @@ export function useCategories() {
         url: '/v1/categories',
         withCredentials: true,
       });
-      return response.data;
+      return response.data?.data || [];
+    },
+  });
+}
+
+// Fetch 상품 목록
+// GET /v1/items?category_id=1&sort=recent&page=1&limit=16
+export function useProductsList({
+  categoryId,
+  sort = 'recent',
+  page = 1,
+  limit = 16,
+} = {}) {
+  return useQuery({
+    queryKey: ['products', 'list', { categoryId, sort, page, limit }],
+    queryFn: async () => {
+      // Mock data
+      if (USE_MOCK_DATA) {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        // Filter by category
+        let filtered = mockProductsList;
+        if (categoryId !== 'all') {
+          filtered = mockProductsList.filter((product) =>
+            product.category_ids.includes(parseInt(categoryId))
+          );
+        }
+
+        // Sort products
+        const sorted = [...filtered].sort((a, b) => {
+          switch (sort) {
+            case 'recent':
+              return (
+                new Date(b.created_at).getTime() -
+                new Date(a.created_at).getTime()
+              );
+            case 'price_low':
+              return a.item_price - b.item_price;
+            case 'price_high':
+              return b.item_price - a.item_price;
+            default:
+              return 0;
+          }
+        });
+
+        return {
+          items: sorted,
+          total: sorted.length,
+          page,
+          limit,
+        };
+      }
+
+      // Real API
+      const params = {
+        page,
+        limit,
+      };
+
+      if (categoryId && categoryId !== 'all') {
+        params.category_id = categoryId;
+      }
+
+      if (sort) {
+        params.sort = sort;
+      }
+
+      const response = await carHarttApi({
+        method: 'GET',
+        url: '/v1/items',
+        params,
+        withCredentials: true,
+      });
+
+      const responseData = response.data?.data;
+
+      return {
+        items: responseData?.content || [],
+        total: responseData?.total_elements || 0,
+        page: responseData?.page || 0,
+        totalPages: responseData?.total_pages || 0,
+        size: responseData?.size || limit,
+      };
+    },
+    keepPreviousData: true, // 새 페이지를 로딩하는 동안 이전 데이터 유지
+  });
+}
+
+// Fetch 회원이 판매한 상품 목록
+// GET /v1/items/mysolditems
+export function useMyItems() {
+  return useQuery({
+    queryKey: ['my-items'],
+    queryFn: async () => {
+      const response = await carHarttApi({
+        method: 'GET',
+        url: '/v1/items/mysolditems',
+        withCredentials: true,
+      });
+
+      return response.data?.data || [];
     },
   });
 }
