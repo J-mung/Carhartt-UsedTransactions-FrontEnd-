@@ -150,11 +150,17 @@ export function useProductsList({
           }
         });
 
+        // Pagination (mock data only)
+        const startIndex = (page - 1) * limit;
+        const endIndex = startIndex + limit;
+        const paginatedItems = sorted.slice(startIndex, endIndex);
+
         return {
-          items: sorted,
+          items: paginatedItems,
           total: sorted.length,
           page,
           limit,
+          totalPages: Math.ceil(sorted.length / limit),
         };
       }
 

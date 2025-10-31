@@ -1,11 +1,21 @@
 @use '@styles/colors' as *;
 @use '@styles/theme' as theme;
+@use '@styles/border' as border;
 @use 'sass:map';
 
 .product-card {
-  background-color: map-get($theme-gray, 'light', 'gray-2');
+  background-color: map.get($theme-gray, 'light', 'gray-4');
   cursor: pointer;
   transition: all 0.3s ease;
+  @include border.border(
+    0.0625rem,
+    map.get($theme-gray, 'light', 'gray-6'),
+    solid
+  );
+
+  [data-theme='dark'] & {
+    background-color: map.get($theme-gray, 'dark', 'gray-12');
+  }
 
   // Hover effect
   &:hover {
@@ -41,7 +51,7 @@
   &__image-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(map-get($theme-gray, 'dark', 'gray-1'), 0.7);
+    background: rgba(map.get($theme-gray, 'dark', 'gray-1'), 0.7);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -54,7 +64,7 @@
   }
 
   &__image-overlay-text {
-    color: map-get($theme-gray, 'light', 'gray-1');
+    color: map.get($theme-gray, 'light', 'gray-1');
     font-size: 1rem;
   }
 
@@ -64,7 +74,7 @@
   }
 
   &__title {
-    color: map-get($theme-gray, 'dark', 'gray-1');
+    color: map.get($theme-gray, 'dark', 'gray-1');
     font-weight: 500;
     margin: 0;
 
@@ -76,7 +86,7 @@
   }
 
   &__price {
-    color: map-get($theme-gray, 'dark', 'gray-8');
+    color: map.get($theme-gray, 'dark', 'gray-8');
     font-weight: 500;
     margin: 0.5rem 0; // 8px
   }
@@ -89,7 +99,7 @@
   right: 0.75rem;
   width: 2.25rem;
   height: 2.25rem;
-  background: map-get($theme-gray, 'light', 'gray-1');
+  background: map.get($theme-gray, 'light', 'gray-1');
   border: none;
   border-radius: 50%;
   display: flex;
@@ -99,28 +109,28 @@
   transition: all 0.3s ease;
 
   .ic-wish-list {
-    background: map-get($theme-gray, 'light', 'gray-8');
+    background: map.get($theme-gray, 'light', 'gray-8');
   }
 
   &:hover {
     transform: scale(1.1);
-    background: map-get($theme-gray, 'light', 'gray-2');
+    background: map.get($theme-gray, 'light', 'gray-2');
 
     .ic-wish-list {
-      background: map-get($theme-red, 'light', 'red-5');
+      background: map.get($theme-red, 'light', 'red-5');
     }
   }
 
   // Active/wishlisted state
   &--active {
-    background: map-get($theme-red, 'light', 'red-5');
+    background: map.get($theme-red, 'light', 'red-5');
 
     .ic-wish-list {
-      background-color: map-get($theme-gray, 'light', 'gray-1') !important;
+      background-color: map.get($theme-gray, 'light', 'gray-1') !important;
     }
 
     &:hover {
-      background: map-get($theme-red, 'light', 'red-5');
+      background: map.get($theme-red, 'light', 'red-5');
       opacity: 0.9;
       transform: scale(1.1);
     }
