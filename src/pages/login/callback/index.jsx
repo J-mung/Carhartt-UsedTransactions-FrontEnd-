@@ -8,7 +8,7 @@ export default function KakaoCallback() {
     const query = new URLSearchParams(window.location.search);
     const code = query.get('code');
     const state = query.get('state');
-    const savedState = sessionStorage.getItem('oauth_state');
+    const savedState = sessionStorage.getItem('user_info');
 
     if (!code || !state || state !== savedState) {
       // state 불일치
