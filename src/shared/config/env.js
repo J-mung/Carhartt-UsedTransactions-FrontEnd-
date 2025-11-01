@@ -4,7 +4,7 @@ export const ENV = {
     import.meta.env.VITE_API_BASE_URL?.trim() ||
     (import.meta.env.VITE_ENV === 'production'
       ? 'https://carhartt-usedtransactions.com' // fallback
-      : 'http://localhost:5173'),
+      : ''),
 };
 
 export const IS_PROD = ENV.NAME === 'production';
