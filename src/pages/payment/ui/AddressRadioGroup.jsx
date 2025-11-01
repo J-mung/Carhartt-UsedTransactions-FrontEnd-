@@ -27,19 +27,6 @@ export default function AddressRadioGroup({ userId = '' }) {
     }
   }, [isLoading, addresses]);
 
-  if (isLoading)
-    return (
-      <div>
-        <span className={'text-regular'}>주소 불러오는 중...</span>
-      </div>
-    );
-  if (error)
-    return (
-      <div>
-        <span className={'text-regular'}>주소를 불러올 수 없습니다.</span>
-      </div>
-    );
-
   const handleClickDelete = (addr) => {
     carHarttApi({
       method: 'DELETE',
@@ -110,10 +97,25 @@ export default function AddressRadioGroup({ userId = '' }) {
     }));
   };
 
-  return (
-    <>
-      <span className={'h4 mb-2'}>배송지</span>
-      <div className={'content--wrapper mt-2 mb-4'}>
+  const drawContent = () => {
+    if (isLoading) {
+      return (
+        <div className={'flex'} style={{ minHeight: '86px' }}>
+          <span className={'text-strong m-auto'}>주소 불러오는 중...</span>
+        </div>
+      );
+    }
+    if (error) {
+      return (
+        <div className={'flex'} style={{ minHeight: '86px' }}>
+          <span className={'text-strong m-auto'}>
+            주소를 불러올 수 없습니다.
+          </span>
+        </div>
+      );
+    }
+    return (
+      <>
         <div className={'mb-3'}>
           <RadioGroup
             label={''}
@@ -138,7 +140,14 @@ export default function AddressRadioGroup({ userId = '' }) {
             }}
           />
         </div>
-      </div>
+      </>
+    );
+  };
+
+  return (
+    <>
+      <span className={'h4 mb-2'}>배송지</span>
+      <div className={'content--wrapper mt-2 mb-4'}>{drawContent()}</div>
     </>
   );
 }
