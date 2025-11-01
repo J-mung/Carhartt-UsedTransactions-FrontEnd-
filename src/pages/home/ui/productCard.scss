@@ -1,0 +1,138 @@
+@use '@styles/colors' as *;
+@use '@styles/theme' as theme;
+@use '@styles/border' as border;
+@use 'sass:map';
+
+.product-card {
+  background-color: map.get($theme-gray, 'light', 'gray-4');
+  cursor: pointer;
+  transition: all 0.3s ease;
+  @include border.border(
+    0.0625rem,
+    map.get($theme-gray, 'light', 'gray-6'),
+    solid
+  );
+
+  [data-theme='dark'] & {
+    background-color: map.get($theme-gray, 'dark', 'gray-12');
+  }
+
+  // Hover effect
+  &:hover {
+    transform: translateY(-0.25rem); // 4px
+  }
+
+  // Active state
+  &:active {
+    transform: translateY(-0.125rem); // 2px
+  }
+
+  &__image {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  &__image-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+
+    .product-card:hover & {
+      transform: scale(1.05);
+    }
+  }
+
+  // Hover overlay
+  &__image-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(map.get($theme-gray, 'dark', 'gray-1'), 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    .product-card:hover & {
+      opacity: 1;
+    }
+  }
+
+  &__image-overlay-text {
+    color: map.get($theme-gray, 'light', 'gray-1');
+    font-size: 1rem;
+  }
+
+  &__info {
+    padding: 1.25rem; // 20px
+    position: relative;
+  }
+
+  &__title {
+    color: map.get($theme-gray, 'dark', 'gray-1');
+    font-weight: 500;
+    margin: 0;
+
+    // 긴 상품명 Truncation (최대 2줄)
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__price {
+    color: map.get($theme-gray, 'dark', 'gray-8');
+    font-weight: 500;
+    margin: 0.5rem 0; // 8px
+  }
+}
+
+// 찜하기 버튼
+.wishlist-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  background: map.get($theme-gray, 'light', 'gray-1');
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.3s ease;
+
+  .ic-wish-list {
+    background: map.get($theme-gray, 'light', 'gray-8');
+  }
+
+  &:hover {
+    transform: scale(1.1);
+    background: map.get($theme-gray, 'light', 'gray-2');
+
+    .ic-wish-list {
+      background: map.get($theme-red, 'light', 'red-5');
+    }
+  }
+
+  // Active/wishlisted state
+  &--active {
+    background: map.get($theme-red, 'light', 'red-5');
+
+    .ic-wish-list {
+      background-color: map.get($theme-gray, 'light', 'gray-1') !important;
+    }
+
+    &:hover {
+      background: map.get($theme-red, 'light', 'red-5');
+      opacity: 0.9;
+      transform: scale(1.1);
+    }
+  }
+}

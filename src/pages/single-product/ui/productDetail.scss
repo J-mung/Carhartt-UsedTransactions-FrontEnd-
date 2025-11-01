@@ -30,6 +30,7 @@
 
 .breadcrumb {
   margin-bottom: 1.5rem;
+  text-transform: uppercase;
 
   &__link {
     color: map.get($theme-gray, 'light', 'gray-11');

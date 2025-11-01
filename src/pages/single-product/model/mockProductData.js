@@ -2,7 +2,7 @@
 export const productData = {
   item_id: 1101,
   item_name: 'Product name',
-  category_ids: [1, 11],
+  category_ids: [140, 141],
   sizes: {
     total_length: 72,
     shoulder: 50,
@@ -65,6 +65,41 @@ export const productData = {
     purchase_count: 5,
   },
 };
+
+// Mock 아이템 리스트 (전체 상품 페이지)
+const categoryIds = [
+  [100], // 산타페 og
+  [110], // 산타페 wip og
+  [120], // 액티브 og
+  [130], // 액티브 wip og
+  [140], // 디트로이트 og
+  [150], // 디트로이트 wip og
+];
+
+export const mockProductsList = Array.from({ length: 50 }, (_, i) => ({
+  item_id: 1000 + i + 1,
+  item_name: `제품명 ${i + 1}`,
+  item_price: Math.floor(Math.random() * 500000) + 50000,
+  category_ids: categoryIds[i % categoryIds.length],
+  direct_trade: Math.random() > 0.5,
+  images: [
+    {
+      image_id: 5000 + i * 3 + 1,
+      image_url: `https://placeholder.pics/svg/300/CCCCCC/333333/Product ${i + 1}`,
+      is_represent: 1,
+    },
+    ...(Math.random() > 0.5
+      ? [
+          {
+            image_id: 5000 + i * 3 + 2,
+            image_url: `https://placeholder.pics/svg/300/DDDDDD/333333/Product ${i + 1} - 2`,
+            is_represent: 0,
+          },
+        ]
+      : []),
+  ],
+  createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000),
+}));
 
 // Mock 카테고리 데이터
 export const mockCategories = [
