@@ -29,7 +29,7 @@ export default function PaymentResult() {
       // 결제 성공 확인 API
       carHarttApi({
         method: 'GET',
-        url: `v1/order/${orderId}/item`,
+        url: `v1/order/${orderId}/summary`,
       })
         .then((response) => {
           const { status, data, meta } = response;
