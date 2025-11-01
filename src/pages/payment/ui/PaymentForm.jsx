@@ -1,3 +1,5 @@
+import { useOrderMutation } from '@/entities/order/hooks/useOrderMutation';
+import { usePaymentReadyMutation } from '@/entities/payment/hooks/usePaymentReadyMutation';
 import { useProductDetail } from '@/entities/product/hooks/useProduct';
 import { Button } from '@/shared/ui/buttons';
 import InputBox from '@/shared/ui/InputBox';
@@ -11,7 +13,6 @@ import './paymentForm.scss';
 
 export default function PaymentForm() {
   const formRef = useRef(null);
-
   const { itemId } = useParams();
   const {
     data: product,
@@ -23,14 +24,14 @@ export default function PaymentForm() {
   const [buyerMessage, setBuyerMessage] = useState('');
   const [method, setMethod] = useState({
     key: 'pay1',
-    value: 'kakaoPay',
+    value: 'KAKAOPAY',
     label: '카카오페이',
   });
 
   const payOptions = [
     {
       key: 'pay1',
-      value: 'kakaoPay',
+      value: 'KAKAOPAY',
       label: '카카오페이',
     },
     {
@@ -44,22 +45,51 @@ export default function PaymentForm() {
     setBuyerMessage(e.target.value);
   };
 
-  const handlePayment = (e) => {
+  const orderMutation = useOrderMutation();
+  const paymentReadyMutation = usePaymentReadyMutation();
+
+  const handlePayment = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const address = formData.get('addressList');
     const payment = formData.get('paymentMethod');
     const message = formData.get('buyerMsg');
+    const requestBody = {
+      item_id: 4,
+      address_id: 101,
+      payment_method: payment,
+      detail_message: message,
+    };
 
-    openModal(Modal, {
-      title: '알림',
-      children: (
-        <span className={'text-regular'}>
-          {product.item_name}, {product.item_price}, {address}, {payment},{' '}
-          {message}
-        </span>
-      ),
-    });
+    try {
+      // 주문 생성
+      const orderResponse = await orderMutation.mutateAsync(requestBody);
+      // 결제 준비
+      const paymentResultResponse = await paymentReadyMutation.mutateAsync({
+        orderId: orderResponse.order_id,
+        paymentMethod: payment,
+        amount: product.item_price,
+      });
+
+      // TODO paymentResultResponse 결과에 따라 결제 진행
+      openModal(Modal, {
+        title: '결제 준비 테스트 - 성공',
+        children: (
+          <span calssName={'text-regular'}>
+            주문번호 {orderResponse.order_id}, 결제 준비 테스트 성공
+          </span>
+        ),
+      });
+    } catch (error) {
+      openModal(Modal, {
+        title: '결제 준비 테스트 - 실패',
+        children: (
+          <span className={'text-regular'}>
+            {error.message} {error.stack}
+          </span>
+        ),
+      });
+    }
   };
 
   const contentWrapper = (title, children) => {
@@ -103,7 +133,7 @@ export default function PaymentForm() {
             variant={'default'}
             placeholder={'판매자에게 전달할 요청사항'}
             value={buyerMessage}
-            onChange={(e) => setBuyerMessage(e.target.value)}
+            onChange={(e) => handleInputMsg(e)}
             clear={true}
           />
         )}
