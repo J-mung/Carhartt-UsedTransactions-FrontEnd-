@@ -9,17 +9,8 @@ import {
   useProductsList,
 } from '@/entities/product/hooks/useProduct';
 
-// Radio 버튼용으로 1차원 배열로 변환
-function flattenCategories(nestedCategories) {
-  if (!nestedCategories || !nestedCategories[0]?.children) return [];
-
-  // Top-level 카테고리만 추출
-  return nestedCategories[0].children.map((cat) => ({
-    category_id: cat.category_id,
-    category_name: cat.category_name,
-    p_id: cat.p_id,
-  }));
-}
+// 페이지당 아이템 수
+const ITEMS_PER_PAGE = 16;
 
 // Sorting options
 const SORT_OPTIONS = [
@@ -28,8 +19,17 @@ const SORT_OPTIONS = [
   { value: 'price_high', label: '높은 가격순' },
 ];
 
-// 페이지당 아이템 수
-const ITEMS_PER_PAGE = 16;
+// Radio 버튼용 카테고리 평탄화 함수
+function flattenCategories(apiCategories) {
+  const rootCategory = apiCategories[0];
+
+  // Top-level 카테고리만 반환
+  return rootCategory.children.map((cat) => ({
+    category_id: cat.category_id,
+    category_name: cat.category_name,
+    p_id: cat.p_id,
+  }));
+}
 
 export default function ProductsListPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -85,7 +85,7 @@ export default function ProductsListPage() {
     return [allOption, ...categoryOpts];
   }, [categories]);
 
-  // Pagination options
+  // Pagination
   const paginationOptions = useMemo(() => {
     return Array.from({ length: totalPages }, (_, i) => ({
       key: String(i + 1),
@@ -93,7 +93,7 @@ export default function ProductsListPage() {
     }));
   }, [totalPages]);
 
-  // 핸들러
+  // 이벤트 핸들러
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
     setCurrentPage(1);

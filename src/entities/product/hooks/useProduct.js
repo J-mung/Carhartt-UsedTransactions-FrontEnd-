@@ -81,7 +81,7 @@ export function useProductDetail(itemId) {
         url: `/v1/items/${itemId}`,
         withCredentials: true,
       });
-      return response.data?.data;
+      return response.data;
     },
     enabled: !!itemId,
   });
@@ -93,19 +93,12 @@ export function useCategories() {
   return useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
-      // Mock data
-      if (USE_MOCK_DATA) {
-        await new Promise((resolve) => setTimeout(resolve, 300));
-        return mockCategories;
-      }
-
-      // Real API
       const response = await carHarttApi({
         method: 'GET',
         url: '/v1/categories',
         withCredentials: true,
       });
-      return response.data?.data || [];
+      return response.data || [];
     },
   });
 }
@@ -185,14 +178,12 @@ export function useProductsList({
         withCredentials: true,
       });
 
-      const responseData = response.data?.data;
-
       return {
-        items: responseData?.content || [],
-        total: responseData?.total_elements || 0,
-        page: responseData?.page || 0,
-        totalPages: responseData?.total_pages || 0,
-        size: responseData?.size || limit,
+        items: response.data?.content || [],
+        total: response.data?.total_elements || 0,
+        page: response.data?.page || 0,
+        totalPages: response.data?.total_pages || 0,
+        size: response.data?.size || limit,
       };
     },
     keepPreviousData: true, // 새 페이지를 로딩하는 동안 이전 데이터 유지
@@ -211,7 +202,7 @@ export function useMyItems() {
         withCredentials: true,
       });
 
-      return response.data?.data || [];
+      return response.data || [];
     },
   });
 }
