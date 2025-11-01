@@ -62,7 +62,7 @@ export default function LoginForm() {
 
     carHarttApi({
       method: 'GET',
-      url: 'v1/oauth/login',
+      url: '/v1/oauth/login',
     })
       .then((response) => {
         const { data } = response;
@@ -95,10 +95,10 @@ export default function LoginForm() {
 
     carHarttApi({
       method: 'GET',
-      url: 'v1/oauth/login/kakao',
+      url: '/v1/oauth/login/kakao',
     })
       .then((response) => {
-        const authUrl = response.data.authorize_kakao_url;
+        const authUrl = response.data.authorize_url;
         // 카카오 authorize_url로 이동
         window.location.href = authUrl;
       })
@@ -106,20 +106,6 @@ export default function LoginForm() {
         alert(`kakao_url error : ${err}`);
         console.log(`kakao_url error : ${err}`);
       });
-    // carHarttApi({
-    //   method: 'GET',
-    //   url: '/v1/oauth/login/kakao',
-    // })
-    //   .then((response) => {
-    //     const { data, meta } = response;
-    //     if (data && data.sessionId) {
-    //       sessionStorage.setItem('oauth_state', data.sessionId);
-    //       navigate('/');
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.error('kakao 로그인 실패');
-    //   });
   };
 
   return (

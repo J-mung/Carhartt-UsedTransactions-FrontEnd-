@@ -1,58 +1,99 @@
+import { useUserStatus } from '@/entities/user/hooks/useUserStatus';
 import { makeUserAvatar } from '@/entities/user/lib/avatar';
-import { carHarttApi } from '@/shared/api/axios';
+import ApiError from '@/shared/api/ApiError';
 import Modal from '@/widgets/modal/Modal';
 import { useModal } from '@/widgets/modal/ModalProvider';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function LoginCallback() {
   const navigate = useNavigate();
   const { openModal } = useModal();
+  const {
+    data: userInfo,
+    status: loginCheckStatus,
+    isError,
+    error,
+  } = useUserStatus();
+  const handleRef = useRef(false);
 
-  const handleOpenModal = (message) => {
+  const handleOpenModal = ({ title, message }) => {
     openModal(Modal, {
       title: '로그인',
       children: <span className={'text-regular'}>{message}</span>,
     });
   };
 
+  const parseUserPayload = (payload) => {
+    if (typeof payload !== 'string') return payload;
+    try {
+      return JSON.parse(payload);
+    } catch {
+      return undefined;
+    }
+  };
+
   useEffect(() => {
-    const parseUserPayload = (payload) => {
-      if (typeof payload !== 'string') return payload;
-      try {
-        return JSON.parse(payload);
-      } catch {
-        return undefined;
-      }
-    };
+    if (handleRef.current) return;
+    if (loginCheckStatus === 'loding' || loginCheckStatus === 'idle') {
+      setTimeout(() => {
+        return;
+      }, 1000);
+    }
 
-    // 서버에 로그인 상태 확인 요청 (쿠키 자동 전송)
-    carHarttApi({
-      method: 'GET',
-      url: 'v1/oauth/login/check',
-    })
-      .then((response) => {
-        const { status, data } = response;
-        if (status === 200 && !!data) {
-          const normalizedData = parseUserPayload(data);
+    // 로그인 성공
+    if (loginCheckStatus === 'success' && userInfo) {
+      handleRef.current = true;
 
-          const userInfo = makeUserAvatar(
-            normalizedData || { raw: data ?? null }
-          );
+      const normalizedData = parseUserPayload(userInfo);
+      const userInfoWithAvatar = makeUserAvatar(
+        normalizedData || { raw: userInfo ?? null }
+      );
 
-          handleOpenModal('로그인에 성공했습니다.');
-          sessionStorage.setItem('user_info', JSON.stringify(userInfo));
-          navigate('/');
-        } else {
-          handleOpenModal('로그인에 실패했습니다. 다시 시도해 주세요.');
-          navigate('/login?error=oauth_failed');
-        }
-      })
-      .catch(() => {
-        alert('로그인 상태 확인 중 오류가 발생했습니다.');
-        navigate('/login?error=oauth_failed');
+      sessionStorage.setItem('user_info', JSON.stringify(userInfoWithAvatar));
+      navigate('/', { replace: true });
+      return;
+    }
+
+    // 비로그인 상태 (C001, C008 등)
+    if (loginCheckStatus === 'success' && !userInfo) {
+      // openModal(Modal, {
+      //   title: '로그인 필요',
+      //   children: (
+      //     <span className={'text-regular'}>
+      //       세션이 만료되었습니다. 다시 로그인해주세요.
+      //     </span>
+      //   ),
+      // });
+      handleRef.current = true;
+      handleOpenModal({
+        title: '로그인 필요',
+        message: '세션이 만료되었습니다. 다시 로그인해주세요.',
       });
-  }, [navigate]);
+      navigate('/login', { replace: true });
+      return;
+    }
+
+    // 기타 오류 처리
+    if (loginCheckStatus === 'error') {
+      handleRef.current = true;
+      const message =
+        error instanceof ApiError
+          ? `${error.code} - ${error.message}`
+          : '로그인 상태 확인 중 알 수 없는 오류가 발생했습니다.';
+
+      // openModal(Modal, {
+      //   title: '로그인 실패',
+      //   children: <span children={'text-regular'}>{message}</span>,
+      // });
+      handleOpenModal({
+        title: '로그인 실패',
+        message: message,
+      });
+
+      navigate('/login?error=oauth_failed', { replace: true });
+    }
+  }, [loginCheckStatus, userInfo, error, navigate, openModal]);
 
   return <div>로그인 처리 중...</div>;
 }

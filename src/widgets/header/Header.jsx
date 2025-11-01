@@ -1,12 +1,18 @@
+import { useIsLoggedIn } from '@/entities/user/hooks/useIsLoggedIn';
+import { carHarttApi } from '@/shared/api/axios';
 import Button from '@/shared/ui/buttons/Button';
 import IconTextButton from '@/shared/ui/buttons/IconTextButton';
 import { useNavigate } from 'react-router-dom';
+import Modal from '../modal/Modal';
+import { useModal } from '../modal/ModalProvider';
 
 /**
  * 공통 헤더
  * @returns
  */
 export default function Header({ title }) {
+  const { openModal } = useModal();
+  const { isLoggedIn, isLoading } = useIsLoggedIn();
   const navigate = useNavigate();
   const handleHome = () => {
     navigate('/', { replace: true });
@@ -15,27 +21,34 @@ export default function Header({ title }) {
     navigate('/login', { replace: true });
   };
   const handleLogOut = () => {
-    sessionStorage.removeItem('oauth_state');
-    sessionStorage.removeItem('user_info');
-    navigate('/');
-  };
-  // const isLogined = sessionStorage.getItem('oauth_state') === 'Authorized';
-  // 쿠키에서 session id get
-  const getJSessionId = () => {
-    let jsId = document.cookie.match(/JSESSIONID=[^;]+/);
-    let mockData = sessionStorage.getItem('user_info');
-    if (jsId != null) {
-      if (jsId instanceof Array) jsId = jsId[0].substring(11);
-      else jsId = jsId.substring(11);
-      return jsId;
-    }
-    if (mockData != null) {
-      return true;
-    }
-    return false;
-  };
+    const { loginType, provider } = JSON.parse(
+      sessionStorage.getItem('user_info') || '{}'
+    );
 
-  const isLogined = getJSessionId();
+    carHarttApi({
+      method: 'POST',
+      url: '/v1/oauth/logout',
+      data: {
+        type: loginType,
+        provider: provider,
+      },
+    })
+      .then((response) => {
+        if (response && response.status) {
+          sessionStorage.removeItem('user_info');
+          sessionStorage.removeItem('is_logged_in');
+          window.location.href = '/';
+        }
+      })
+      .catch((error) => {
+        openModal(Modal, {
+          title: '로그아웃 실패',
+          children: (
+            <span className={'text-regular'}>{`에러 발생 : ${error}`}</span>
+          ),
+        });
+      });
+  };
 
   return (
     <>
@@ -73,7 +86,7 @@ export default function Header({ title }) {
           onClick={() => alert('채팅 버튼 클릭')}
           disabled={true}
         ></Button>
-        {isLogined ? (
+        {isLoggedIn ? (
           <Button label={'로그아웃'} onClick={handleLogOut}></Button>
         ) : (
           <Button label={'로그인'} onClick={handleLogin}></Button>
