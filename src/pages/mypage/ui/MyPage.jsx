@@ -4,134 +4,9 @@ import TabGroup from '@/shared/ui/tabs/TabGroup';
 import ThemeToggle from '@/shared/ui/ThemeToggle';
 import Modal from '@/widgets/modal/Modal';
 import { useModal } from '@/widgets/modal/ModalProvider';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo } from 'react';
 import './myPage.scss';
-
-const PAGE_SIZE = 4;
-
-function MyPageProductCard({ item }) {
-  return (
-    <article className="my-page-card">
-      <div className="my-page-card__thumbnail" aria-hidden="true">
-        <div className="my-page-card__thumbnail-icon">IMG</div>
-      </div>
-      <div className="my-page-card__body">
-        <header className="my-page-card__header">
-          <h3 className="my-page-card__title h5">{item.title}</h3>
-          <span
-            className={`my-page-card__status my-page-card__status--${item.statusType}`}
-          >
-            {item.status}
-          </span>
-        </header>
-        <div className="my-page-card__price h5-regular">{item.price}</div>
-        <p className="my-page-card__description text-regular">
-          {item.description}
-        </p>
-        <div className="my-page-card__actions">
-          <Button label="자세히 보기" size="--s" variant="standard-secondary" />
-        </div>
-      </div>
-    </article>
-  );
-}
-
-function MyPageProductList({ items, emptyText }) {
-  const sentinelRef = useRef(null);
-  const isFetchingRef = useRef(false);
-  const [visibleCount, setVisibleCount] = useState(() =>
-    Math.min(PAGE_SIZE, items.length)
-  );
-  const [isFetching, setIsFetching] = useState(false);
-
-  useEffect(() => {
-    setVisibleCount(Math.min(PAGE_SIZE, items.length));
-    setIsFetching(false);
-    isFetchingRef.current = false;
-  }, [items]);
-
-  const loadMore = useCallback(() => {
-    setIsFetching(true);
-    setVisibleCount((prev) => {
-      if (prev >= items.length) {
-        return prev;
-      }
-      const next = Math.min(prev + PAGE_SIZE, items.length);
-      return next;
-    });
-  }, [items.length]);
-
-  const visibleItems = useMemo(
-    () => items.slice(0, visibleCount),
-    [items, visibleCount]
-  );
-
-  const hasMore = visibleCount < items.length;
-
-  useEffect(() => {
-    if (!hasMore) {
-      return undefined;
-    }
-
-    const target = sentinelRef.current;
-    if (!target) {
-      return undefined;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !isFetchingRef.current) {
-            isFetchingRef.current = true;
-            loadMore();
-          }
-        });
-      },
-      { rootMargin: '160px 0px', threshold: 0.1 }
-    );
-
-    observer.observe(target);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [hasMore, loadMore]);
-
-  useEffect(() => {
-    isFetchingRef.current = false;
-    setIsFetching(false);
-  }, [visibleCount]);
-
-  if (!items.length) {
-    return (
-      <div className="my-page__empty">
-        <span className="text-regular">{emptyText}</span>
-      </div>
-    );
-  }
-
-  return (
-    <>
-      <div className="my-page__items">
-        {visibleItems.map((item) => (
-          <MyPageProductCard key={item.id} item={item} />
-        ))}
-      </div>
-      {isFetching && hasMore && (
-        <div className="my-page__loader text-caption" role="status">
-          상품을 불러오는 중입니다...
-        </div>
-      )}
-      {hasMore && (
-        <div
-          ref={sentinelRef}
-          className="my-page__sentinel"
-          aria-hidden="true"
-        />
-      )}
-    </>
-  );
-}
+import MyPageProductList from './MyPageProductList';
 
 export default function MyPage() {
   const { openModal } = useModal();
@@ -300,15 +175,15 @@ export default function MyPage() {
     openModal(Modal, {
       title: '닉네임 변경',
       children: (
-        <div className="my-page__nickname-modal">
-          <p className="text-regular">닉네임 변경 기능이 준비 중입니다.</p>
+        <div className={'my-page__nickname-modal'}>
+          <p className={'text-regular'}>닉네임 변경 기능이 준비 중입니다.</p>
         </div>
       ),
     });
   };
 
   const PanelLayout = ({ children }) => (
-    <div className="my-page__panel">{children}</div>
+    <div className={'my-page__panel'}>{children}</div>
   );
 
   const tabGroup = [
@@ -318,7 +193,7 @@ export default function MyPage() {
       content: (
         <MyPageProductList
           items={sellingList}
-          emptyText="판매중인 상품이 없습니다."
+          emptyText={'판매중인 상품이 없습니다.'}
         />
       ),
     },
@@ -328,7 +203,7 @@ export default function MyPage() {
       content: (
         <MyPageProductList
           items={purchaseList}
-          emptyText="구매 내역이 없습니다."
+          emptyText={'구매 내역이 없습니다.'}
         />
       ),
     },
@@ -336,76 +211,79 @@ export default function MyPage() {
       key: 'wishlist',
       label: '찜',
       content: (
-        <MyPageProductList items={wishList} emptyText="찜한 상품이 없습니다." />
+        <MyPageProductList
+          items={wishList}
+          emptyText={'찜한 상품이 없습니다.'}
+        />
       ),
     },
   ];
 
   return (
-    <div className="my-page">
-      <div className="my-page__header">
+    <div className={'my-page'}>
+      <div className={'my-page__header'}>
         <div>
-          <h2 className="my-page__title h3">마이페이지</h2>
-          <p className="my-page__subtitle text-regular">
+          <h2 className={'my-page__title h3'}>마이페이지</h2>
+          <p className={'my-page__subtitle text-regular'}>
             회원 정보와 거래 현황을 한 눈에 확인해보세요.
           </p>
         </div>
         <ThemeToggle />
       </div>
 
-      <section className="my-page__profile-card">
-        <div className="my-page__avatar">
-          <div className="my-page__avatar-image" aria-hidden="true">
+      <section className={'my-page__profile-card'}>
+        <div className={'my-page__avatar'}>
+          <div className={'my-page__avatar-image'} aria-hidden={'true'}>
             <span>USER</span>
           </div>
           <Button
-            label="프로필 수정"
-            size="--s"
-            variant="standard-secondary"
+            label={'프로필 수정'}
+            size={'--s'}
+            variant={'standard-secondary'}
             onClick={openProfileModal}
           />
         </div>
 
-        <div className="my-page__profile-details">
-          <div className="my-page__nickname-row">
-            <span className="my-page__nickname h4">{profile.nickname}</span>
+        <div className={'my-page__profile-details'}>
+          <div className={'my-page__nickname-row'}>
+            <span className={'my-page__nickname h4'}>{profile.nickname}</span>
             <Button
-              label="닉네임 수정"
-              size="--s"
-              variant="standard-secondary"
+              label={'닉네임 수정'}
+              size={'--s'}
+              variant={'standard-secondary'}
               onClick={openNicknameModal}
             />
           </div>
 
-          <dl className="my-page__meta">
+          <dl className={'my-page__meta'}>
             <div>
-              <dt className="text-caption">이메일</dt>
-              <dd className="text-regular">{profile.email}</dd>
+              <dt className={'text-caption'}>이메일</dt>
+              <dd className={'text-regular'}>{profile.email}</dd>
             </div>
             <div>
-              <dt className="text-caption">가입일</dt>
-              <dd className="text-regular">{profile.joinDate}</dd>
+              <dt className={'text-caption'}>가입일</dt>
+              <dd className={'text-regular'}>{profile.joinDate}</dd>
             </div>
             <div>
-              <dt className="text-caption">보유 포인트</dt>
-              <dd className="text-regular">{profile.point}</dd>
+              <dt className={'text-caption'}>보유 포인트</dt>
+              <dd className={'text-regular'}>{profile.point}</dd>
             </div>
           </dl>
 
-          <div className="my-page__stats">
+          <div className={'my-page__stats'}>
             {profile.stats.map((stat) => (
-              <div key={stat.key} className="my-page__stat">
-                <span className="my-page__stat-label text-caption">
+              <div key={stat.key} className={'my-page__stat'}>
+                <span className={'my-page__stat-label text-caption'}>
                   {stat.label}
                 </span>
-                <span className="my-page__stat-value h4">{stat.value}</span>
+                <span className={'my-page__stat-value h4'}>{stat.value}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <div className="my-page__tabs">
+      <div className={'my-page__tabs'}>
         <TabGroup tabGroup={tabGroup} Layout={PanelLayout} />
       </div>
     </div>
