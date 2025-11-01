@@ -73,7 +73,7 @@ export default function Header({ title }) {
           label={'관리'}
           variant={'standard-link'}
           onClick={() => {
-            alert('관리 버튼 클릭');
+            navigate('/mypage');
           }}
           disabled={false}
         >
