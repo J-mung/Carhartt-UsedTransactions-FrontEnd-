@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useIsLoggedIn } from '@/entities/user/hooks/useIsLoggedIn';
 import WishListBtn from './WishListBtn';
 import './productCard.scss';
 
@@ -8,6 +9,7 @@ import './productCard.scss';
  */
 export default function ProductCard({ product }) {
   const navigate = useNavigate();
+  const { isLoggedIn } = useIsLoggedIn();
 
   // 첫 상품 이미지
   const representativeImage = product.images?.find(
@@ -19,8 +21,6 @@ export default function ProductCard({ product }) {
   const handleClick = () => {
     navigate(`/product/${product.item_id}`);
   };
-
-  const isLoggedIn = document.cookie.includes('JSESSIONID=');
 
   return (
     <article className="product-card" onClick={handleClick}>
