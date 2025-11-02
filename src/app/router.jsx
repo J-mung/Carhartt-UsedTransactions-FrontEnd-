@@ -1,4 +1,3 @@
-import HomePage from '@/pages/home/HomePage';
 import LoginPage from '@/pages/login';
 import LoginCallback from '@/pages/login/ui/LoginCallback';
 import MyPage from '@/pages/mypage';
@@ -8,7 +7,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import SingleProductPage from '../pages/single-product';
 import MainLayout from './layouts/MainLayout';
 // import ProductUploadPage from '@/pages/product-upload';
-// import ProductsPage from '@/pages/home/ProductsPage';
+import ProductsPage from '@/pages/home/ProductsPage';
 
 export const router = createBrowserRouter(
   [
@@ -16,8 +15,8 @@ export const router = createBrowserRouter(
       path: '/',
       element: <MainLayout stickyFooter={false} />,
       children: [
-        { index: true, element: <HomePage /> },
-        // { index: true, element: <ProductsPage /> },
+        // { index: true, element: <HomePage /> },
+        { index: true, element: <ProductsPage /> },
         { path: 'mypage', element: <MyPage /> },
         { path: 'login', element: <LoginPage /> },
         { path: 'login/callback', element: <LoginCallback /> },
