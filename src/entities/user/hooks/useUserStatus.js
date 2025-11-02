@@ -1,18 +1,46 @@
 import { carHarttApi } from '@/shared/api/axios';
+import { useMockConfig } from '@/shared/config/mockConfig';
 import { useQuery } from '@tanstack/react-query';
+import { makeUserAvatar } from '../lib/avatar';
 
 export function useUserStatus() {
+  const { isMockConfig: isMockConfigFromContext } = useMockConfig();
+  const mockDataMode = Boolean(isMockConfigFromContext);
   return useQuery({
     queryKey: ['loginStatus'],
     queryFn: async () => {
+      if (mockDataMode) {
+        const baseMockUserInfo = {
+          memberId: 'mock-user',
+          memberName: '우직한 감자칩',
+          memberNickname: '빠른수달9177',
+          loginType: 'OAUTH',
+          provider: 'KAKAO',
+          avatar: '',
+        };
+        return makeUserAvatar({ ...baseMockUserInfo });
+      }
       return carHarttApi({
         method: 'GET',
         url: '/v1/oauth/login/check',
       })
         .then((response) => {
           if (response && response.data) {
+            const parseUserPayload = (payload) => {
+              if (typeof payload !== 'string') return payload;
+              try {
+                return JSON.parse(payload);
+              } catch {
+                return undefined;
+              }
+            };
             // 로그인 성공 및 사용자 정보 반환
-            return response.data;
+            const normalizedData = parseUserPayload(response.data);
+            const userInfoWithAvatar = makeUserAvatar(
+              normalizedData || { raw: response.data ?? null }
+            );
+
+            return userInfoWithAvatar;
           }
 
           // 응답은 정상이나 data 없음

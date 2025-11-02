@@ -18,13 +18,6 @@ const mockOAuthProviders = [
   },
 ];
 
-const baseMockUserInfo = {
-  id: 'mock-user',
-  name: '우직한 감자칩',
-  email: 'mock-user@example.com',
-  profileImage: null,
-};
-
 const getMockUserInfo = () => makeUserAvatar({ ...baseMockUserInfo });
 
 export default function LoginForm() {
@@ -86,10 +79,7 @@ export default function LoginForm() {
     }
 
     if (mockDataMode) {
-      const userInfo = getMockUserInfo();
-      sessionStorage.setItem('oauth_state', 'Authorized');
-      sessionStorage.setItem('user_info', JSON.stringify(userInfo));
-      navigate('/');
+      navigate('/login/callback');
       return;
     }
 

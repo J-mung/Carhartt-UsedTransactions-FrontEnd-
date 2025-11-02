@@ -1,5 +1,4 @@
 import { useUserStatus } from '@/entities/user/hooks/useUserStatus';
-import { makeUserAvatar } from '@/entities/user/lib/avatar';
 import ApiError from '@/shared/api/ApiError';
 import Modal from '@/widgets/modal/Modal';
 import { useModal } from '@/widgets/modal/ModalProvider';
@@ -24,15 +23,6 @@ export default function LoginCallback() {
     });
   };
 
-  const parseUserPayload = (payload) => {
-    if (typeof payload !== 'string') return payload;
-    try {
-      return JSON.parse(payload);
-    } catch {
-      return undefined;
-    }
-  };
-
   useEffect(() => {
     if (handleRef.current) return;
     if (loginCheckStatus === 'loding' || loginCheckStatus === 'idle') {
@@ -45,12 +35,7 @@ export default function LoginCallback() {
     if (loginCheckStatus === 'success' && userInfo) {
       handleRef.current = true;
 
-      const normalizedData = parseUserPayload(userInfo);
-      const userInfoWithAvatar = makeUserAvatar(
-        normalizedData || { raw: userInfo ?? null }
-      );
-
-      sessionStorage.setItem('user_info', JSON.stringify(userInfoWithAvatar));
+      sessionStorage.setItem('user_info', JSON.stringify(userInfo));
       navigate('/', { replace: true });
       return;
     }
