@@ -81,6 +81,10 @@
     }
   }
 
+  &__avatar-source {
+    max-width: 10.75rem; // 172px
+  }
+
   &__profile-details {
     display: flex;
     flex-direction: column;
@@ -89,9 +93,11 @@
 
   &__nickname-row {
     display: flex;
+    flex-direction: row;
+    max-height: 40px;
+    min-height: 40px;
     align-items: center;
     gap: 1rem; // 16px
-    flex-wrap: wrap;
   }
 
   &__nickname {
@@ -169,7 +175,7 @@
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
-    height: 45.875rem; // 734px
+    // height: 45.875rem; // 734px
   }
 
   &__tabs .tab-group__content {

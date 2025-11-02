@@ -1,30 +1,37 @@
-import ImageUploader from '@/pages/mypage/ui/ImageUploader';
+import { useUpdateNickname } from '@/entities/user/hooks/useUpdateNickname';
+import { useUserStatus } from '@/entities/user/hooks/useUserStatus';
 import { Button } from '@/shared/ui/buttons';
+import InputBox from '@/shared/ui/InputBox';
 import TabGroup from '@/shared/ui/tabs/TabGroup';
 import ThemeToggle from '@/shared/ui/ThemeToggle';
 import Modal from '@/widgets/modal/Modal';
 import { useModal } from '@/widgets/modal/ModalProvider';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useImageUploader } from '../model/useImageUploader';
+import ImageUploadModal from './ImageUploadModal';
 import './myPage.scss';
 import MyPageProductList from './MyPageProductList';
 
 export default function MyPage() {
-  const { openModal } = useModal();
-
-  const profile = useMemo(
-    () => ({
-      nickname: '사용자 닉네임',
-      email: 'user@example.com',
-      joinDate: '2024.01.12 가입',
-      point: '3,200P',
-      stats: [
-        { key: 'selling', label: '판매중', value: 3 },
-        { key: 'sold', label: '판매완료', value: 12 },
-        { key: 'purchased', label: '구매완료', value: 5 },
-      ],
-    }),
-    []
-  );
+  const { openModal, updateModal } = useModal();
+  const {
+    data: userInfo,
+    isLoading: userStatusLoding,
+    isError: userStatusError,
+  } = useUserStatus();
+  // 닉네임 수정
+  const [isEditing, setIsEditing] = useState(false);
+  const [newNickname, setNewNickname] = useState('');
+  const { mutate: nicknameMutate, isPending: nicknamePending } =
+    useUpdateNickname();
+  // 프로필 이미지 수정
+  const {
+    items: avatarSrcList,
+    handleSelect: handleAvatarSelect,
+    handleConfirm: handleAvatarUpload,
+    reset: resetAvatarSelection,
+  } = useImageUploader();
+  const [avatarModalId, setAvatarModalId] = useState(null);
 
   const sellingList = useMemo(
     () => [
@@ -164,22 +171,92 @@ export default function MyPage() {
     []
   );
 
+  const profile = useMemo(() => {
+    if (userStatusLoding || userStatusError) {
+      return {
+        memberId: '',
+        memberName: '',
+        memberNickname: '',
+        loginType: '',
+        provider: '',
+        avatar: '',
+        email: '',
+        joinDate: '',
+        stats: [],
+      };
+    }
+    return {
+      ...userInfo,
+      email: userInfo.email ?? userInfo.provider ?? '이메일 정보 이슈',
+      joinDate: '2024.01.12 가입',
+      stats: [
+        { key: 'selling', label: '판매', value: sellingList.length ?? 0 },
+        { key: 'sold', label: '구매', value: purchaseList.length ?? 0 },
+        { key: 'purchased', label: '찜', value: wishList.length ?? 0 },
+      ],
+    };
+  }, [userInfo, userStatusLoding, userStatusError]);
+
+  useEffect(() => {
+    if (!avatarModalId) return;
+
+    // 최신 미리보기/원본 정보를 모달에 반영하여 리렌더링을 유도
+    updateModal(avatarModalId, () => ({
+      children: (
+        <ImageUploadModal
+          origin={profile.avatar}
+          items={avatarSrcList}
+          handleSelect={handleAvatarSelect}
+        />
+      ),
+    }));
+  }, [
+    avatarModalId,
+    avatarSrcList,
+    handleAvatarSelect,
+    profile.avatar,
+    updateModal,
+  ]);
+
+  // 프로필 변경 모달
   const openProfileModal = () => {
-    openModal(Modal, {
+    const modalId = openModal(Modal, {
       title: '프로필 이미지 변경',
-      children: <ImageUploader />,
+      children: (
+        <ImageUploadModal
+          origin={profile.avatar}
+          items={avatarSrcList}
+          handleSelect={handleAvatarSelect}
+        />
+      ),
+      buttons: [
+        {
+          label: '업로드',
+          variant: 'standard-primary',
+          onClick: handleAvatarUpload,
+        },
+      ],
+      width: '520px',
+      centered: true,
+      onClose: () => {
+        resetAvatarSelection();
+        setAvatarModalId(null);
+      },
     });
+    setAvatarModalId(modalId);
   };
 
-  const openNicknameModal = () => {
-    openModal(Modal, {
-      title: '닉네임 변경',
-      children: (
-        <div className={'my-page__nickname-modal'}>
-          <p className={'text-regular'}>닉네임 변경 기능이 준비 중입니다.</p>
-        </div>
-      ),
-    });
+  // 닉네임 변경 모드 토글 전용
+  const toggleEditMode = () => {
+    setIsEditing((prev) => !prev);
+    setNewNickname('');
+  };
+
+  // 닉네임 실제 변경 요청
+  const submitNicknameChange = () => {
+    if (!newNickname.trim()) return;
+    nicknameMutate(newNickname);
+    setIsEditing(false);
   };
 
   const PanelLayout = ({ children }) => (
@@ -221,6 +298,7 @@ export default function MyPage() {
 
   return (
     <div className={'my-page'}>
+      {/* 헤더 */}
       <div className={'my-page__header'}>
         <div>
           <h2 className={'my-page__title h3'}>마이페이지</h2>
@@ -231,10 +309,12 @@ export default function MyPage() {
         <ThemeToggle />
       </div>
 
-      <section className={'my-page__profile-card'}>
+      {/* 프로필 카드 */}
+      <div className={'my-page__profile-card'}>
+        {/* 아바타 */}
         <div className={'my-page__avatar'}>
           <div className={'my-page__avatar-image'} aria-hidden={'true'}>
-            <span>USER</span>
+            <img className={'my-page__avatar-source'} src={profile.avatar} />
           </div>
           <Button
             label={'프로필 수정'}
@@ -244,30 +324,63 @@ export default function MyPage() {
           />
         </div>
 
+        {/* 닉네임 수정 영역 */}
         <div className={'my-page__profile-details'}>
-          <div className={'my-page__nickname-row'}>
-            <span className={'my-page__nickname h4'}>{profile.nickname}</span>
-            <Button
-              label={'닉네임 수정'}
-              size={'--s'}
-              variant={'standard-secondary'}
-              onClick={openNicknameModal}
-            />
-          </div>
+          {isEditing ? (
+            <div className={'my-page__nickname-row'}>
+              <InputBox
+                type={'text'}
+                name={'change_nickname'}
+                placeholder={'새 닉네임 입력'}
+                value={newNickname}
+                onChange={(e) => setNewNickname(e.target.value)}
+                clear
+              />
+              <Button
+                label={'수정 완료'}
+                variant={'standard-primary'}
+                onClick={submitNicknameChange}
+                disabled={nicknamePending}
+                className={'flex m-auto'}
+              />
+              <Button
+                label={'취소'}
+                variant={'standard-secondary'}
+                onClick={toggleEditMode}
+              />
+            </div>
+          ) : (
+            <div className={'my-page__nickname-row'}>
+              <span className={'my-page__nickname h4'}>
+                {profile.memberNickname}
+              </span>
+              <Button
+                label={'닉네임 수정'}
+                variant={'standard-secondary'}
+                onClick={toggleEditMode}
+              />
+            </div>
+          )}
 
+          {/* 기타 정보 */}
           <dl className={'my-page__meta'}>
+            <div>
+              <dt className={'text-caption'}>로그인 타입</dt>
+              <dd className={'text-regular'}>{profile.loginType}</dd>
+            </div>
             <div>
               <dt className={'text-caption'}>이메일</dt>
               <dd className={'text-regular'}>{profile.email}</dd>
             </div>
-            <div>
+            {/* (필요 시) 추가 정보 */}
+            {/* <div>
               <dt className={'text-caption'}>가입일</dt>
               <dd className={'text-regular'}>{profile.joinDate}</dd>
             </div>
             <div>
               <dt className={'text-caption'}>보유 포인트</dt>
               <dd className={'text-regular'}>{profile.point}</dd>
-            </div>
+            </div> */}
           </dl>
 
           <div className={'my-page__stats'}>
@@ -281,7 +394,7 @@ export default function MyPage() {
             ))}
           </div>
         </div>
-      </section>
+      </div>
 
       <div className={'my-page__tabs'}>
         <TabGroup tabGroup={tabGroup} Layout={PanelLayout} />
