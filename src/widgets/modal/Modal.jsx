@@ -10,7 +10,7 @@ export default function Modal({
   title, // 모달 제목
   children, // 모달 컨텐트
   buttons = [], // 사용자 정의 버튼 그룹
-  afterClose, // 모달 닫기 핸들러 (onClose 명칭은 예약어와 충돌하여 변경)
+  onClose, // 모달 닫기 핸들러 (onClose 명칭은 예약어와 충돌하여 변경)
   width = '350px', // 모달 너비 (최소 너비 기본값 지정)
   visible = true, // 모달 열림 상태 (외부 컨트롤)
   centered = false, // 모달 위치 지정 (중앙)
@@ -35,7 +35,7 @@ export default function Modal({
   const handleClose = () => {
     setOpenState(false);
     setTimeout(() => {
-      afterClose && afterClose();
+      onClose && onClose();
     }, 200);
   };
 
