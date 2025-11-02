@@ -9,4 +9,4 @@ export const ENV = {
 
 export const IS_PROD = ENV.NAME === 'production';
 export const IS_DEV = !IS_PROD;
-export const IS_MOCK_CONFIG = 'true';
+export const IS_MOCK_CONFIG = 'false';
