@@ -10,7 +10,7 @@ export default function Modal({
   title, // 모달 제목
   children, // 모달 컨텐트
   buttons = [], // 사용자 정의 버튼 그룹
-  onClose, // 모달 닫기 핸들러 (onClose 명칭은 예약어와 충돌하여 변경)
+  onClose, // 모달 닫기 핸들러
   width = '350px', // 모달 너비 (최소 너비 기본값 지정)
   visible = true, // 모달 열림 상태 (외부 컨트롤)
   centered = false, // 모달 위치 지정 (중앙)
@@ -32,10 +32,10 @@ export default function Modal({
    * 모달 닫기 핸들러
    * 애니메이션 적용을 위해 setTimeout
    */
-  const handleClose = () => {
+  const handleClose = (e) => {
     setOpenState(false);
     setTimeout(() => {
-      onClose && onClose();
+      onClose && onClose(e);
     }, 200);
   };
 
@@ -67,7 +67,7 @@ export default function Modal({
     {
       label: '닫기',
       variant: 'standard-secondary',
-      onClick: handleClose,
+      onClick: (e) => handleClose(e),
     },
     ...buttons,
   ];
@@ -75,7 +75,7 @@ export default function Modal({
   return (
     <div className={'custom-modal-wrapper'}>
       {/* 모달 마스크(배경) */}
-      <div className={modalMaskClass} onClick={handleClose} />
+      <div className={modalMaskClass} onClick={(e) => handleClose(e)} />
       {/* 모달 */}
       <div
         className={modalClass}
@@ -89,7 +89,7 @@ export default function Modal({
           <div className={'modal-title'}>
             <span className={'h5'}>{title}</span>
           </div>
-          <Button variant={'standard-link'} onClick={handleClose}>
+          <Button variant={'standard-link'} onClick={(e) => handleClose(e)}>
             <span>X</span>
           </Button>
         </div>
@@ -103,9 +103,9 @@ export default function Modal({
                 key={`modal-btn-${index}`}
                 label={_btn.label}
                 variant={`${_btn.variant}`}
-                onClick={() => {
-                  _btn.onClick();
-                  handleClose();
+                onClick={(e) => {
+                  _btn.onClick(e);
+                  handleClose(e);
                 }}
                 className={'modal-btn__flex'}
               />
