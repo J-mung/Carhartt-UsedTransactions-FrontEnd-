@@ -1,7 +1,7 @@
 import Identicon from 'identicon.js';
 
 const DEFAULT_IDENTICON_OPTIONS = {
-  size: 64,
+  size: 300,
   format: 'svg',
 };
 
@@ -49,7 +49,7 @@ export const makeUserAvatar = (user, options) => {
     };
   }
 
-  const seed = user.email || user.id || user.name;
+  const seed = user.memberName || user.memberNickname;
   const avatar = generateIdenticonDataUrl(seed, options);
 
   return {
