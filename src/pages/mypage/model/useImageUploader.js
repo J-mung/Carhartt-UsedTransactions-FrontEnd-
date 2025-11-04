@@ -1,14 +1,19 @@
+import { IMAGE_FORMAT } from '@/entities/user/hooks/constants';
 import { useCallback, useState } from 'react';
 import { resizeImage } from './imageResizer';
 
 export function useImageUploader() {
+  // 파일 리스트
   const [items, setItems] = useState([]);
+  // 파일 다중 선택 여부
+  const [multiple, setMultiple] = useState(false);
 
   // 파일 선택
   const handleSelect = useCallback((event) => {
     // 브라우저 지원 포맷에 맞춰 리사이즈 결과물의 포맷 결정
-    const format = supportsWebP() ? 'image/webp' : 'image/jpeg';
+    const format = supportsWebP() ? IMAGE_FORMAT.WEBP : IMAGE_FORMAT.JPEG;
 
+    // 선택된 이미지 파일 압축
     const selectedPromises = Array.from(event.target.files).map((_file) => {
       return resizeImage(_file, {
         width: 800,
@@ -16,6 +21,7 @@ export function useImageUploader() {
         format: format,
       })
         .then((resized) => {
+          // 제한 용량 준수
           return {
             file: resized,
             overSize: false,
@@ -23,6 +29,7 @@ export function useImageUploader() {
           };
         })
         .catch(() => {
+          // 제한 용량 초과 (추후 로직에서 서버 업로드를 거부)
           return {
             file: _file,
             overSize: true,
@@ -35,8 +42,12 @@ export function useImageUploader() {
       _selected.forEach((_select) => {
         console.log(`${Math.round(_select.file.size / 1024)}KB`);
       });
-      // 파일을 누적하여 모달에서 최신 선택 이미지를 추적
-      setItems((prev) => [...prev, ..._selected]);
+      if (multiple) {
+        // 파일을 누적하여 모달에서 최신 선택 이미지를 추적
+        setItems((prev) => [...prev, ..._selected]);
+      } else {
+        setItems([..._selected]);
+      }
     });
   }, []);
 
@@ -45,31 +56,16 @@ export function useImageUploader() {
     setItems([]);
   }, []);
 
-  // 업로드 (압축/리사이즈 후)
-  const handleConfirm = useCallback(async () => {
-    // 업로드 가능 체크
-    const overSizeList = items.filter((_item) => _item.overSize === true);
-    if (overSizeList && overSizeList.length > 0) {
-      alert('업로드 불가');
-      return;
-    }
-
-    // 서버에게 S3 Presigned url 요청
-    // 발급된 url로 이미지 업로드
-    // 200?
-    // 서버에게 업로드 완료 안내
-    // 종료
-  }, [items]);
-
-  return { items, handleSelect, handleConfirm, reset };
+  return { items, setMultiple, handleSelect, reset };
 }
 
+// WebP 지원 여부
 function supportsWebP() {
   try {
     return document
       .createElement('canvas')
-      .toDataURL('image/webp')
-      .startsWith('data:image/webp');
+      .toDataURL(IMAGE_FORMAT.WEBP)
+      .startsWith(`data:${IMAGE_FORMAT.WEBP}`);
   } catch {
     return false;
   }

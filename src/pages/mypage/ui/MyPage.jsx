@@ -1,4 +1,5 @@
 import { useUpdateNickname } from '@/entities/user/hooks/useUpdateNickname';
+import { useUploadProfileImage } from '@/entities/user/hooks/useUploadProfileImage';
 import { useUserStatus } from '@/entities/user/hooks/useUserStatus';
 import { Button } from '@/shared/ui/buttons';
 import InputBox from '@/shared/ui/InputBox';
@@ -6,7 +7,7 @@ import TabGroup from '@/shared/ui/tabs/TabGroup';
 import ThemeToggle from '@/shared/ui/ThemeToggle';
 import Modal from '@/widgets/modal/Modal';
 import { useModal } from '@/widgets/modal/ModalProvider';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useImageUploader } from '../model/useImageUploader';
 import ImageUploadModal from './ImageUploadModal';
 import './myPage.scss';
@@ -24,14 +25,37 @@ export default function MyPage() {
   const [newNickname, setNewNickname] = useState('');
   const { mutate: nicknameMutate, isPending: nicknamePending } =
     useUpdateNickname();
-  // 프로필 이미지 수정
+  // 프로필 이미지 업로드 훅 (파일 선택용)
   const {
     items: avatarSrcList,
+    setMultiple,
     handleSelect: handleAvatarSelect,
-    handleConfirm: handleAvatarUpload,
     reset: resetAvatarSelection,
   } = useImageUploader();
+  // 업로드 로직 훅 (API 연동)
+  const { uploadProfileImage, isUploading } = useUploadProfileImage();
+  // 모달 컨트롤을 위한 modal id state
   const [avatarModalId, setAvatarModalId] = useState(null);
+
+  const buildProfileModalButtons = useCallback(() => {
+    // uploader에 이미지 하나만 업로드 하도록 설정
+    setMultiple(false);
+
+    return [
+      {
+        label: isUploading ? '업로드 중...' : '업로드',
+        variant: 'standard-primary',
+        disabled: isUploading || avatarSrcList.length === 0,
+        onClick: async () => {
+          const snapshot = [...avatarSrcList];
+          const isSuccess = await uploadProfileImage(snapshot);
+          if (isSuccess) {
+            resetAvatarSelection();
+          }
+        },
+      },
+    ];
+  }, [avatarSrcList, isUploading, resetAvatarSelection, uploadProfileImage]);
 
   const sellingList = useMemo(
     () => [
@@ -197,6 +221,7 @@ export default function MyPage() {
     };
   }, [userInfo, userStatusLoding, userStatusError]);
 
+  // 모달 내 미리보기 업데이트
   useEffect(() => {
     if (!avatarModalId) return;
 
@@ -209,16 +234,18 @@ export default function MyPage() {
           handleSelect={handleAvatarSelect}
         />
       ),
+      buttons: buildProfileModalButtons(),
     }));
   }, [
     avatarModalId,
     avatarSrcList,
+    buildProfileModalButtons,
     handleAvatarSelect,
     profile.avatar,
     updateModal,
   ]);
 
-  // 프로필 변경 모달
+  // 프로필 변경 모달 열기
   const openProfileModal = () => {
     const modalId = openModal(Modal, {
       title: '프로필 이미지 변경',
@@ -229,13 +256,7 @@ export default function MyPage() {
           handleSelect={handleAvatarSelect}
         />
       ),
-      buttons: [
-        {
-          label: '업로드',
-          variant: 'standard-primary',
-          onClick: handleAvatarUpload,
-        },
-      ],
+      buttons: buildProfileModalButtons(),
       width: '520px',
       centered: true,
       onClose: () => {

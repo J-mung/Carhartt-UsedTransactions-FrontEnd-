@@ -1,5 +1,4 @@
 import kakaoLoginImage from '@/app/assets/images/kakao/login_ko/kakao_login_medium_wide.png';
-import { makeUserAvatar } from '@/entities/user/lib/avatar';
 import { carHarttApi } from '@/shared/api/axios';
 import { useMockConfig } from '@/shared/config/mockConfig.jsx';
 import { Button } from '@/shared/ui/buttons';
@@ -17,8 +16,6 @@ const mockOAuthProviders = [
     authorize_url: '',
   },
 ];
-
-const getMockUserInfo = () => makeUserAvatar({ ...baseMockUserInfo });
 
 export default function LoginForm() {
   const [kakaoLogin, setKakaoLogin] = useState('');
