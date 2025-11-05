@@ -1,12 +1,12 @@
 import AlternativeImage from '@/app/assets/images/AlternativeImage.jpg';
-import { carHarttApi } from '@/shared/api/axios'; // 커스텀 axios 인스턴스
-import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import {
-  productData,
-  mockCategories,
   mockProductsList,
+  productData,
 } from '@/pages/single-product/model/mockProductData';
+import { carHarttApi } from '@/shared/api/axios'; // 커스텀 axios 인스턴스
+import { useMockToggle } from '@/shared/config/MockToggleProvider';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 
 export function useProducts(productId) {
   const [product, setProduct] = useState(undefined);
@@ -61,16 +61,16 @@ export function useProducts(productId) {
   return { product, loading, error };
 }
 
-const USE_MOCK_DATA = true;
-
 // Fetch 상품 상세 정보
 // GET /v1/items/{itemId}
 export function useProductDetail(itemId) {
+  const { useMock } = useMockToggle();
+
   return useQuery({
     queryKey: ['product', itemId],
     queryFn: async () => {
       // Mock data
-      if (USE_MOCK_DATA) {
+      if (useMock) {
         await new Promise((resolve) => setTimeout(resolve, 500));
         return productData;
       }
@@ -111,11 +111,13 @@ export function useProductsList({
   page = 1,
   limit = 16,
 } = {}) {
+  const { useMock } = useMockToggle();
+
   return useQuery({
     queryKey: ['products', 'list', { categoryId, sort, page, limit }],
     queryFn: async () => {
       // Mock data
-      if (USE_MOCK_DATA) {
+      if (useMock) {
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         // Filter by category
