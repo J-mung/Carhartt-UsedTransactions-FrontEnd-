@@ -1,4 +1,5 @@
 import { carHarttApi } from '@/shared/api/axios';
+import { useMockToggle } from '@/shared/config/MockToggleProvider';
 import { useEffect, useState } from 'react';
 
 const mockAddresses = [
@@ -21,6 +22,7 @@ export function useAddresses(userId) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(undefined);
   const [reloadTrigger, setReloadTrigger] = useState(0);
+  const { useMock } = useMockToggle();
 
   const refresh = () => setReloadTrigger((prev) => prev + 1);
 
@@ -29,7 +31,7 @@ export function useAddresses(userId) {
 
     setLoading(true);
 
-    if (!userId) {
+    if (useMock) {
       // API 준비 전: mock 데이터
       setAddresses(mockAddresses);
       setLoading(false);
