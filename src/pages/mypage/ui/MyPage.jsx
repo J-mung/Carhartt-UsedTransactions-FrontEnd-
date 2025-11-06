@@ -1,3 +1,4 @@
+import { useWishList } from '@/entities/product/hooks/useWishList';
 import { useUpdateNickname } from '@/entities/user/hooks/useUpdateNickname';
 import { useUploadProfileImage } from '@/entities/user/hooks/useUploadProfileImage';
 import { useUserStatus } from '@/entities/user/hooks/useUserStatus';
@@ -36,6 +37,13 @@ export default function MyPage() {
   const { uploadProfileImage, isUploading } = useUploadProfileImage();
   // 모달 컨트롤을 위한 modal id state
   const [avatarModalId, setAvatarModalId] = useState(null);
+
+  // 상품 찜하기 목록
+  const {
+    data: wishList,
+    isLoading: wishListLoading,
+    error: wishListError,
+  } = useWishList();
 
   const buildProfileModalButtons = useCallback(() => {
     // uploader에 이미지 하나만 업로드 하도록 설정
@@ -149,52 +157,6 @@ export default function MyPage() {
     []
   );
 
-  const wishList = useMemo(
-    () => [
-      {
-        id: 'wish-1',
-        title: '트레드 밀 비니',
-        price: '32,000원',
-        status: '가격 인하',
-        statusType: 'notice',
-        description: '찜한 후 2일 경과 · 5,000원 인하',
-      },
-      {
-        id: 'wish-2',
-        title: 'Kendrick Cap',
-        price: '46,000원',
-        status: '판매중',
-        statusType: 'ongoing',
-        description: '남은 수량 1개',
-      },
-      {
-        id: 'wish-3',
-        title: 'Hooded Sail Jacket',
-        price: '165,000원',
-        status: '재입고 알림',
-        statusType: 'notice',
-        description: '입고 예정 · 3일 전 안내',
-      },
-      {
-        id: 'wish-4',
-        title: 'Simple Pant',
-        price: '85,000원',
-        status: '판매중',
-        statusType: 'ongoing',
-        description: '사이즈 30 · 새상품 급',
-      },
-      {
-        id: 'wish-5',
-        title: 'Jake Hip Bag',
-        price: '58,000원',
-        status: '가격 인하',
-        statusType: 'notice',
-        description: '10% 할인 진행 중',
-      },
-    ],
-    []
-  );
-
   const profile = useMemo(() => {
     if (userStatusLoding || userStatusError) {
       return {
@@ -214,9 +176,9 @@ export default function MyPage() {
       email: userInfo.email ?? userInfo.provider ?? '이메일 정보 이슈',
       joinDate: '2024.01.12 가입',
       stats: [
-        { key: 'selling', label: '판매', value: sellingList.length ?? 0 },
-        { key: 'sold', label: '구매', value: purchaseList.length ?? 0 },
-        { key: 'purchased', label: '찜', value: wishList.length ?? 0 },
+        { key: 'selling', label: '판매', value: sellingList?.length ?? 0 },
+        { key: 'sold', label: '구매', value: purchaseList?.length ?? 0 },
+        { key: 'purchased', label: '찜', value: wishList?.length ?? 0 },
       ],
     };
   }, [userInfo, userStatusLoding, userStatusError]);
@@ -311,7 +273,13 @@ export default function MyPage() {
       content: (
         <MyPageProductList
           items={wishList}
-          emptyText={'찜한 상품이 없습니다.'}
+          emptyText={
+            wishListLoading
+              ? '상품을 불러오는 중입니다...'
+              : wishListError
+                ? '찜한 상품을 불러오는 중 오류가 발생했습니다.'
+                : '찜한 상품이 없습니다.'
+          }
         />
       ),
     },
