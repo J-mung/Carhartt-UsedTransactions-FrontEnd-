@@ -1,4 +1,7 @@
-import { mockProductsList } from '@/pages/single-product/model/mockProductData';
+import {
+  mockProductsList,
+  productData,
+} from '@/pages/single-product/model/mockProductData';
 import { carHarttApi } from '@/shared/api/axios'; // 커스텀 axios 인스턴스
 import { useQuery } from '@tanstack/react-query';
 

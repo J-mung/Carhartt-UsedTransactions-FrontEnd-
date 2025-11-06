@@ -55,7 +55,7 @@ export default function PaymentForm() {
     const payment = formData.get('paymentMethod');
     const message = formData.get('buyerMsg');
     const requestBody = {
-      item_id: 4,
+      item_id: 22,
       address_id: 101,
       payment_method: payment,
       detail_message: message,
@@ -72,14 +72,15 @@ export default function PaymentForm() {
       });
 
       // TODO paymentResultResponse 결과에 따라 결제 진행
-      openModal(Modal, {
-        title: '결제 준비 테스트 - 성공',
-        children: (
-          <span calssName={'text-regular'}>
-            주문번호 {orderResponse.order_id}, 결제 준비 테스트 성공
-          </span>
-        ),
-      });
+      // openModal(Modal, {
+      //   title: '결제 준비 테스트 - 성공',
+      //   children: (
+      //     <span className={'text-regular'}>
+      //       주문번호 {orderResponse.order_id}, 결제 준비 테스트 성공
+      //     </span>
+      //   ),
+      // });
+      window.location.href = paymentResultResponse?.next_redirect_pc_url || '/';
     } catch (error) {
       openModal(Modal, {
         title: '결제 준비 테스트 - 실패',
@@ -110,9 +111,9 @@ export default function PaymentForm() {
   if (productError) {
     return (
       <>
-        <span className={'text-strong'}>에러가 발생했습니다.</span>;
-        <span className={'text-regular'}>{productError}</span>;
-        <span className={'text-regular'}>잠시 후, 다시 시도해주세요.</span>;
+        <span className={'text-strong'}>에러가 발생했습니다.</span>
+        <span className={'text-regular'}>{String(productError)}</span>
+        <span className={'text-regular'}>잠시 후, 다시 시도해주세요.</span>
       </>
     );
   }
@@ -121,7 +122,9 @@ export default function PaymentForm() {
     <div className={'payment-form ml-auto mr-auto'}>
       {contentWrapper(
         '상품정보',
-        <span className={'text-regular'}>상품명: {product.item_name}</span>
+        <span className={'text-regular'}>
+          상품명: {product?.item_name ?? '상품 정보 없음'}
+        </span>
       )}
       <form ref={formRef} onSubmit={handlePayment}>
         <AddressRadioGroup userId={''} />
@@ -145,9 +148,9 @@ export default function PaymentForm() {
             value={method.value}
             onChange={(e) => {
               const selected = payOptions.find(
-                (_opt) => _opt.key === e.target.key
+                (_opt) => _opt.value === e.target.value
               );
-              setMethod(selected);
+              if (selected) setMethod(selected);
             }}
             options={payOptions}
             variant={'button'}
@@ -158,7 +161,7 @@ export default function PaymentForm() {
             <p>상품 정보 로딩 중...</p>
           ) : (
             <Button
-              label={`${product.item_price} 결제하기`}
+              label={`${product?.item_price ?? 0} 결제하기`}
               onClick={() => formRef.current?.requestSubmit?.()}
               size={'--l'}
               className={'form-btn__flex'}

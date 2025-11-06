@@ -8,9 +8,9 @@ export const usePaymentReadyMutation = () => {
         order_id: orderId,
         payment_method: paymentMethod,
         amount_of_payment: amount,
-        approve_url: '/payment/1101/result',
-        fail_url: '/payment/1101/result',
-        cancel_url: '/payment/1101/result',
+        approve_url: 'https://localhost:5173/payment/1101/result',
+        fail_url: 'https://localhost:5173/payment/1101/result',
+        cancel_url: 'https://localhost:5173/payment/1101/result',
       };
       const response = await carHarttApi({
         method: 'POST',
