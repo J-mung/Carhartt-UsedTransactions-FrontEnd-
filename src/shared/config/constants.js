@@ -7,7 +7,6 @@ export const AXIOS_CONFIG = {
   DEFAULT_HEADERS: {
     Accept: 'application/json',
     'Content-Type': 'application/json; charset=utf-8',
-    'Accept-Charset': 'utf-8',
     'X-Server-Timezone': 'UTC',
     'X-Server-Time-Format': 'ISO-8601',
   },
