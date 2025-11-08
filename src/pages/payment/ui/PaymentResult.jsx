@@ -1,87 +1,97 @@
 import AlternativeImage from '@/app/assets/images/AlternativeImage.jpg';
+import { usePaymentApproveMutation } from '@/entities/payment/hooks/usePaymentApproveMutation';
+import { usePaymentResultMutation } from '@/entities/payment/hooks/usePaymentResultMutation';
 import '@/pages/payment/ui/paymentResult.scss';
-import { carHarttApi } from '@/shared/api/axios';
-import { useMockToggle } from '@/shared/config/MockToggleProvider';
-import Modal from '@/widgets/modal/Modal';
-import { useModal } from '@/widgets/modal/ModalProvider';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 export default function PaymentResult() {
+  // 결제 요청으로 uri에 추가된 pg_token query string추출
+  const { search } = useLocation();
+  const urlSearchParams = new URLSearchParams(search);
+  const provider = urlSearchParams.get('provider');
+  const pgToken = urlSearchParams.get('pg_token');
+
+  // usePaymentApproveMutation (승인 요청)
+  const approveMutation = usePaymentApproveMutation();
+  // usePaymentResultMutation (결제 완료된 상품 정보 요청)
+  const resultMutation = usePaymentResultMutation();
+
   const [paymentResult, setPaymentResult] = useState(false);
   const [paymentInfo, setPaymentInfo] = useState(undefined);
-  const { openModal } = useModal();
-  const { useMock } = useMockToggle();
 
+  // 결제 승인 후 주문정보 조회
   useEffect(() => {
-    //결제 성공 정보
-    getPaymentResult('');
-  }, []);
-  const getPaymentResult = (orderId) => {
-    // Mock data 반환
-    if (useMock) {
-      setPaymentInfo({
-        itemId: 1,
-        itemName: '근면성실한 샐러리',
-        itemPrice: 95000,
-        itemImg: AlternativeImage,
-        addressDetail: '서울특별시 강남구 역삼동 ㅁㅁㅁ-ㅁㅁㅁ',
-        orderDateTime: Date.now(),
-      });
-      setPaymentResult(true);
-    } else {
-      // 결제 성공 확인 API
-      carHarttApi({
-        method: 'GET',
-        url: `v1/order/${orderId}/summary`,
-      })
-        .then((response) => {
-          const { status, data, meta } = response;
-          if (!!data) {
-            setPaymentResult(true);
-            setPaymentInfo({
-              ...data,
-            });
-          } else {
-            openModal(Modal, {
-              title: '결제 실패',
-              children: (
-                <span className={'text-strong'}>
-                  알 수 없는 에러로 결제 실패 했습니다.
-                </span>
-              ),
-            });
-          }
-        })
-        .catch((error) => {
-          openModal(Modal, {
-            title: '결제 실패',
-            children: (
-              <>
-                <span className={'text-strong'}>
-                  에러로 결제 실패 했습니다.
-                </span>
-                <span claaName={'text-regular'}>{error.message}</span>
-              </>
-            ),
-          });
+    if (!pgToken || !provider) return;
+
+    let cancelled = false;
+
+    (async () => {
+      try {
+        // 결제 승인 요청
+        const response = await approveMutation.mutateAsync({
+          provider,
+          pgToken,
         });
-    }
-  };
+        const orderId = response?.order_id;
+        if (!orderId) throw new Error('order_id 누락');
 
-  // if (productLoading) {
-  //   return (
-  //     <div className={'payment-result--wrapper'}>
-  //       <span className={'text-regular'}>로딩 중...</span>
-  //     </div>
-  //   );
-  // }
+        // 주문정보 조회
+        const result = await resultMutation.mutateAsync({ orderId });
+        if (!cancelled) {
+          setPaymentInfo(result);
+          setPaymentResult(true);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setPaymentInfo(null);
+          setPaymentResult(false);
+        }
+      }
+    })();
 
-  if (!paymentResult) {
+    return () => {
+      cancelled = true;
+    };
+  }, [pgToken, provider]);
+
+  // 결제 승인 요청
+  if (approveMutation.isPending) {
     return (
       <div className={'payment-result--wrapper'}>
-        <span className={'text-regular'}>
-          상품 정보 로드 에러: {'productError'}
-        </span>
+        <span className={'text-regular'}>결제 승인 요청 중...</span>
+      </div>
+    );
+  }
+  // 결제 승인 실패
+  if (approveMutation.isError) {
+    return (
+      <div className={'payment-result--wrapper'}>
+        <span className={'text-regular'}>결제 승인 실패</span>
+      </div>
+    );
+  }
+  // 결제 완료 상품 정보 요청
+  if (resultMutation.isPending) {
+    return (
+      <div className={'payment-result--wrapper'}>
+        <span className={'text-regular'}>결제 완료 상품 정보 요청 중...</span>
+      </div>
+    );
+  }
+  // 결제 완료 상품 정보 요청 실패
+  if (resultMutation.isError) {
+    return (
+      <div className={'payment-result--wrapper'}>
+        <span className={'text-regular'}>결제 완료 상품 정보 요청 실패</span>
+      </div>
+    );
+  }
+
+  if (!paymentInfo) {
+    return (
+      <div className={'payment-result--wrapper'}>
+        <span className={'text-regular'}>결제 정보 없음</span>
       </div>
     );
   }
@@ -100,8 +110,8 @@ export default function PaymentResult() {
         <div className={'product--info'}>
           <img
             className={'info--image'}
-            src={paymentInfo.itemImg ?? ''}
-            alt={AlternativeImage}
+            src={paymentInfo?.itemImg ?? AlternativeImage}
+            alt={'상품 이미지'}
           />
           {/* == grid로 만들기 == */}
           <div className="info--table">
@@ -116,7 +126,7 @@ export default function PaymentResult() {
                 </div>
                 <div className="info--table__cell">
                   <span className="text-regular">
-                    {paymentInfo[key] ?? '-'}
+                    {paymentInfo?.[key] ?? '-'}
                   </span>
                 </div>
               </div>
@@ -129,7 +139,7 @@ export default function PaymentResult() {
         <div className={'product--price'}>
           <span className={'h4'}>최종 결제 금액</span>
           <span className={'h4'}>
-            {Number(paymentInfo.itemPrice).toLocaleString('ko-KR', {
+            {Number(paymentInfo?.itemPrice).toLocaleString('ko-KR', {
               style: 'currency',
               currency: 'KRW',
             })}
