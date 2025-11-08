@@ -1,6 +1,7 @@
 import AlternativeImage from '@/app/assets/images/AlternativeImage.jpg';
 import '@/pages/payment/ui/paymentResult.scss';
 import { carHarttApi } from '@/shared/api/axios';
+import { useMockToggle } from '@/shared/config/MockToggleProvider';
 import Modal from '@/widgets/modal/Modal';
 import { useModal } from '@/widgets/modal/ModalProvider';
 import { useEffect, useState } from 'react';
@@ -9,13 +10,15 @@ export default function PaymentResult() {
   const [paymentResult, setPaymentResult] = useState(false);
   const [paymentInfo, setPaymentInfo] = useState(undefined);
   const { openModal } = useModal();
+  const { useMock } = useMockToggle();
+
   useEffect(() => {
     //결제 성공 정보
     getPaymentResult('');
   }, []);
   const getPaymentResult = (orderId) => {
     // Mock data 반환
-    if (orderId === '') {
+    if (useMock) {
       setPaymentInfo({
         itemId: 1,
         itemName: '근면성실한 샐러리',

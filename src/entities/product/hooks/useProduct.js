@@ -1,7 +1,4 @@
-import {
-  mockProductsList,
-  productData,
-} from '@/pages/single-product/model/mockProductData';
+import { mockProductsList } from '@/pages/single-product/model/mockProductData';
 import { carHarttApi } from '@/shared/api/axios'; // 커스텀 axios 인스턴스
 import { useQuery } from '@tanstack/react-query';
 
@@ -10,11 +7,13 @@ const USE_MOCK_DATA = true;
 // Fetch 상품 상세 정보
 // GET /v1/items/{itemId}
 export function useProductDetail(itemId) {
+  const { useMock } = useMockToggle();
+
   return useQuery({
     queryKey: ['product', itemId],
     queryFn: async () => {
       // Mock data
-      if (USE_MOCK_DATA) {
+      if (useMock) {
         await new Promise((resolve) => setTimeout(resolve, 500));
         return productData;
       }
@@ -55,11 +54,13 @@ export function useProductsList({
   page = 1,
   limit = 16,
 } = {}) {
+  const { useMock } = useMockToggle();
+
   return useQuery({
     queryKey: ['products', 'list', { categoryId, sort, page, limit }],
     queryFn: async () => {
       // Mock data
-      if (USE_MOCK_DATA) {
+      if (useMock) {
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         // Filter by category
