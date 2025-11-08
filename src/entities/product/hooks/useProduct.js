@@ -1,8 +1,10 @@
-import { mockProductsList } from '@/pages/single-product/model/mockProductData';
+import {
+  mockProductsList,
+  productData,
+} from '@/pages/single-product/model/mockProductData';
 import { carHarttApi } from '@/shared/api/axios'; // 커스텀 axios 인스턴스
+import { useMockToggle } from '@/shared/config/MockToggleProvider';
 import { useQuery } from '@tanstack/react-query';
-
-const USE_MOCK_DATA = true;
 
 // Fetch 상품 상세 정보
 // GET /v1/items/{itemId}
