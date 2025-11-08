@@ -45,18 +45,21 @@ export default function PaymentForm() {
     setBuyerMessage(e.target.value);
   };
 
+  // 주문 생성 커스텀 hook
   const orderMutation = useOrderMutation();
+  // 카카오페이 화면 요청 커스텀 hook
   const paymentReadyMutation = usePaymentReadyMutation();
 
   const handlePayment = async (e) => {
     e.preventDefault();
+    // 주문 신청서에서 필요한 데이터 get
     const formData = new FormData(e.currentTarget);
     const address = formData.get('addressList');
     const payment = formData.get('paymentMethod');
     const message = formData.get('buyerMsg');
     const requestBody = {
-      item_id: 22,
-      address_id: 101,
+      item_id: 22, // product.item_id
+      address_id: 101, // address.id
       payment_method: payment,
       detail_message: message,
     };
