@@ -3,7 +3,6 @@ import LoginCallback from '@/pages/login/ui/LoginCallback';
 import PaymentPage from '@/pages/payment';
 import PaymentResult from '@/pages/payment/ui/PaymentResult';
 import { createBrowserRouter } from 'react-router-dom';
-import HomePage from '../pages/home/HomePage';
 import TestProfilePage from '../pages/profile';
 import SingleProductPage from '../pages/single-product';
 import MainLayout from './layouts/MainLayout';
@@ -25,7 +24,7 @@ export const router = createBrowserRouter(
         // { path: '/product/new', element: <ProductUploadPage /> },
         // { path: '/product/:itemId/edit', element: <ProductUploadPage /> },
         { path: `payment/:itemId`, element: <PaymentPage /> },
-        { path: `payment/:itemId/result`, element: <PaymentResult /> },
+        { path: `payment/result`, element: <PaymentResult /> },
       ],
     },
   ],
