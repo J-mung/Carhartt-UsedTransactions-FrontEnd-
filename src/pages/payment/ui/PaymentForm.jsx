@@ -79,6 +79,26 @@ export default function PaymentForm() {
     };
   };
 
+  // 주문 생성, 결제 요청 payload 빌더
+  const buildPaymentPayload = ({ product, formData, addressId }) => {
+    const itemId = product?.item_id;
+    const itemPrice = product?.item_price;
+
+    return {
+      order: {
+        item_id: itemId,
+        address_id: Number(addressId),
+        payment_method: formData.get('paymentMethod'),
+        detail_message: formData.get('buyerMsg'),
+      },
+      payment: {
+        orderId: null, // handleOrder 성공 후 채워짐
+        paymentMethod: formData.get('paymentMethod'),
+        amount: itemPrice,
+      },
+    };
+  };
+
   // 주문 생성 api 요청 handler
   const handleOrder = async (payload, navigate) => {
     try {
@@ -122,6 +142,7 @@ export default function PaymentForm() {
     });
   };
 
+  // 결제 요청 api 핸들러
   const handlePaymentReady = async ({
     orderId,
     paymentMethod,
@@ -145,6 +166,7 @@ export default function PaymentForm() {
       return result.next_redirect_pc_url;
     } catch (error) {
       handlePaymentReadyError({ error, payload, navigate });
+      throw error;
     }
   };
 
@@ -189,16 +211,27 @@ export default function PaymentForm() {
     // 주문 신청서에서 필요한 데이터 get
     const formData = getFormData(new FormData(e.currentTarget));
     // 주문 생성 api payload 생성
-    const orderPayload = createOrderPayload(formData);
+
+    // 선택된 배송지 id 추출
+    const selectedRadio = e.currentTarget.querySelector(
+      'input[name="addressList"]:checked'
+    );
+    const addressId = selectedRadio?.dataset.key;
+
+    const { order: orderPayload, payment: paymentPayload } =
+      buildPaymentPayload({
+        product,
+        formData: new FormData(e.currentTarget),
+        addressId,
+      });
 
     try {
       // 주문 생성
       const orderId = await handleOrder(orderPayload, navigate);
       // 결제 준비
       const paymentReadyUrl = await handlePaymentReady({
-        orderId,
-        paymentMethod: formData.payment,
-        amount: product.item_price,
+        ...paymentPayload,
+        orderId: orderId,
         navigate,
       });
 

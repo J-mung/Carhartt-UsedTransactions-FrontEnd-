@@ -22,23 +22,17 @@ export default function AddressRadioGroup({ userId = '' }) {
   // 주소지 조회
   useEffect(() => {
     // 주소지 조회 성공 시
-    if (!isLoading && addresses.length > 0) {
-      setCurAddress({ ...addresses[0] });
+    if (addresses && addresses.count > 0) {
+      setCurAddress(addresses.list[0]);
     }
-  }, [isLoading, addresses]);
+  }, [addresses]);
 
   const handleClickDelete = (addr) => {
     carHarttApi({
       method: 'DELETE',
       url: `/v1/orders/address/${addr.key}`,
     })
-      .then((response) => {
-        const { success, data, meta } = response;
-        if (success) {
-          // window.location.reload();
-          refresh();
-        }
-      })
+      .then(() => refetch())
       .catch((err) => {
         console.error(`배송지 삭제 실패 : ${err}`);
         openModal(Modal, {
@@ -73,7 +67,7 @@ export default function AddressRadioGroup({ userId = '' }) {
   };
 
   const customOptions = () => {
-    return (addresses ?? []).map((_addr) => ({
+    return (addresses.list ?? []).map((_addr) => ({
       ..._addr,
       label: (
         <div className={'radio__button-label-with-delete'}>
@@ -122,7 +116,7 @@ export default function AddressRadioGroup({ userId = '' }) {
             name={'addressList'}
             value={curAddress?.value}
             onChange={(e) => {
-              const selected = addresses.find(
+              const selected = addresses.list.find(
                 (_addr) => _addr.key === e.target.key
               );
               setCurAddress(selected);
