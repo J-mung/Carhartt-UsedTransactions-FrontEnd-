@@ -10,7 +10,7 @@ export const usePaymentResultMutation = () => {
   return useMutation({
     mutationFn: async ({ orderId }) => {
       // mock 데이터 사용 시
-      if (!useMock) {
+      if (useMock) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         return {
           itemId: 1,
@@ -31,7 +31,17 @@ export const usePaymentResultMutation = () => {
 
         return response.data;
       } catch (error) {
-        throw error;
+        const { code, message } = error;
+
+        if (['O004', 'O005', 'O006'].includes(code)) {
+          throw { code, message };
+        }
+
+        throw {
+          code: code || 'UNKNOWN',
+          message:
+            '확인되지 않은 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        };
       }
     },
   });
