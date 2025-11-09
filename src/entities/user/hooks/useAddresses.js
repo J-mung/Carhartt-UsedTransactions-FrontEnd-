@@ -25,9 +25,12 @@ export function useAddressesQuery(userId) {
       console.log('[useAddressesQuery] queryFn called', { userId });
 
       // Mock data
-      if (!useMock) {
+      if (useMock) {
         await new Promise((resolve) => setTimeout(resolve, 500));
-        return mockAddresses;
+        return {
+          count: mockAddresses.length,
+          list: mockAddresses,
+        };
       }
 
       // API 요청

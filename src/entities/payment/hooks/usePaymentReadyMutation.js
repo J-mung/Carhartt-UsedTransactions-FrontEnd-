@@ -9,7 +9,7 @@ export const usePaymentReadyMutation = () => {
   return useMutation({
     mutationFn: async ({ orderId, paymentMethod, amount }) => {
       // mock 데이터 사용 시
-      if (!useMock) {
+      if (useMock) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         return {
           next_redirect_pc_url: `/payment/result?provider=${paymentMethod}&order_id=${orderId}&pg_token=pg123`,
