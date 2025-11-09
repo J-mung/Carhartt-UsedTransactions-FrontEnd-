@@ -18,6 +18,7 @@ export const usePaymentApproveMutation = () => {
 
       // 요청 Body
       const requestBody = {
+        order_id: orderId,
         provider: provider,
         pgToken: pgToken,
       };
@@ -26,7 +27,7 @@ export const usePaymentApproveMutation = () => {
         // 응답
         const response = await carHarttApi({
           method: 'POST',
-          url: `/v1/order/payment/approve?orderId=${orderId}`,
+          url: '/v1/order/payment/approve',
           data: requestBody,
         });
 
