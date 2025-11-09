@@ -1,70 +1,61 @@
 import { carHarttApi } from '@/shared/api/axios';
 import { useMockToggle } from '@/shared/config/MockToggleProvider';
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 const mockAddresses = [
   {
-    key: 'add1',
+    key: '101',
     value: '주소1',
     alias: '집',
     label: '집: 주소1',
   },
   {
-    key: 'add2',
+    key: '102',
     value: '주소2',
     alias: '본가',
     label: '본가: 주소2',
   },
 ];
 
-export function useAddresses(userId) {
-  const [addresses, setAddresses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(undefined);
-  const [reloadTrigger, setReloadTrigger] = useState(0);
+export function useAddressesQuery(userId) {
   const { useMock } = useMockToggle();
+  return useQuery({
+    queryKey: ['addresses', userId],
+    queryFn: async () => {
+      console.log('[useAddressesQuery] queryFn called', { userId });
 
-  const refresh = () => setReloadTrigger((prev) => prev + 1);
+      // Mock data
+      if (useMock) {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        return {
+          count: mockAddresses.length,
+          list: mockAddresses,
+        };
+      }
 
-  useEffect(() => {
-    let isMounted = true; // 언마운트 시 setState 방지
+      // API 요청
+      try {
+        const response = await carHarttApi({
+          method: 'GET',
+          url: `/v1/orders/address?member_id=${userId}`,
+        });
 
-    setLoading(true);
+        const data = response.data;
 
-    if (useMock) {
-      // API 준비 전: mock 데이터
-      setAddresses(mockAddresses);
-      setLoading(false);
-      return;
-    }
-
-    carHarttApi({
-      method: 'GET',
-      url: `/v1/orders/address?member_id=${userId}`,
-      responseType: 'application/json',
-    })
-      .then((response) => {
-        if (isMounted) {
-          // API 응답 구조에 맞게 조정 필요
-          // 필요 시, model 디렉터리 추가 후 타입/DTO/도메인 로직 등 정의
-          setAddresses([...response.data]);
-        }
-      })
-      .catch((err) => {
-        if (isMounted) {
-          setError(err);
-        }
-      })
-      .finally(() => {
-        if (isMounted) {
-          setLoading(false);
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [userId, reloadTrigger]);
-
-  return { addresses, loading, error, refresh };
+        return {
+          count: data.address_number,
+          list: data.address_item_list.map((_addr) => ({
+            key: String(_addr.address_id),
+            alias: _addr.address_name,
+            value: `${_addr.road_address} ${_addr.detail_address}`,
+            zip: _addr.zip_code,
+            label: `${_addr.address_name}: ${_addr.road_address} ${_addr.detail_address}`,
+          })),
+        };
+      } catch (error) {
+        console.error(`주소지 목록 조회 API 에러 : ${error}`);
+        throw error;
+      }
+    },
+  });
 }
