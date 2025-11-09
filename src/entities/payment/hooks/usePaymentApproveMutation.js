@@ -9,9 +9,9 @@ export const usePaymentApproveMutation = () => {
   const { useMock } = useMockToggle();
 
   return useMutation({
-    mutationFn: async ({ provider, pgToken }) => {
+    mutationFn: async ({ provider, orderId, pgToken }) => {
       // mock 데이터 사용 시
-      if (useMock) {
+      if (!useMock) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         return { order_id: 1 }; // 테스트 목적으로 order_id를 파라미터로 받아 와야 하나
       }
@@ -26,7 +26,7 @@ export const usePaymentApproveMutation = () => {
         // 응답
         const response = await carHarttApi({
           method: 'POST',
-          url: '/v1/order/payment/approve',
+          url: `/v1/order/payment/approve?orderId=${orderId}`,
           data: requestBody,
         });
 

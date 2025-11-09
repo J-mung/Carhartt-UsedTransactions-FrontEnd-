@@ -11,6 +11,7 @@ export default function PaymentResult() {
   const urlSearchParams = new URLSearchParams(search);
   const provider = urlSearchParams.get('provider');
   const pgToken = urlSearchParams.get('pg_token');
+  const orderId = urlSearchParams.get('order_id');
 
   // usePaymentApproveMutation (승인 요청)
   const approveMutation = usePaymentApproveMutation();
@@ -31,13 +32,16 @@ export default function PaymentResult() {
         // 결제 승인 요청
         const response = await approveMutation.mutateAsync({
           provider,
+          orderId,
           pgToken,
         });
-        const orderId = response?.order_id;
+        const approveOrderId = response?.order_id;
         if (!orderId) throw new Error('order_id 누락');
 
         // 주문정보 조회
-        const result = await resultMutation.mutateAsync({ orderId });
+        const result = await resultMutation.mutateAsync({
+          orderId: approveOrderId,
+        });
         if (!cancelled) {
           setPaymentInfo(result);
           setPaymentResult(true);

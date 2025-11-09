@@ -9,10 +9,10 @@ export const usePaymentReadyMutation = () => {
   return useMutation({
     mutationFn: async ({ orderId, paymentMethod, amount }) => {
       // mock 데이터 사용 시
-      if (useMock) {
+      if (!useMock) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         return {
-          next_redirect_pc_url: `/payment/result?provider=${paymentMethod}&orderid=${orderId}&pg_token=pg123`,
+          next_redirect_pc_url: `/payment/result?provider=${paymentMethod}&order_id=${orderId}&pg_token=pg123`,
         };
       }
 
@@ -21,9 +21,9 @@ export const usePaymentReadyMutation = () => {
         order_id: orderId,
         payment_method: paymentMethod,
         amount_of_payment: amount,
-        approve_url: `https://localhost:5173/payment/result?provider=${paymentMethod}&orderid=${orderId}`,
-        fail_url: `https://localhost:5173/payment/result?provider=${paymentMethod}&orderid=${orderId}`,
-        cancel_url: `https://localhost:5173/payment/result?provider=${paymentMethod}&orderid=${orderId}`,
+        approve_url: `https://carhartt-local.com:5173/payment/result?provider=${paymentMethod}&order_id=${orderId}`,
+        fail_url: `https://carhartt-local.com:5173/payment/result?provider=${paymentMethod}&order_id=${orderId}`,
+        cancel_url: `https://carhartt-local.com:5173/payment/result?provider=${paymentMethod}&order_id=${orderId}`,
       };
       try {
         // 응답

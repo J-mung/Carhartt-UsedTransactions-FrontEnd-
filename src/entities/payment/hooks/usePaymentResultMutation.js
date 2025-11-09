@@ -10,7 +10,7 @@ export const usePaymentResultMutation = () => {
   return useMutation({
     mutationFn: async ({ orderId }) => {
       // mock 데이터 사용 시
-      if (useMock) {
+      if (!useMock) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         return {
           itemId: 1,
