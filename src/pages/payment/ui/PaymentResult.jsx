@@ -17,32 +17,133 @@ export default function PaymentResult() {
   const approveMutation = usePaymentApproveMutation();
   // usePaymentResultMutation (결제 완료된 상품 정보 요청)
   const resultMutation = usePaymentResultMutation();
-
   const [paymentResult, setPaymentResult] = useState(false);
   const [paymentInfo, setPaymentInfo] = useState(undefined);
 
+  // 기본 에러 모달 -> PaymentForm에도 있는 거라 공통으로 분리
+  const errorModal = (title, message, onClose = () => {}) => {
+    openModal(Modal, {
+      title: title,
+      children: <span className={'text-regular'}>{message}</span>,
+      onClose: onClose,
+    });
+  };
+  // 결제 승인 api payload 빌더
+  const buildPaymentApprovePayload = (urlSearchParams) => {
+    return {
+      provider: urlSearchParams.get('provider'),
+      pgToken: urlSearchParams.get('pg_token'),
+      orderId: urlSearchParams.get('orderId'),
+    };
+  };
+  // 결제 승인 api 핸들러
+  const handlePaymentApprove = async (payload) => {
+    const { mutateAsync: requestApprove } = approveMutation;
+
+    try {
+      const result = await requestApprove(payload);
+
+      if (!result?.order_id) {
+        throw {
+          code: 'P000',
+          message:
+            '예기치 못한 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.',
+        };
+      }
+
+      return result.order_id;
+    } catch (error) {
+      handlePaymentApproveError({ error, payload, navigate });
+      throw error;
+    }
+  };
+  // 결제 승인 api error 핸들러
+  const handlePaymentApproveError = ({ error, payload, navigate }) => {
+    // 코드별 routes 정의
+    const routes = {
+      P008: () => navigate('/payment'),
+      P009: () => navigate('/payment/result?status=fail'),
+    };
+    // 코드별 모달 title 정의
+    const titles = {
+      P008: '결제 취소',
+      P009: '결제 실패',
+      DEFAULT: '결제 승인 오류',
+    };
+
+    const code = error.code || 'DEFAULT';
+    const title = titles[error.code] ?? title.DEFAULT;
+    // 모달 open
+    errorModal({
+      title: title,
+      message: error.message,
+      onClose: routes[code] || (() => {}),
+    });
+  };
+
+  // 결제 승인된 상품 조회 api 핸들러
+  const handleApprovedItem = async (payload) => {
+    const { mutateAsync: requestApprovedItem } = resultMutation;
+
+    try {
+      const approvedItem = requestApprovedItem(payload);
+
+      if (!approvedItem) {
+        throw {
+          code: 'O000',
+          message:
+            '예기치 못한 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.',
+        };
+      }
+
+      return approvedItem;
+    } catch (error) {
+      handleApprovedItemError({ error, payload, navigate });
+      throw error;
+    }
+  };
+  // 결제 승인된 상품 조회 api error 핸들러
+  const handleApprovedItemError = ({ error, payload, navigate }) => {
+    // 코드별 routes 경로 정의
+    const routes = {
+      O004: () => navigate('/'),
+      O005: () => navigate('/'),
+      O006: () => navigate('/payment'),
+    };
+    // title 정의
+    const titles = {
+      O004: '주문 조회 실패',
+      O005: '접근 제한',
+      O006: '미결제 주문',
+      DEFAULT: '결제 상품 조회 실패',
+    };
+
+    const code = error.code || 'DEFAULT';
+    const title = titles[error.code] ?? title.DEFAULT;
+    // 모달 open
+    errorModal({
+      title: title,
+      message: error.message,
+      onClose: routes[code] || (() => {}),
+    });
+  };
+
   // 결제 승인 후 주문정보 조회
   useEffect(() => {
-    if (!pgToken || !provider) return;
+    if (!pgToken || !provider || !orderId) return;
 
     let cancelled = false;
 
     (async () => {
       try {
         // 결제 승인 요청
-        const response = await approveMutation.mutateAsync({
-          provider,
-          orderId,
-          pgToken,
-        });
-        const approveOrderId = response?.order_id;
-        if (!orderId) throw new Error('order_id 누락');
+        const approvePayload = buildPaymentApprovePayload(urlSearchParams);
+        // 결제 승인된 주문 번호
+        const approveOrderId = await handlePaymentApprove(approvePayload);
 
         // 주문정보 조회
-        const result = await resultMutation.mutateAsync({
-          orderId: approveOrderId,
-        });
         if (!cancelled) {
+          const result = await handleApprovedItem({ orderId: approveOrderId });
           setPaymentInfo(result);
           setPaymentResult(true);
         }
@@ -57,7 +158,7 @@ export default function PaymentResult() {
     return () => {
       cancelled = true;
     };
-  }, [pgToken, provider]);
+  }, [pgToken, provider, orderId]);
 
   // 결제 승인 요청
   if (approveMutation.isPending) {
