@@ -24,7 +24,19 @@ export const useOrderMutation = () => {
 
         return response.data;
       } catch (error) {
-        throw error;
+        const { code, message } = error || {};
+
+        // 명시된 코드가 있을 경우 그대로 throw
+        if (['O004', 'O005', 'O006'].includes(code)) {
+          throw { code, message };
+        }
+
+        // 그 외의 경우
+        throw {
+          code: code || 'UNKNOWN',
+          message:
+            '확인되지 않은 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        };
       }
     },
   });
