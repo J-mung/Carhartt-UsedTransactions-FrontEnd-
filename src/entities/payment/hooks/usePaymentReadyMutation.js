@@ -35,7 +35,23 @@ export const usePaymentReadyMutation = () => {
 
         return response.data;
       } catch (error) {
-        throw error;
+        const { code, message } = error;
+
+        // 명시된 코드일 경우 그대로 throw
+        if (
+          ['P001', 'P002', 'P003', 'P004', 'P005', 'P006', 'P007'].includes(
+            code
+          )
+        ) {
+          throw { code, message };
+        }
+
+        // 그 외의 경우
+        throw {
+          code: code || 'UNKNOWN',
+          message:
+            '확인되지 않은 오류가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        };
       }
     },
   });

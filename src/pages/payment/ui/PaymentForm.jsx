@@ -49,7 +49,7 @@ export default function PaymentForm() {
   // 주문 생성 커스텀 hook
   const { mutateAsync: createOrder } = useOrderMutation();
   // 카카오페이 화면 요청 커스텀 hook
-  const paymentReadyMutation = usePaymentReadyMutation();
+  const { mutateAsync: createPaymentReady } = usePaymentReadyMutation();
 
   // 기본 에러 모달
   const errorModal = (title, message, onClose = () => {}) => {
@@ -80,7 +80,7 @@ export default function PaymentForm() {
   };
 
   // 주문 생성 api 요청 handler
-  const handleOrder = async (payload) => {
+  const handleOrder = async (payload, navigate) => {
     try {
       // api 요청
       const result = await createOrder(payload);
@@ -93,7 +93,7 @@ export default function PaymentForm() {
       return result.order_id;
     } catch (error) {
       // error handler 호출
-      orderErrorHandler(error, payload, navigate, openModal);
+      orderErrorHandler(error, payload, navigate);
 
       // 명시적으로 throw해서 상위 결제 준비 로직 중단
       throw error;
@@ -101,7 +101,7 @@ export default function PaymentForm() {
   };
 
   // 주문 생성 api error shooting handler
-  const orderErrorHandler = ({ error, payload, navigate, openModal }) => {
+  const orderErrorHandler = ({ error, payload, navigate }) => {
     // 코드 별 route 주소
     const routes = {
       O004: () => navigate(`/product/${payload.item_id}`),
@@ -117,13 +117,70 @@ export default function PaymentForm() {
           O005: '접근 권한이 없습니다.',
           O006: '유효하지 않은 주문 상태',
         }[error.code] ?? '알 수 없는 오류',
-      message:
-        {
-          O004: '상품 상세 페이지로 돌아갑니다.',
-          O005: '홈 화면으로 이동합니다.',
-          O006: '이미 결제가 완료된 주문입니다.',
-        }[error.code] ?? error.message,
+      message: error.message,
       onClose: routes[error.code],
+    });
+  };
+
+  const handlePaymentReady = async ({
+    orderId,
+    paymentMethod,
+    amount,
+    navigate,
+  }) => {
+    try {
+      const result = await createPaymentReady({
+        orderId: orderId,
+        paymentMethod: paymentMethod,
+        amount: amount,
+      });
+      if (!result?.next_redirect_pc_url) {
+        throw {
+          code: 'P000',
+          message:
+            '예기치 못한 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.',
+        };
+      }
+
+      return result.next_redirect_pc_url;
+    } catch (error) {
+      handlePaymentReadyError({ error, payload, navigate });
+    }
+  };
+
+  // 결제 요청 api error shooting handler
+  const handlePaymentReadyError = ({ error, payload, navigate }) => {
+    // 코드별 route 정의
+    const routes = {
+      P001: () => navigate('/payment/result?status=invalid'),
+      P002: () => navigate(`/product/${payload.item_id}`),
+      P003: () => navigate('/'),
+      P004: () => {}, // stay
+      P005: () => navigate(`/payment/${payload.item_id}`),
+      P006: () => navigate('/payment/result?status=duplicated'),
+      P007: () => navigate('/payment/result?status=progress'),
+    };
+
+    // 코드별 title 정의
+    const titles = {
+      P001: '결제 불가 상태',
+      P002: '주문 정보 없음',
+      P003: '접근 권한 없음',
+      P004: '결제창 오류',
+      P005: '요청 데이터 오류',
+      P006: '중복 결제 요청',
+      P007: '결제 시도 중복',
+      DEFAULT: '결제 요청 실패',
+    };
+
+    const code = error.code || 'DEFAULT';
+    const title = titles[code] ?? titles.DEFAULT;
+
+    // 서버에서 내려온 message를 그대로 표시
+    errorModal({
+      title,
+      message: error.message,
+      onClose: routes[code] || (() => {}),
     });
   };
 
@@ -136,24 +193,17 @@ export default function PaymentForm() {
 
     try {
       // 주문 생성
-      const orderId = await handleOrder(orderPayload);
+      const orderId = await handleOrder(orderPayload, navigate);
       // 결제 준비
-      const paymentResultResponse = await paymentReadyMutation.mutateAsync({
-        orderId: orderId,
+      const paymentReadyUrl = await handlePaymentReady({
+        orderId,
         paymentMethod: formData.payment,
         amount: product.item_price,
+        navigate,
       });
 
-      // TODO paymentResultResponse 결과에 따라 결제 진행
-      // openModal(Modal, {
-      //   title: '결제 준비 테스트 - 성공',
-      //   children: (
-      //     <span className={'text-regular'}>
-      //       주문번호 {orderResponse.order_id}, 결제 준비 테스트 성공
-      //     </span>
-      //   ),
-      // });
-      window.location.href = paymentResultResponse?.next_redirect_pc_url || '/';
+      // PG 결제창으로 이동
+      window.location.href = paymentReadyUrl;
     } catch (error) {
       openModal(Modal, {
         title: '결제 준비 테스트 - 실패',
