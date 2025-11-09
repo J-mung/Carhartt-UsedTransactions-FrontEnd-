@@ -269,6 +269,7 @@ export default function RadioGroup({
                   name={name}
                   className="radio__input"
                   value={option.value}
+                  data-key={option.key}
                   checked={isChecked}
                   onChange={() =>
                     handleChange(option.value, option.key, option.disabled)
@@ -313,6 +314,7 @@ export default function RadioGroup({
                   id={radioId}
                   name={isNavigation ? `${name}-nav` : name}
                   value={option.value}
+                  data-key={options.key}
                   className="radio__button-input"
                   checked={isChecked && !isNavigation}
                   onChange={() => {}}
