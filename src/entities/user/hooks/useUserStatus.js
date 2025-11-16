@@ -1,15 +1,14 @@
 import { carHarttApi } from '@/shared/api/axios';
-import { useMockConfig } from '@/shared/config/mockConfig';
+import { useMockToggle } from '@/shared/config/MockToggleProvider';
 import { useQuery } from '@tanstack/react-query';
 import { makeUserAvatar } from '../lib/avatar';
 
 export function useUserStatus() {
-  const { isMockConfig: isMockConfigFromContext } = useMockConfig();
-  const mockDataMode = Boolean(isMockConfigFromContext);
+  const { useMock } = useMockToggle();
   return useQuery({
     queryKey: ['loginStatus'],
     queryFn: async () => {
-      if (mockDataMode) {
+      if (useMock) {
         const baseMockUserInfo = {
           memberId: 'mock-user',
           memberName: '우직한 감자칩',

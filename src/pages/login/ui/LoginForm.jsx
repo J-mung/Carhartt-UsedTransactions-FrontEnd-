@@ -1,6 +1,6 @@
 import kakaoLoginImage from '@/app/assets/images/kakao/login_ko/kakao_login_medium_wide.png';
 import { carHarttApi } from '@/shared/api/axios';
-import { useMockConfig } from '@/shared/config/mockConfig.jsx';
+import { useMockToggle } from '@/shared/config/MockToggleProvider';
 import { Button } from '@/shared/ui/buttons';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -21,8 +21,7 @@ export default function LoginForm() {
   const [kakaoLogin, setKakaoLogin] = useState('');
   const [naverLogin, setNaverLogin] = useState('');
   const navigate = useNavigate();
-  const { isMockConfig: isMockConfigFromContext } = useMockConfig();
-  const mockDataMode = Boolean(isMockConfigFromContext);
+  const { useMock } = useMockToggle();
 
   useEffect(() => {
     let isMounted = true;
@@ -43,7 +42,7 @@ export default function LoginForm() {
     setKakaoLogin('');
     setNaverLogin('');
 
-    if (mockDataMode) {
+    if (useMock) {
       applyProviders(mockOAuthProviders);
       return () => {
         isMounted = false;
@@ -67,7 +66,7 @@ export default function LoginForm() {
     return () => {
       isMounted = false;
     };
-  }, [mockDataMode]);
+  }, [useMock]);
 
   const onKakaoLogin = () => {
     if (!kakaoLogin) {
@@ -75,7 +74,7 @@ export default function LoginForm() {
       return;
     }
 
-    if (mockDataMode) {
+    if (useMock) {
       navigate('/login/callback');
       return;
     }
