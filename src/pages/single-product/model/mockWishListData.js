@@ -1,7 +1,4 @@
-import { carHarttApi } from '@/shared/api/axios';
-import { useQuery } from '@tanstack/react-query';
-
-const mockWishList = [
+export const mockWishListData = [
   {
     id: 'wish-1',
     title: '트레드 밀 비니',
@@ -43,26 +40,3 @@ const mockWishList = [
     description: '10% 할인 진행 중',
   },
 ];
-
-// GET /v1/wishes
-export function useWishList() {
-  const USE_MOCK_DATA = false;
-
-  return useQuery({
-    queryKey: ['wishList'],
-    queryFn: async () => {
-      if (USE_MOCK_DATA) {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        return mockWishList;
-      }
-
-      const response = await carHarttApi({
-        method: 'GET',
-        url: '/v1/wishes',
-        withCredentials: true,
-      });
-
-      return response.data || [];
-    },
-  });
-}

@@ -1,20 +1,20 @@
-import { useState, useMemo } from 'react';
-import RadioGroup from '@/shared/ui/Radio';
-import SelectBox from '@/shared/ui/SelectBox';
-import ProductCard from './ui/ProductCard';
-import './productsPage.scss';
 import heroVideo from '@/app/assets/videos/hero_video.mp4';
 import {
   useCategories,
   useProductsList,
 } from '@/entities/product/hooks/useProduct';
+import RadioGroup from '@/shared/ui/Radio';
+import SelectBox from '@/shared/ui/SelectBox';
+import { useMemo, useState } from 'react';
+import './productsPage.scss';
+import ProductCard from './ui/ProductCard';
 
 // 페이지당 아이템 수
 const ITEMS_PER_PAGE = 16;
 
 // Sorting options
 const SORT_OPTIONS = [
-  { value: 'recent', label: '최신순' },
+  { value: 'signedDate,desc', label: '최신순' },
   { value: 'price_low', label: '낮은 가격순' },
   { value: 'price_high', label: '높은 가격순' },
 ];
@@ -33,7 +33,7 @@ function flattenCategories(apiCategories) {
 
 export default function ProductsListPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [sortBy, setSortBy] = useState('recent');
+  const [sortBy, setSortBy] = useState('signedDate,desc');
   const [currentPage, setCurrentPage] = useState(1);
 
   // Fetch categories from API
@@ -53,7 +53,7 @@ export default function ProductsListPage() {
     categoryId: selectedCategory,
     sort: sortBy,
     page: currentPage,
-    limit: ITEMS_PER_PAGE,
+    size: ITEMS_PER_PAGE,
   });
 
   // 상품 데이터

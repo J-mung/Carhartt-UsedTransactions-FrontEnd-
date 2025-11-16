@@ -1,7 +1,7 @@
-import { useWishList } from '@/entities/product/hooks/useWishList';
 import { useUpdateNickname } from '@/entities/user/hooks/useUpdateNickname';
 import { useUploadProfileImage } from '@/entities/user/hooks/useUploadProfileImage';
 import { useUserStatus } from '@/entities/user/hooks/useUserStatus';
+import { useWishlist } from '@/entities/user/hooks/useWishList';
 import { Button } from '@/shared/ui/buttons';
 import InputBox from '@/shared/ui/InputBox';
 import TabGroup from '@/shared/ui/tabs/TabGroup';
@@ -43,7 +43,7 @@ export default function MyPage() {
     data: wishList,
     isLoading: wishListLoading,
     error: wishListError,
-  } = useWishList();
+  } = useWishlist();
 
   const buildProfileModalButtons = useCallback(() => {
     // uploader에 이미지 하나만 업로드 하도록 설정
