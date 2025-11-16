@@ -123,6 +123,7 @@ export default function AddressRadioGroup({ userId = '' }) {
             }}
             variant={'radio'}
             options={customOptions()}
+            optionDirection={'column'}
           />
         </div>
         <div className={'ml-auto'}>

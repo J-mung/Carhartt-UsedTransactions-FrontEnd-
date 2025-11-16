@@ -102,3 +102,11 @@ $space-32: 8rem; // 128px
 .flex--inline {
   display: inline-flex;
 }
+.flex--col {
+  display: flex !important;
+  flex-direction: column;
+}
+.flex--row {
+  display: flex !important;
+  flex-direction: row;
+}
