@@ -1,57 +1,62 @@
 import { mockAddresses } from '@/pages/mypage/model/mockAddressData';
 import { carHarttApi } from '@/shared/api/axios';
-import { useMockConfig } from '@/shared/config/mockConfig';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMockToggle } from '@/shared/config/MockToggleProvider';
+import { useQuery } from '@tanstack/react-query';
 
-export function useAddresses(userId) {
-  const { isMockConfig: isMockConfigFromContext } = useMockConfig();
-  const USE_MOCK_DATA = Boolean(isMockConfigFromContext);
+const mockAddresses = [
+  {
+    key: '101',
+    value: '주소1',
+    alias: '집',
+    label: '집: 주소1',
+  },
+  {
+    key: '102',
+    value: '주소2',
+    alias: '본가',
+    label: '본가: 주소2',
+  },
+];
 
+export function useAddressesQuery(userId) {
+  const { useMock } = useMockToggle();
   return useQuery({
-    queryKey: ['addresses', userId], // userId 별 캐시 구분
-    enabled: !!userId || USE_MOCK_DATA, // userId 없을 경우 쿼리 비활성화
+    queryKey: ['addresses', userId],
     queryFn: async () => {
+      console.log('[useAddressesQuery] queryFn called', { userId });
+
       // Mock data
-      if (USE_MOCK_DATA) {
+      if (useMock) {
         await new Promise((resolve) => setTimeout(resolve, 500));
-        return mockAddresses.addresses;
+        return {
+          count: mockAddresses.length,
+          list: mockAddresses,
+        };
       }
 
-      // 실제 Request API
-      const response = carHarttApi({
-        method: 'GET',
-        url: `/orders/address?member_id=${userId}`,
-        responseType: 'application/json',
-      });
+      // API 요청
+      try {
+        const response = await carHarttApi({
+          method: 'GET',
+          url: `/v1/orders/address?member_id=${userId}`,
+        });
 
-      // 서버 응답 구조에 따라 추후 조정
-      return (await response).data.addresses ?? [];
-    },
-    staleTime: 1000 * 60, // 1분 동안 fresh 상태 유지
-    retry: 1, // 실패 시 한 번만 재시도
-  });
-}
+        const data = response.data;
 
-export function useRemoveAddresses() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (addrKey) => {
-      // Mock data
-      if (USE_MOCK_DATA) {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        return { success: true };
+        return {
+          count: data.address_number,
+          list: data.address_item_list.map((_addr) => ({
+            key: String(_addr.address_id),
+            alias: _addr.address_name,
+            value: `${_addr.road_address} ${_addr.detail_address}`,
+            zip: _addr.zip_code,
+            label: `${_addr.address_name}: ${_addr.road_address} ${_addr.detail_address}`,
+          })),
+        };
+      } catch (error) {
+        console.error(`주소지 목록 조회 API 에러 : ${error}`);
+        throw error;
       }
-
-      // 실제 Request API
-      const response = await carHarttApi({
-        method: 'DELETE',
-        url: `/orders/address/${addrKey}`,
-      });
-      return response.data;
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries(['addresses']);
     },
   });
 }

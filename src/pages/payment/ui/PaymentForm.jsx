@@ -1,30 +1,38 @@
-import { useProducts } from '@/entities/product/hooks/useProduct';
+import { useOrderMutation } from '@/entities/order/hooks/useOrderMutation';
+import { usePaymentReadyMutation } from '@/entities/payment/hooks/usePaymentReadyMutation';
+import { useProductDetail } from '@/entities/product/hooks/useProduct';
 import { Button } from '@/shared/ui/buttons';
 import InputBox from '@/shared/ui/InputBox';
 import RadioGroup from '@/shared/ui/Radio';
 import Modal from '@/widgets/modal/Modal';
 import { useModal } from '@/widgets/modal/ModalProvider';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import AddressRadioGroup from './AddressRadioGroup';
 import './paymentForm.scss';
 
 export default function PaymentForm() {
   const formRef = useRef(null);
-
-  const { openModal } = useModal();
+  const { itemId } = useParams();
   const {
-    product,
-    loading: productLoading,
+    data: product,
+    isLoading: productLoading,
     error: productError,
-  } = useProducts();
+  } = useProductDetail(itemId);
+  const { openModal } = useModal();
+  const navigate = useNavigate();
 
   const [buyerMessage, setBuyerMessage] = useState('');
-  const [method, setMethod] = useState(undefined);
+  const [method, setMethod] = useState({
+    key: 'pay1',
+    value: 'KAKAOPAY',
+    label: '카카오페이',
+  });
 
   const payOptions = [
     {
       key: 'pay1',
-      value: 'kakaoPay',
+      value: 'KAKAOPAY',
       label: '카카오페이',
     },
     {
@@ -34,31 +42,206 @@ export default function PaymentForm() {
     },
   ];
 
-  useEffect(() => {
-    if (payOptions && payOptions.length > 0) {
-      setMethod({ ...payOptions[0] });
-    }
-  }, []); // 최초 1회만 실행
-
   const handleInputMsg = (e) => {
     setBuyerMessage(e.target.value);
   };
 
-  const handlePayment = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const address = formData.get('addressList');
-    const payment = formData.get('paymentMethod');
-    const message = formData.get('buyerMsg');
+  // 주문 생성 커스텀 hook
+  const { mutateAsync: createOrder } = useOrderMutation();
+  // 카카오페이 화면 요청 커스텀 hook
+  const { mutateAsync: createPaymentReady } = usePaymentReadyMutation();
 
+  // 기본 에러 모달
+  const errorModal = ({ title, message, onClose = () => {} }) => {
     openModal(Modal, {
-      title: '알림',
-      children: (
-        <span className={'text-regular'}>
-          {product.name}, {product.price}, {address}, {payment}, {message}
-        </span>
-      ),
+      title: title,
+      children: <span className={'text-regular'}>{message}</span>,
+      onClose: onClose,
     });
+  };
+
+  // 결제 폼(form) 데이터 get
+  const getFormData = (formData) => {
+    return {
+      address: formData.get('addressList'),
+      payment: formData.get('paymentMethod'),
+      message: formData.get('buyerMsg'),
+    };
+  };
+
+  // 주문 생성 api payload 생성
+  const createOrderPayload = (orderFormData) => {
+    return {
+      item_id: 22, // product.item_id
+      address_id: 101, // orderFormData.address
+      payment_method: orderFormData.payment,
+      detail_message: orderFormData.message,
+    };
+  };
+
+  // 주문 생성, 결제 요청 payload 빌더
+  const buildPaymentPayload = ({ product, formData, addressId }) => {
+    const itemId = product?.item_id;
+    const itemPrice = product?.item_price;
+
+    return {
+      order: {
+        item_id: 22, // itemId
+        address_id: Number(addressId),
+        payment_method: formData.get('paymentMethod'),
+        detail_message: formData.get('buyerMsg'),
+      },
+      payment: {
+        orderId: null, // handleOrder 성공 후 채워짐
+        paymentMethod: formData.get('paymentMethod'),
+        amount: itemPrice,
+      },
+    };
+  };
+
+  // 주문 생성 api 요청 handler
+  const handleOrder = async (payload, navigate) => {
+    try {
+      // api 요청
+      const result = await createOrder(payload);
+
+      // 주문 ID가 확인되지 않을 경우
+      if (!result?.order_id) {
+        throw { code: 'O000', message: '주문 ID가 존재하지 않습니다.' };
+      }
+
+      return result.order_id;
+    } catch (error) {
+      // error handler 호출
+      orderErrorHandler({ error, payload, navigate });
+
+      // 명시적으로 throw해서 상위 결제 준비 로직 중단
+      throw error;
+    }
+  };
+
+  // 주문 생성 api error shooting handler
+  const orderErrorHandler = ({ error, payload, navigate }) => {
+    // 코드 별 route 주소
+    const routes = {
+      '004': () => navigate(`/product/${payload.item_id}`),
+      '005': () => navigate('/'),
+      '006': () => navigate('/payment/result?status=invalid'),
+      '008': () => navigate(`/product/${payload.item_id}`),
+    };
+
+    // 에러 모달 열기
+    errorModal({
+      title:
+        {
+          '004': '주문을 찾을 수 없습니다.',
+          '005': '접근 권한이 없습니다.',
+          '006': '유효하지 않은 주문 상태',
+          '008': '품절 상품',
+        }[error.code] ?? '알 수 없는 오류',
+      message: error.message,
+      onClose: routes[error.code],
+    });
+  };
+
+  // 결제 요청 api 핸들러
+  const handlePaymentReady = async ({
+    orderId,
+    paymentMethod,
+    amount,
+    navigate,
+  }) => {
+    try {
+      const result = await createPaymentReady({
+        orderId: orderId,
+        paymentMethod: paymentMethod,
+        amount: amount,
+      });
+      if (!result?.next_redirect_pc_url) {
+        throw {
+          code: 'P000',
+          message:
+            '예기치 못한 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.',
+        };
+      }
+
+      return result.next_redirect_pc_url;
+    } catch (error) {
+      handlePaymentReadyError({ error, payload, navigate });
+      throw error;
+    }
+  };
+
+  // 결제 요청 api error shooting handler
+  const handlePaymentReadyError = ({ error, payload, navigate }) => {
+    // 코드별 route 정의
+    const routes = {
+      '001': () => navigate('/payment/result?status=invalid'),
+      '002': () => navigate(`/product/${payload.item_id}`),
+      '003': () => navigate('/'),
+      '004': () => {}, // stay
+      '005': () => navigate(`/payment/${payload.item_id}`),
+      '006': () => navigate('/payment/result?status=duplicated'),
+      '007': () => navigate('/payment/result?status=progress'),
+    };
+
+    // 코드별 title 정의
+    const titles = {
+      '001': '결제 불가 상태',
+      '002': '주문 정보 없음',
+      '003': '접근 권한 없음',
+      '004': '결제창 오류',
+      '005': '요청 데이터 오류',
+      '006': '중복 결제 요청',
+      '007': '결제 시도 중복',
+      DEFAULT: '결제 요청 실패',
+    };
+
+    const code = error.code || 'DEFAULT';
+    const title = titles[code] ?? titles.DEFAULT;
+
+    // 서버에서 내려온 message를 그대로 표시
+    errorModal({
+      title,
+      message: error.message,
+      onClose: routes[code] || (() => {}),
+    });
+  };
+
+  const handlePayment = async (e) => {
+    e.preventDefault();
+    // 주문 신청서에서 필요한 데이터 get
+    const formData = getFormData(new FormData(e.currentTarget));
+    // 주문 생성 api payload 생성
+
+    // 선택된 배송지 id 추출
+    const selectedRadio = e.currentTarget.querySelector(
+      'input[name="addressList"]:checked'
+    );
+    const addressId = selectedRadio?.dataset.key;
+
+    const { order: orderPayload, payment: paymentPayload } =
+      buildPaymentPayload({
+        product,
+        formData: new FormData(e.currentTarget),
+        addressId,
+      });
+
+    try {
+      // 주문 생성
+      const orderId = await handleOrder(orderPayload, navigate);
+      // 결제 준비
+      const paymentReadyUrl = await handlePaymentReady({
+        ...paymentPayload,
+        orderId: orderId,
+        navigate,
+      });
+
+      // PG 결제창으로 이동
+      window.location.href = paymentReadyUrl;
+    } catch (error) {
+      console.error(error.message, error.stack);
+    }
   };
 
   const contentWrapper = (title, children) => {
@@ -79,9 +262,9 @@ export default function PaymentForm() {
   if (productError) {
     return (
       <>
-        <span className={'text-strong'}>에러가 발생했습니다.</span>;
-        <span className={'text-regular'}>{productError}</span>;
-        <span className={'text-regular'}>잠시 후, 다시 시도해주세요.</span>;
+        <span className={'text-strong'}>에러가 발생했습니다.</span>
+        <span className={'text-regular'}>{String(productError)}</span>
+        <span className={'text-regular'}>잠시 후, 다시 시도해주세요.</span>
       </>
     );
   }
@@ -90,7 +273,9 @@ export default function PaymentForm() {
     <div className={'payment-form ml-auto mr-auto'}>
       {contentWrapper(
         '상품정보',
-        <span className={'text-regular'}>상품명: {product.name}</span>
+        <span className={'text-regular'}>
+          상품명: {product?.item_name ?? '상품 정보 없음'}
+        </span>
       )}
       <form ref={formRef} onSubmit={handlePayment}>
         <AddressRadioGroup userId={''} />
@@ -102,7 +287,7 @@ export default function PaymentForm() {
             variant={'default'}
             placeholder={'판매자에게 전달할 요청사항'}
             value={buyerMessage}
-            onChange={(e) => setBuyerMessage(e.target.value)}
+            onChange={(e) => handleInputMsg(e)}
             clear={true}
           />
         )}
@@ -114,9 +299,9 @@ export default function PaymentForm() {
             value={method.value}
             onChange={(e) => {
               const selected = payOptions.find(
-                (_opt) => _opt.key === e.target.key
+                (_opt) => _opt.value === e.target.value
               );
-              setMethod(selected);
+              if (selected) setMethod(selected);
             }}
             options={payOptions}
             variant={'button'}
@@ -127,7 +312,7 @@ export default function PaymentForm() {
             <p>상품 정보 로딩 중...</p>
           ) : (
             <Button
-              label={`${product.price} 결제하기`}
+              label={`${product?.item_price ?? 0} 결제하기`}
               onClick={() => formRef.current?.requestSubmit?.()}
               size={'--l'}
               className={'form-btn__flex'}

@@ -100,8 +100,8 @@ export default function ProductPage() {
     }
   };
 
-  const handleBuy = () => {
-    navigate(`/payment`);
+  const handleBuy = (itemId) => {
+    navigate(`/payment/${itemId}`);
     // alert('구매 페이지로 이동');
   };
 
@@ -155,7 +155,7 @@ export default function ProductPage() {
         <ProductInfo
           product={product}
           onWishlist={handleWishlist}
-          onBuy={handleBuy}
+          onBuy={() => handleBuy(product.item_id)}
           onChat={handleChat}
           onEdit={handleEdit}
           isSeller={isSeller}
