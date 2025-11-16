@@ -5,17 +5,26 @@ import { useQuery } from '@tanstack/react-query';
 
 export function useAddressesQuery(userId) {
   const { useMock } = useMockToggle();
+
+  const convertAddressInfo = (list) => {
+    return list.map((_addr) => ({
+      key: String(_addr.address_id),
+      alias: _addr.address_name,
+      value: `${_addr.road_address} ${_addr.detail_address}`,
+      zip: _addr.zip_code,
+      label: `${_addr.address_name}: ${_addr.road_address} ${_addr.detail_address}`,
+    }));
+  };
+
   return useQuery({
     queryKey: ['addresses', userId],
     queryFn: async () => {
-      console.log('[useAddressesQuery] queryFn called', { userId });
-
       // Mock data
       if (useMock) {
         await new Promise((resolve) => setTimeout(resolve, 500));
         return {
           count: mockAddresses.length,
-          list: mockAddresses,
+          list: convertAddressInfo(mockAddresses),
         };
       }
 
@@ -30,13 +39,7 @@ export function useAddressesQuery(userId) {
 
         return {
           count: data.address_number,
-          list: data.address_item_list.map((_addr) => ({
-            key: String(_addr.address_id),
-            alias: _addr.address_name,
-            value: `${_addr.road_address} ${_addr.detail_address}`,
-            zip: _addr.zip_code,
-            label: `${_addr.address_name}: ${_addr.road_address} ${_addr.detail_address}`,
-          })),
+          list: convertAddressInfo(data.address_item_list),
         };
       } catch (error) {
         console.error(`주소지 목록 조회 API 에러 : ${error}`);
