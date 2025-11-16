@@ -1,21 +1,7 @@
+import { mockAddresses } from '@/pages/mypage/model/mockAddressData';
 import { carHarttApi } from '@/shared/api/axios';
 import { useMockToggle } from '@/shared/config/MockToggleProvider';
 import { useQuery } from '@tanstack/react-query';
-
-const mockAddresses = [
-  {
-    key: '101',
-    value: '주소1',
-    alias: '집',
-    label: '집: 주소1',
-  },
-  {
-    key: '102',
-    value: '주소2',
-    alias: '본가',
-    label: '본가: 주소2',
-  },
-];
 
 export function useAddressesQuery(userId) {
   const { useMock } = useMockToggle();

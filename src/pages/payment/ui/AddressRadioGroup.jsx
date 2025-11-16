@@ -56,14 +56,23 @@ export default function AddressRadioGroup({ userId = '' }) {
       ),
       buttons: [
         {
-          label: '삭제',
+          label: removeAddress.isPending ? '삭제 중...' : '삭제',
           variant: 'danger-primary',
-          onClick: () => {
-            handleClickDelete(addr);
-          },
+          onClick: () => handleClickDelete(addr),
         },
       ],
     });
+  };
+
+  const normalizeAddress = (addr) => {
+    const { address_id, address_name, zip_code, road_address, detail_address } =
+      addr;
+    return {
+      key: address_id ?? '오류',
+      value: `${road_address} ${detail_address}`,
+      alias: address_name ?? '오류',
+      label: `${address_name} : ${road_address} ${detail_address}`,
+    };
   };
 
   const customOptions = () => {

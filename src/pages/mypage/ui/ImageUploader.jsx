@@ -2,7 +2,7 @@ import { useImageUploader } from '../model/useImageUploader';
 import './imageUploader.scss';
 
 export default function ImageUploader() {
-  const { items, handleSelect, handleConfirm } = useImageUploader();
+  const { items, handleSelect } = useImageUploader();
 
   return (
     <div className={'image-uploader'}>
@@ -20,7 +20,10 @@ export default function ImageUploader() {
           </div>
         ))}
       </div>
-      <button className={'image-uploader__button'} onClick={handleConfirm}>
+      <button
+        className={'image-uploader__button'}
+        onClick={() => console.log('확인')}
+      >
         확인 (압축 후 업로드)
       </button>
     </div>

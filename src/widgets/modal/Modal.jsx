@@ -32,10 +32,10 @@ export default function Modal({
    * 모달 닫기 핸들러
    * 애니메이션 적용을 위해 setTimeout
    */
-  const handleClose = () => {
+  const handleClose = (e) => {
     setOpenState(false);
     setTimeout(() => {
-      onClose && onClose();
+      onClose && onClose(e);
     }, 200);
   };
 
@@ -67,7 +67,7 @@ export default function Modal({
     {
       label: '닫기',
       variant: 'standard-secondary',
-      onClick: handleClose,
+      onClick: (e) => handleClose(e),
     },
     ...buttons,
   ];
@@ -75,7 +75,7 @@ export default function Modal({
   return (
     <div className={'custom-modal-wrapper'}>
       {/* 모달 마스크(배경) */}
-      <div className={modalMaskClass} onClick={handleClose} />
+      <div className={modalMaskClass} onClick={(e) => handleClose(e)} />
       {/* 모달 */}
       <div
         className={modalClass}
@@ -89,7 +89,7 @@ export default function Modal({
           <div className={'modal-title'}>
             <span className={'h5'}>{title}</span>
           </div>
-          <Button variant={'standard-link'} onClick={handleClose}>
+          <Button variant={'standard-link'} onClick={(e) => handleClose(e)}>
             <span>X</span>
           </Button>
         </div>
@@ -103,9 +103,9 @@ export default function Modal({
                 key={`modal-btn-${index}`}
                 label={_btn.label}
                 variant={`${_btn.variant}`}
-                onClick={() => {
-                  _btn.onClick();
-                  handleClose();
+                onClick={(e) => {
+                  _btn.onClick(e);
+                  handleClose(e);
                 }}
                 className={'modal-btn__flex'}
               />
