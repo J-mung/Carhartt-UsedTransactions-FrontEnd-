@@ -1,14 +1,14 @@
-import { useParams, useNavigate } from 'react-router-dom';
 import {
-  useProductDetail,
   useCategories,
+  useProductDetail,
 } from '@/entities/product/hooks/useProduct';
 import {
-  useWishlistStatus,
   useToggleWishlist,
+  useWishlistStatus,
 } from '@/entities/user/hooks/useWishList';
-import { useModal } from '@/widgets/modal/ModalProvider';
 import Modal from '@/widgets/modal/Modal';
+import { useModal } from '@/widgets/modal/ModalProvider';
+import { useNavigate, useParams } from 'react-router-dom';
 import Breadcrumb from './ui/Breadcrumb';
 import ImageCarousel from './ui/ImageCarousel';
 import ProductInfo from './ui/ProductInfo';
@@ -100,8 +100,8 @@ export default function ProductPage() {
     }
   };
 
-  const handleBuy = () => {
-    navigate(`/payment`);
+  const handleBuy = (itemId) => {
+    navigate(`/payment/${itemId}`);
     // alert('구매 페이지로 이동');
   };
 
@@ -155,7 +155,7 @@ export default function ProductPage() {
         <ProductInfo
           product={product}
           onWishlist={handleWishlist}
-          onBuy={handleBuy}
+          onBuy={() => handleBuy(product.item_id)}
           onChat={handleChat}
           onEdit={handleEdit}
           isSeller={isSeller}

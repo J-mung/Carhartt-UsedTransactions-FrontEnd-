@@ -59,4 +59,10 @@ $shadow-themes: (
       justify-content: space-between;
     }
   }
+
+  &--buttons {
+    display: flex;
+    justify-content: end;
+    gap: 0.5rem; // 8px
+  }
 }
