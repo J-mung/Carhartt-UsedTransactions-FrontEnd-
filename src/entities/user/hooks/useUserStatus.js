@@ -2,6 +2,7 @@ import { carHarttApi } from '@/shared/api/axios';
 import { useMockToggle } from '@/shared/config/MockToggleProvider';
 import { useQuery } from '@tanstack/react-query';
 import { makeUserAvatar } from '../lib/avatar';
+import { BASE_PATH } from './constants';
 
 export function useUserStatus() {
   const { useMock } = useMockToggle();
@@ -36,8 +37,11 @@ export function useUserStatus() {
             // 로그인 성공 및 사용자 정보 반환
             const normalizedData = parseUserPayload(response.data);
             // 응답에 프로필 이미지 url이 없으면 기본 프로필 이미지 랜덤 생성
-            const userInfoWithAvatar = normalizedData.imageUrl
-              ? normalizedData
+            const userInfoWithAvatar = normalizedData.profileImageUrl
+              ? {
+                  ...normalizedData,
+                  avatar: `${BASE_PATH}/${normalizedData.profileImageUrl}`,
+                }
               : makeUserAvatar(
                   normalizedData || { raw: response.data ?? null }
                 );
