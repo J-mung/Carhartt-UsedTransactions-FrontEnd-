@@ -2,8 +2,9 @@ import AlternativeImage from '@/app/assets/images/AlternativeImage.jpg';
 import { usePaymentApproveMutation } from '@/entities/payment/hooks/usePaymentApproveMutation';
 import { usePaymentResultMutation } from '@/entities/payment/hooks/usePaymentResultMutation';
 import '@/pages/payment/ui/paymentResult.scss';
+import { Button } from '@/shared/ui/buttons';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function PaymentResult() {
   // 결제 요청으로 uri에 추가된 pg_token query string추출
@@ -12,6 +13,7 @@ export default function PaymentResult() {
   const provider = urlSearchParams.get('provider');
   const pgToken = urlSearchParams.get('pg_token');
   const orderId = urlSearchParams.get('order_id');
+  const navigate = useNavigate();
 
   // usePaymentApproveMutation (승인 요청)
   const approveMutation = usePaymentApproveMutation();
@@ -33,7 +35,7 @@ export default function PaymentResult() {
     return {
       provider: urlSearchParams.get('provider'),
       pgToken: urlSearchParams.get('pg_token'),
-      orderId: urlSearchParams.get('orderId'),
+      orderId: urlSearchParams.get('order_id'),
     };
   };
   // 결제 승인 api 핸들러
@@ -61,13 +63,13 @@ export default function PaymentResult() {
   const handlePaymentApproveError = ({ error, payload, navigate }) => {
     // 코드별 routes 정의
     const routes = {
-      P008: () => navigate('/payment'),
-      P009: () => navigate('/payment/result?status=fail'),
+      '008': () => navigate('/payment'),
+      '009': () => navigate('/payment/result?status=fail'),
     };
     // 코드별 모달 title 정의
     const titles = {
-      P008: '결제 취소',
-      P009: '결제 실패',
+      '008': '결제 취소',
+      '009': '결제 실패',
       DEFAULT: '결제 승인 오류',
     };
 
@@ -106,15 +108,15 @@ export default function PaymentResult() {
   const handleApprovedItemError = ({ error, payload, navigate }) => {
     // 코드별 routes 경로 정의
     const routes = {
-      O004: () => navigate('/'),
-      O005: () => navigate('/'),
-      O006: () => navigate('/payment'),
+      '004': () => navigate('/'),
+      '005': () => navigate('/'),
+      '006': () => navigate('/payment'),
     };
     // title 정의
     const titles = {
-      O004: '주문 조회 실패',
-      O005: '접근 제한',
-      O006: '미결제 주문',
+      '004': '주문 조회 실패',
+      '005': '접근 제한',
+      '006': '미결제 주문',
       DEFAULT: '결제 상품 조회 실패',
     };
 
@@ -215,7 +217,7 @@ export default function PaymentResult() {
         <div className={'product--info'}>
           <img
             className={'info--image'}
-            src={paymentInfo?.itemImg ?? AlternativeImage}
+            src={paymentInfo?.representImageUrl ?? AlternativeImage}
             alt={'상품 이미지'}
           />
           {/* == grid로 만들기 == */}
@@ -240,7 +242,7 @@ export default function PaymentResult() {
           {/* == grid로 만들기 == */}
         </div>
       </div>
-      <div className={'payment-result--content'}>
+      <div className={'payment-result--content mb-6'}>
         <div className={'product--price'}>
           <span className={'h4'}>최종 결제 금액</span>
           <span className={'h4'}>
@@ -250,6 +252,18 @@ export default function PaymentResult() {
             })}
           </span>
         </div>
+      </div>
+      <div className={'payment-result--buttons'}>
+        <Button
+          label={'홈으로 돌아가기'}
+          variant={'standard-primary'}
+          onClick={() => navigate('/', { replace: true })}
+        />
+        <Button
+          label={'상품으로 돌아가기'}
+          variant={'standard-secondary'}
+          onClick={() => navigate(`/product/${orderId}`, { replace: true })}
+        />
       </div>
     </div>
   );

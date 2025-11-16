@@ -33,7 +33,7 @@ export const usePaymentResultMutation = () => {
       } catch (error) {
         const { code, message } = error;
 
-        if (['O004', 'O005', 'O006'].includes(code)) {
+        if (['004', '005', '006'].includes(code)) {
           throw { code, message };
         }
 

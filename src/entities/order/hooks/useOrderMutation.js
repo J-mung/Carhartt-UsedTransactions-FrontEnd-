@@ -27,7 +27,7 @@ export const useOrderMutation = () => {
         const { code, message } = error || {};
 
         // 명시된 코드가 있을 경우 그대로 throw
-        if (['O004', 'O005', 'O006'].includes(code)) {
+        if (['004', '005', '006', '008'].includes(code)) {
           throw { code, message };
         }
 

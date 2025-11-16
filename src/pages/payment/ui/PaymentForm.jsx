@@ -20,7 +20,7 @@ export default function PaymentForm() {
     error: productError,
   } = useProductDetail(itemId);
   const { openModal } = useModal();
-  const navigate = useNavigate;
+  const navigate = useNavigate();
 
   const [buyerMessage, setBuyerMessage] = useState('');
   const [method, setMethod] = useState({
@@ -52,7 +52,7 @@ export default function PaymentForm() {
   const { mutateAsync: createPaymentReady } = usePaymentReadyMutation();
 
   // 기본 에러 모달
-  const errorModal = (title, message, onClose = () => {}) => {
+  const errorModal = ({ title, message, onClose = () => {} }) => {
     openModal(Modal, {
       title: title,
       children: <span className={'text-regular'}>{message}</span>,
@@ -86,7 +86,7 @@ export default function PaymentForm() {
 
     return {
       order: {
-        item_id: itemId,
+        item_id: 22, // itemId
         address_id: Number(addressId),
         payment_method: formData.get('paymentMethod'),
         detail_message: formData.get('buyerMsg'),
@@ -113,7 +113,7 @@ export default function PaymentForm() {
       return result.order_id;
     } catch (error) {
       // error handler 호출
-      orderErrorHandler(error, payload, navigate);
+      orderErrorHandler({ error, payload, navigate });
 
       // 명시적으로 throw해서 상위 결제 준비 로직 중단
       throw error;
@@ -124,18 +124,20 @@ export default function PaymentForm() {
   const orderErrorHandler = ({ error, payload, navigate }) => {
     // 코드 별 route 주소
     const routes = {
-      O004: () => navigate(`/product/${payload.item_id}`),
-      O005: () => navigate('/'),
-      O006: () => navigate('/payment/result?status=invalid'),
+      '004': () => navigate(`/product/${payload.item_id}`),
+      '005': () => navigate('/'),
+      '006': () => navigate('/payment/result?status=invalid'),
+      '008': () => navigate(`/product/${payload.item_id}`),
     };
 
     // 에러 모달 열기
     errorModal({
       title:
         {
-          O004: '주문을 찾을 수 없습니다.',
-          O005: '접근 권한이 없습니다.',
-          O006: '유효하지 않은 주문 상태',
+          '004': '주문을 찾을 수 없습니다.',
+          '005': '접근 권한이 없습니다.',
+          '006': '유효하지 않은 주문 상태',
+          '008': '품절 상품',
         }[error.code] ?? '알 수 없는 오류',
       message: error.message,
       onClose: routes[error.code],
@@ -174,24 +176,24 @@ export default function PaymentForm() {
   const handlePaymentReadyError = ({ error, payload, navigate }) => {
     // 코드별 route 정의
     const routes = {
-      P001: () => navigate('/payment/result?status=invalid'),
-      P002: () => navigate(`/product/${payload.item_id}`),
-      P003: () => navigate('/'),
-      P004: () => {}, // stay
-      P005: () => navigate(`/payment/${payload.item_id}`),
-      P006: () => navigate('/payment/result?status=duplicated'),
-      P007: () => navigate('/payment/result?status=progress'),
+      '001': () => navigate('/payment/result?status=invalid'),
+      '002': () => navigate(`/product/${payload.item_id}`),
+      '003': () => navigate('/'),
+      '004': () => {}, // stay
+      '005': () => navigate(`/payment/${payload.item_id}`),
+      '006': () => navigate('/payment/result?status=duplicated'),
+      '007': () => navigate('/payment/result?status=progress'),
     };
 
     // 코드별 title 정의
     const titles = {
-      P001: '결제 불가 상태',
-      P002: '주문 정보 없음',
-      P003: '접근 권한 없음',
-      P004: '결제창 오류',
-      P005: '요청 데이터 오류',
-      P006: '중복 결제 요청',
-      P007: '결제 시도 중복',
+      '001': '결제 불가 상태',
+      '002': '주문 정보 없음',
+      '003': '접근 권한 없음',
+      '004': '결제창 오류',
+      '005': '요청 데이터 오류',
+      '006': '중복 결제 요청',
+      '007': '결제 시도 중복',
       DEFAULT: '결제 요청 실패',
     };
 
@@ -238,14 +240,7 @@ export default function PaymentForm() {
       // PG 결제창으로 이동
       window.location.href = paymentReadyUrl;
     } catch (error) {
-      openModal(Modal, {
-        title: '결제 준비 테스트 - 실패',
-        children: (
-          <span className={'text-regular'}>
-            {error.message} {error.stack}
-          </span>
-        ),
-      });
+      console.error(error.message, error.stack);
     }
   };
 

@@ -36,7 +36,7 @@ export const usePaymentApproveMutation = () => {
         const { code, message } = error;
 
         // 명시된 코드가 있을 경우 그대로 throw
-        if (['P008', 'P009'].includes(code)) {
+        if (['008', '009'].includes(code)) {
           throw {
             code,
             message,

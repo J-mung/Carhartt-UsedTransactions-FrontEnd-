@@ -38,11 +38,7 @@ export const usePaymentReadyMutation = () => {
         const { code, message } = error;
 
         // 명시된 코드일 경우 그대로 throw
-        if (
-          ['P001', 'P002', 'P003', 'P004', 'P005', 'P006', 'P007'].includes(
-            code
-          )
-        ) {
+        if (['001', '002', '003', '004', '005', '006', '007'].includes(code)) {
           throw { code, message };
         }
 
