@@ -49,17 +49,17 @@ export function useCategories() {
 }
 
 // Fetch 상품 목록
-// GET /v1/items?category_id=1&sort=recent&page=1&limit=16
+// GET /v1/items?category_id=1&sort=signedDate&page=1&size=16
 export function useProductsList({
   categoryId,
-  sort = 'recent',
+  sort = 'signedDate',
   page = 1,
-  limit = 16,
+  size = 16,
 } = {}) {
   const { useMock } = useMockToggle();
 
   return useQuery({
-    queryKey: ['products', 'list', { categoryId, sort, page, limit }],
+    queryKey: ['products', 'list', { categoryId, sort, page, size }],
     queryFn: async () => {
       // Mock data
       if (useMock) {
@@ -91,23 +91,23 @@ export function useProductsList({
         });
 
         // Pagination (mock data only)
-        const startIndex = (page - 1) * limit;
-        const endIndex = startIndex + limit;
+        const startIndex = (page - 1) * size;
+        const endIndex = startIndex + size;
         const paginatedItems = sorted.slice(startIndex, endIndex);
 
         return {
           items: paginatedItems,
           total: sorted.length,
           page,
-          limit,
-          totalPages: Math.ceil(sorted.length / limit),
+          size,
+          totalPages: Math.ceil(sorted.length / size),
         };
       }
 
       // Real API
       const params = {
-        page,
-        limit,
+        page: page - 1,
+        size,
       };
 
       if (categoryId && categoryId !== 'all') {
@@ -130,7 +130,7 @@ export function useProductsList({
         total: response.data?.total_elements || 0,
         page: response.data?.page || 0,
         totalPages: response.data?.total_pages || 0,
-        size: response.data?.size || limit,
+        size: response.data?.size || size,
       };
     },
     keepPreviousData: true, // 새 페이지를 로딩하는 동안 이전 데이터 유지
