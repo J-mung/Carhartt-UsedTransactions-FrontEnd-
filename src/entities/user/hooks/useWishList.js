@@ -38,7 +38,7 @@ export function useWishlist() {
         url: '/v1/wishes',
         withCredentials: true,
       });
-      return response.data?.data || [];
+      return response?.data || [];
     },
   });
 }
