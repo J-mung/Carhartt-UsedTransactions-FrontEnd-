@@ -1,0 +1,22 @@
+.avatar-upload {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &--wrapper {
+    flex: 1 1 auto;
+  }
+
+  &--preview {
+    display: flex;
+    justify-content: center;
+    max-width: 29.5rem; // 472px
+    max-height: 18.75rem; // 300px
+    height: auto;
+    background: var(--color-bg);
+  }
+
+  &--source {
+    max-width: 18.75rem; // 300px
+  }
+}

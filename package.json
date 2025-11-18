@@ -32,6 +32,7 @@
     "axios": "^1.11.0",
     "browser-image-compression": "^2.0.2",
     "cookie": "^0.6.0",
+    "identicon.js": "^2.3.3",
     "pica": "^9.0.1",
     "postcss": "^8.5.6",
     "react": "^18.3.1",

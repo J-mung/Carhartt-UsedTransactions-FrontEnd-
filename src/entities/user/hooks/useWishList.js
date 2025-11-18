@@ -1,5 +1,7 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { mockWishListData } from '@/pages/single-product/model/mockWishListData';
 import { carHarttApi } from '@/shared/api/axios';
+import { useMockToggle } from '@/shared/config/MockToggleProvider';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 // 상품이 찜 목록에 있는지 확인
 // GET /v1/wishes/{itemId}/status
@@ -21,15 +23,22 @@ export function useWishlistStatus(itemId) {
 // 찜 목록 불러오기
 // GET /v1/wishes
 export function useWishlist() {
+  const { useMock } = useMockToggle();
+
   return useQuery({
     queryKey: ['wishlist'],
     queryFn: async () => {
+      if (useMock) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        return mockWishListData;
+      }
+
       const response = await carHarttApi({
         method: 'GET',
         url: '/v1/wishes',
         withCredentials: true,
       });
-      return response.data?.data || [];
+      return response?.data || [];
     },
   });
 }

@@ -1,40 +1,81 @@
 import kakaoLoginImage from '@/app/assets/images/kakao/login_ko/kakao_login_medium_wide.png';
 import { carHarttApi } from '@/shared/api/axios';
+import { useMockToggle } from '@/shared/config/MockToggleProvider';
 import { Button } from '@/shared/ui/buttons';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './loginForm.scss';
 
+const mockOAuthProviders = [
+  {
+    provider: 'KAKAO',
+    authorize_url: '/login/callback?mock=1',
+  },
+  {
+    provider: 'NAVER',
+    authorize_url: '',
+  },
+];
+
 export default function LoginForm() {
   const [kakaoLogin, setKakaoLogin] = useState('');
   const [naverLogin, setNaverLogin] = useState('');
   const navigate = useNavigate();
+  const { useMock } = useMockToggle();
 
   useEffect(() => {
+    let isMounted = true;
+
+    const applyProviders = (providers = []) => {
+      if (!isMounted || !providers.length) return;
+
+      providers.forEach((_provider) => {
+        if (_provider.provider === 'KAKAO') {
+          setKakaoLogin(_provider.authorize_url || '');
+        }
+        if (_provider.provider === 'NAVER') {
+          setNaverLogin(_provider.authorize_url || '');
+        }
+      });
+    };
+
+    setKakaoLogin('');
+    setNaverLogin('');
+
+    if (useMock) {
+      applyProviders(mockOAuthProviders);
+      return () => {
+        isMounted = false;
+      };
+    }
+
     carHarttApi({
       method: 'GET',
       url: '/v1/oauth/login',
     })
       .then((response) => {
-        const { data, meta } = response;
+        const { data } = response;
         if (data) {
-          data.map((_provider) => {
-            console.log('provider: ' + _provider.provider);
-            if (_provider.provider === 'KAKAO')
-              setKakaoLogin(_provider.authorize_url);
-            if (_provider.provider === 'NAVER')
-              setNaverLogin(_provider.authorize_url);
-          });
+          applyProviders(data);
         }
       })
       .catch((err) => {
         console.log('OAuth URL fetch error', err);
       });
-  }, []);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [useMock]);
 
   const onKakaoLogin = () => {
     if (!kakaoLogin) {
       alert('카카오 로그인 URL을 불러오지 못했습니다.');
+      return;
+    }
+
+    if (useMock) {
+      navigate('/login/callback');
       return;
     }
 

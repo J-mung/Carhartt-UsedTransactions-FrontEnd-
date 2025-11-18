@@ -19,6 +19,7 @@ export default function RadioGroup({
   required = false,
   error = false,
   variant = 'radio', // 'radio' | 'button'
+  optionDirection = 'row', // 'row' | 'column'
   showNavigation = false,
   onNavigate = () => {},
 }) {
@@ -244,7 +245,9 @@ export default function RadioGroup({
         </label>
       )}
 
-      <div className="radio__container">
+      <div
+        className={`radio__container ${optionDirection === 'row' ? 'flex--row' : 'flex--col'}`}
+      >
         {processedOptions.map((option) => {
           const radioId = `${radioGroupId}-${option.key}`;
           const isChecked = option.value === currentValue;
@@ -269,6 +272,7 @@ export default function RadioGroup({
                   name={name}
                   className="radio__input"
                   value={option.value}
+                  data-key={option.key}
                   checked={isChecked}
                   onChange={() =>
                     handleChange(option.value, option.key, option.disabled)
@@ -313,6 +317,7 @@ export default function RadioGroup({
                   id={radioId}
                   name={isNavigation ? `${name}-nav` : name}
                   value={option.value}
+                  data-key={options.key}
                   className="radio__button-input"
                   checked={isChecked && !isNavigation}
                   onChange={() => {}}

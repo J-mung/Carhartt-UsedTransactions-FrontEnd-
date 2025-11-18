@@ -1,76 +1,21 @@
-import AlternativeImage from '@/app/assets/images/AlternativeImage.jpg';
-import { carHarttApi } from '@/shared/api/axios'; // 커스텀 axios 인스턴스
-import { useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import {
-  productData,
-  mockCategories,
   mockProductsList,
+  productData,
 } from '@/pages/single-product/model/mockProductData';
-
-export function useProducts(productId) {
-  const [product, setProduct] = useState(undefined);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(undefined);
-
-  useEffect(() => {
-    let isMounted = true; // 언마운트 시 setState 방지
-
-    setLoading(true);
-
-    if (!productId) {
-      // API 준비 전: mock 데이터
-      setProduct({
-        id: 1,
-        name: '고성능 보조배터리 - 묠니르',
-        img: AlternativeImage,
-        price: 9900,
-      });
-      setLoading(false);
-      return;
-    }
-
-    carHarttApi({
-      method: 'GET',
-      url: `/v1/items/${productId}`,
-      responseType: 'application/json',
-    })
-      .then((response) => {
-        if (isMounted) {
-          // API 응답 구조에 맞게 조정 필요
-          // 필요 시, model 디렉터리 추가 후 타입/DTO/도메인 로직 등 정의
-          setProduct(response.data);
-        }
-      })
-      .catch((err) => {
-        if (isMounted) {
-          setError(err);
-        }
-      })
-      .finally(() => {
-        if (isMounted) {
-          setLoading(false);
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [productId]);
-
-  return { product, loading, error };
-}
-
-const USE_MOCK_DATA = true;
+import { carHarttApi } from '@/shared/api/axios'; // 커스텀 axios 인스턴스
+import { useMockToggle } from '@/shared/config/MockToggleProvider';
+import { useQuery } from '@tanstack/react-query';
 
 // Fetch 상품 상세 정보
 // GET /v1/items/{itemId}
 export function useProductDetail(itemId) {
+  const { useMock } = useMockToggle();
+
   return useQuery({
     queryKey: ['product', itemId],
     queryFn: async () => {
       // Mock data
-      if (USE_MOCK_DATA) {
+      if (useMock) {
         await new Promise((resolve) => setTimeout(resolve, 500));
         return productData;
       }
@@ -104,18 +49,20 @@ export function useCategories() {
 }
 
 // Fetch 상품 목록
-// GET /v1/items?category_id=1&sort=recent&page=1&limit=16
+// GET /v1/items?category_id=1&sort=signedDate&page=1&size=16
 export function useProductsList({
   categoryId,
-  sort = 'recent',
+  sort = 'signedDate',
   page = 1,
-  limit = 16,
+  size = 16,
 } = {}) {
+  const { useMock } = useMockToggle();
+
   return useQuery({
-    queryKey: ['products', 'list', { categoryId, sort, page, limit }],
+    queryKey: ['products', 'list', { categoryId, sort, page, size }],
     queryFn: async () => {
       // Mock data
-      if (USE_MOCK_DATA) {
+      if (useMock) {
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         // Filter by category
@@ -144,23 +91,23 @@ export function useProductsList({
         });
 
         // Pagination (mock data only)
-        const startIndex = (page - 1) * limit;
-        const endIndex = startIndex + limit;
+        const startIndex = (page - 1) * size;
+        const endIndex = startIndex + size;
         const paginatedItems = sorted.slice(startIndex, endIndex);
 
         return {
           items: paginatedItems,
           total: sorted.length,
           page,
-          limit,
-          totalPages: Math.ceil(sorted.length / limit),
+          size,
+          totalPages: Math.ceil(sorted.length / size),
         };
       }
 
       // Real API
       const params = {
-        page,
-        limit,
+        page: page - 1,
+        size,
       };
 
       if (categoryId && categoryId !== 'all') {
@@ -183,7 +130,7 @@ export function useProductsList({
         total: response.data?.total_elements || 0,
         page: response.data?.page || 0,
         totalPages: response.data?.total_pages || 0,
-        size: response.data?.size || limit,
+        size: response.data?.size || size,
       };
     },
     keepPreviousData: true, // 새 페이지를 로딩하는 동안 이전 데이터 유지

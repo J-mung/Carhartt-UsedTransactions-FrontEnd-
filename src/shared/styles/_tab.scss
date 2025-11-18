@@ -9,7 +9,7 @@ $tab-group-themes: (
     selector: theme.$theme-light-selector,
     states: (
       default: (
-        background: deep-get($theme-gray, 'light', 'gray-2'),
+        background: deep-get($theme-gray, 'light', 'gray-1'),
         border: deep-get($theme-gray, 'light', 'gray-6'),
         font: deep-get($theme-gray, 'light', 'gray-11'),
       ),
@@ -44,7 +44,7 @@ $tab-group-themes: (
     selector: theme.$theme-dark-selector,
     states: (
       default: (
-        background: deep-get($theme-gray, 'dark', 'gray-3'),
+        background: deep-get($theme-gray, 'dark', 'gray-1'),
         border: deep-get($theme-gray, 'dark', 'gray-6'),
         font: deep-get($theme-gray, 'dark', 'gray-11'),
       ),

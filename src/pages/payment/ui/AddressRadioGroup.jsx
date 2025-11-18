@@ -1,4 +1,4 @@
-import { useAddresses } from '@/entities/user/hooks/useAddresses';
+import { useAddressesQuery } from '@/entities/user/hooks/useAddresses';
 import { carHarttApi } from '@/shared/api/axios';
 import { Button } from '@/shared/ui/buttons';
 import RadioGroup from '@/shared/ui/Radio';
@@ -9,42 +9,30 @@ import './paymentForm.scss';
 
 export default function AddressRadioGroup({ userId = '' }) {
   const { openModal } = useModal();
-  const { addresses, loading, error, refresh } = useAddresses();
+  const memberId =
+    JSON.parse(sessionStorage.getItem('user_info') || '{}')?.memberId || '';
+  const {
+    data: addresses,
+    isLoading,
+    error,
+    refetch,
+  } = useAddressesQuery(memberId);
   const [curAddress, setCurAddress] = useState(undefined);
 
   // 주소지 조회
   useEffect(() => {
     // 주소지 조회 성공 시
-    if (!loading && addresses.length > 0) {
-      setCurAddress({ ...addresses[0] });
+    if (addresses && addresses.count > 0) {
+      setCurAddress(addresses.list[0]);
     }
-  }, [loading, addresses]);
-
-  if (loading)
-    return (
-      <div>
-        <span className={'text-regular'}>주소 불러오는 중...</span>
-      </div>
-    );
-  if (error)
-    return (
-      <div>
-        <span className={'text-regular'}>주소를 불러올 수 없습니다.</span>
-      </div>
-    );
+  }, [addresses]);
 
   const handleClickDelete = (addr) => {
     carHarttApi({
       method: 'DELETE',
       url: `/v1/orders/address/${addr.key}`,
     })
-      .then((response) => {
-        const { success, data, meta } = response;
-        if (success) {
-          // window.location.reload();
-          refresh();
-        }
-      })
+      .then(() => refetch())
       .catch((err) => {
         console.error(`배송지 삭제 실패 : ${err}`);
         openModal(Modal, {
@@ -68,18 +56,27 @@ export default function AddressRadioGroup({ userId = '' }) {
       ),
       buttons: [
         {
-          label: '삭제',
+          label: removeAddress.isPending ? '삭제 중...' : '삭제',
           variant: 'danger-primary',
-          onClick: () => {
-            handleClickDelete(addr);
-          },
+          onClick: () => handleClickDelete(addr),
         },
       ],
     });
   };
 
+  const normalizeAddress = (addr) => {
+    const { address_id, address_name, zip_code, road_address, detail_address } =
+      addr;
+    return {
+      key: address_id ?? '오류',
+      value: `${road_address} ${detail_address}`,
+      alias: address_name ?? '오류',
+      label: `${address_name} : ${road_address} ${detail_address}`,
+    };
+  };
+
   const customOptions = () => {
-    return addresses.map((_addr) => ({
+    return (addresses.list ?? []).map((_addr) => ({
       ..._addr,
       label: (
         <div className={'radio__button-label-with-delete'}>
@@ -103,23 +100,39 @@ export default function AddressRadioGroup({ userId = '' }) {
     }));
   };
 
-  return (
-    <>
-      <span className={'h4 mb-2'}>배송지</span>
-      <div className={'content--wrapper mt-2 mb-4'}>
+  const drawContent = () => {
+    if (isLoading) {
+      return (
+        <div className={'flex'} style={{ minHeight: '86px' }}>
+          <span className={'text-strong m-auto'}>주소 불러오는 중...</span>
+        </div>
+      );
+    }
+    if (error) {
+      return (
+        <div className={'flex'} style={{ minHeight: '86px' }}>
+          <span className={'text-strong m-auto'}>
+            주소를 불러올 수 없습니다.
+          </span>
+        </div>
+      );
+    }
+    return (
+      <>
         <div className={'mb-3'}>
           <RadioGroup
             label={''}
             name={'addressList'}
             value={curAddress?.value}
             onChange={(e) => {
-              const selected = addresses.find(
+              const selected = addresses.list.find(
                 (_addr) => _addr.key === e.target.key
               );
               setCurAddress(selected);
             }}
             variant={'radio'}
             options={customOptions()}
+            optionDirection={'column'}
           />
         </div>
         <div className={'ml-auto'}>
@@ -131,7 +144,14 @@ export default function AddressRadioGroup({ userId = '' }) {
             }}
           />
         </div>
-      </div>
+      </>
+    );
+  };
+
+  return (
+    <>
+      <span className={'h4 mb-2'}>배송지</span>
+      <div className={'content--wrapper mt-2 mb-4'}>{drawContent()}</div>
     </>
   );
 }

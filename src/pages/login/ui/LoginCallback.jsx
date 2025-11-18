@@ -34,6 +34,7 @@ export default function LoginCallback() {
     // 로그인 성공
     if (loginCheckStatus === 'success' && userInfo) {
       handleRef.current = true;
+
       sessionStorage.setItem('user_info', JSON.stringify(userInfo));
       navigate('/', { replace: true });
       return;
