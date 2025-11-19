@@ -40,33 +40,35 @@ export default function TextArea({
         </label>
       )}
 
-      <textarea
-        id={name}
-        name={name}
-        className="textarea__input"
-        placeholder={placeholder}
-        value={value}
-        onChange={safeOnChange}
-        maxLength={maxLength ? maxLength + 1 : undefined}
-        aria-label={label}
-        disabled={disabled}
-        required={required}
-      />
+      <div className="textarea__wrapper">
+        <textarea
+          id={name}
+          name={name}
+          className="textarea__input"
+          placeholder={placeholder}
+          value={value}
+          onChange={safeOnChange}
+          maxLength={maxLength ? maxLength + 1 : undefined}
+          aria-label={label}
+          disabled={disabled}
+          required={required}
+        />
 
-      <div className="textarea__bottom">
-        {hasError && displayErrorMessage && (
-          <div className="textarea__error-message">{displayErrorMessage}</div>
-        )}
+        <div className="textarea__bottom">
+          {hasError && displayErrorMessage && (
+            <div className="textarea__error-message">{displayErrorMessage}</div>
+          )}
 
-        {maxLength && (
-          <div
-            className={`textarea__counter ${
-              isOverLimit ? 'textarea__counter--over' : ''
-            }`}
-          >
-            {currentLength}/{maxLength}
-          </div>
-        )}
+          {maxLength && (
+            <div
+              className={`textarea__counter ${
+                isOverLimit ? 'textarea__counter--over' : ''
+              }`}
+            >
+              {currentLength}/{maxLength}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

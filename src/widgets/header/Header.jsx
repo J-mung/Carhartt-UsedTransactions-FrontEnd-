@@ -67,8 +67,9 @@ export default function Header({ title }) {
         <Button
           label={'판매하기'}
           variant={'standard-link'}
-          onClick={() => alert('판매하기 버튼 클릭')}
-          disabled={true}
+          // onClick={() => navigate(isLoggedIn ? '/product/new' : '/login')}
+          onClick={() => navigate('/product/new')}
+          disabled={false}
         ></Button>
         <IconTextButton
           label={'관리'}

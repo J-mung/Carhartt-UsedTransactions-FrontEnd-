@@ -1,6 +1,7 @@
 import Button from '@/shared/ui/buttons/Button';
 import { useModal } from '@/widgets/modal/ModalProvider';
 import Modal from '@/widgets/modal/Modal';
+import SizeGuide from '@/app/assets/images/size_guide.png';
 
 export default function ProductInfo({
   product,
@@ -22,14 +23,12 @@ export default function ProductInfo({
       title: '사이즈 측정 기준',
       children: (
         <div className="size-guide">
-          <p>사이즈 가이드 차트 이미지 제작 & 대체 예정</p>
-          <img
-            src="https://placeholder.pics/svg/300/000000/FFFFFF/Placeholder%20Image"
-            alt="사이즈 측정 가이드"
-          />
+          <img src={SizeGuide} alt="사이즈 측정 가이드" />
+          <cite>출처: 칼하트윕 온라인 스토어</cite>
         </div>
       ),
       buttons: [],
+      className: 'size-guide-modal',
     });
   };
 
