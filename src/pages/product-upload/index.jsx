@@ -19,7 +19,7 @@ import Button from '@/shared/ui/buttons/Button';
 import ImageUploadSection from './ui/ImageUploadSection';
 import Modal from '@/widgets/modal/Modal';
 import { useModal } from '@/widgets/modal/ModalProvider';
-import './productUploadPage.scss';
+import './ui/productUploadPage.scss';
 
 // 상품 등록/수정 페이지
 // product/new → 판매글 작성 (작성/등록 모드)
