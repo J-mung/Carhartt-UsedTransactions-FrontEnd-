@@ -14,9 +14,9 @@ const ITEMS_PER_PAGE = 16;
 
 // Sorting options
 const SORT_OPTIONS = [
-  { value: 'signedDate,desc', label: '최신순' },
-  { value: 'price_low', label: '낮은 가격순' },
-  { value: 'price_high', label: '높은 가격순' },
+  { value: 'createdAt,desc', label: '최신순' },
+  { value: 'price,asc', label: '낮은 가격순' },
+  { value: 'price,desc', label: '높은 가격순' },
 ];
 
 // Radio 버튼용 카테고리 평탄화 함수
@@ -33,7 +33,7 @@ function flattenCategories(apiCategories) {
 
 export default function ProductsListPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [sortBy, setSortBy] = useState('signedDate,desc');
+  const [sortBy, setSortBy] = useState('createdAt,desc');
   const [currentPage, setCurrentPage] = useState(1);
 
   // Fetch categories from API

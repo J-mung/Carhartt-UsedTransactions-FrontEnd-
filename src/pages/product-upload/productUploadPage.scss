@@ -1,10 +1,25 @@
 @use '@styles/typography' as *;
-@use '@styles/border' as *;
+@use '@styles/border' as border;
+@use '@styles/colors' as *;
+@use 'sass:map';
+
+.product-upload-page {
+  max-width: 65rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
 
 .product-form {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  @include border.borderRadius(1rem);
+  box-shadow: 0 0.75rem 1.5rem rgba(22, 25, 31, 0.08);
+  padding: 2rem;
   width: 100%;
+  box-sizing: border-box;
 
-  div:not(:first-of-type),
+  div:not(:first-of-type):not(.image-upload-section),
+  .input-box,
   .select-box,
   .text-area {
     display: flex;
@@ -32,9 +47,26 @@
     }
   }
 
-  &__category .select-box:not(:first-of-type) {
-    flex: 0 0 auto;
-    margin-left: 2rem;
+  .image-upload-section {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 1.5rem;
+  }
+
+  &__category {
+    text-transform: uppercase;
+
+    .select-box:not(:first-of-type) {
+      flex: 0 0 auto;
+      margin-left: 2rem;
+    }
+  }
+
+  &__measurements {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
   }
 
   &__measurement-inputs {
@@ -42,11 +74,19 @@
     grid-template-columns: repeat(4, 1fr);
     column-gap: 2rem;
 
-    @media (max-width: 48em) {
+    .input-box.input-box--has-suffix .input-box__input {
+      padding-right: 3rem;
+
+      @media (max-width: 64em) {
+        padding-right: 2rem;
+      }
+    }
+
+    @media (max-width: 64em) {
       grid-template-columns: repeat(2, 1fr);
     }
 
-    @media (max-width: 30em) {
+    @media (max-width: 48em) {
       grid-template-columns: 1fr;
     }
   }
@@ -55,30 +95,30 @@
     margin-top: 2rem;
   }
 
-  &__submit {
-    justify-content: flex-end;
-
-    button {
-      padding: 0.5rem 2rem;
-    }
+  &__actions {
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
   }
 
-  @media (max-width: 48em) {
+  &__submit-buttons {
+    display: flex;
+    gap: 1rem;
+  }
+
+  @media (max-width: 40em) {
+    padding: 1.5rem;
+
     div:not(:first-of-type):not(.radio__option),
     .select-box,
-    .text-area,
-    .radio {
+    .text-area {
       flex-direction: column;
       align-items: flex-start;
 
       label:not(.radio__radio-label) {
         width: 100%;
-        margin-bottom: var(--space-2);
-      }
-
-      .select-box__container,
-      .textarea__wrapper {
-        width: 100%;
+        margin-bottom: 0.5rem;
       }
     }
 
@@ -88,8 +128,56 @@
       }
     }
 
-    &__measurements .input-box {
-      margin-top: 0;
+    &__measurements {
+      .input-box {
+        margin: 0.5rem auto;
+      }
+    }
+
+    &__actions {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    &__submit-buttons {
+      width: 100%;
+      flex-direction: column;
+    }
+
+    &__delete-button {
+      align-self: center;
+    }
+  }
+
+  @media (max-width: 40em) {
+    padding: 1rem;
+
+    div:not(:first-of-type):not(.radio__option),
+    .select-box,
+    .text-area {
+      flex-direction: column;
+      align-items: flex-start;
+
+      label:not(.radio__radio-label) {
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+
+      .input-box__container,
+      .select-box__container,
+      .textarea__wrapper {
+        width: 100%;
+      }
+    }
+
+    &__form {
+      gap: 0;
+    }
+
+    &__category {
+      flex-direction: column;
+      gap: 0;
+      align-items: stretch;
     }
   }
 }

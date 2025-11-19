@@ -149,3 +149,15 @@
     }
   }
 }
+
+.size-guide-modal {
+  width: 90% !important;
+
+  .size-guide img {
+    height: 30rem;
+
+    @media screen and (max-width: 50em) {
+      height: 20rem;
+    }
+  }
+}

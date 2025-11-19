@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { resizeImage } from '@/pages/profile/model/imageResizer';
+import { resizeImage } from '@/pages/mypage/model/imageResizer';
 import './imageUploadSection.scss';
 
 /**
@@ -135,20 +135,23 @@ export default function ImageUploadSection({
         {/* 추가 버튼 */}
         {images.length < maxImages && (
           <div className="image-upload-section__item">
-            <button
-              type="button"
-              className="image-upload-section__upload-btn"
-              onClick={handleAddClick}
-            >
-              <span className="ic-upload"></span>
-            </button>
-            <button
-              type="button"
-              className="image-upload-section__add-btn"
-              onClick={handleAddClick}
-            >
-              <span className="ic-add"></span>
-            </button>
+            {images.length === 0 ? (
+              <button
+                type="button"
+                className="image-upload-section__upload-btn"
+                onClick={handleAddClick}
+              >
+                <span className="ic-upload"></span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="image-upload-section__add-btn"
+                onClick={handleAddClick}
+              >
+                <span className="ic-add"></span>
+              </button>
+            )}
           </div>
         )}
       </div>

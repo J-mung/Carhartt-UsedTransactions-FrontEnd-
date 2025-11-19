@@ -102,7 +102,6 @@ export default function ProductPage() {
 
   const handleBuy = (itemId) => {
     navigate(`/payment/${itemId}`);
-    // alert('구매 페이지로 이동');
   };
 
   const handleChat = () => {
@@ -111,8 +110,7 @@ export default function ProductPage() {
   };
 
   const handleEdit = () => {
-    // navigate(`/product/${itemId}/edit`);
-    alert('게시글 수정 페이지로 이동');
+    navigate(`/product/${itemId}/edit`);
   };
 
   if (isLoading) {
