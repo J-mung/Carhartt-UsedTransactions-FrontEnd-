@@ -37,8 +37,7 @@ export default function ProductCard({ product }) {
         </div>
 
         {/* 찜하기 버튼 - 로그인 상태에서만 디스플레이 */}
-        {/* {isLoggedIn && <WishListBtn product={product} />} */}
-        <WishListBtn product={product} />
+        {isLoggedIn && <WishListBtn product={product} />}
       </div>
 
       {/* 상품 정보 */}

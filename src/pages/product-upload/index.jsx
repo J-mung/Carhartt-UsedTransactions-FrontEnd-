@@ -61,6 +61,24 @@ export default function ProductUploadPage() {
   const [price, setPrice] = useState('');
   const [directTrade, setDirectTrade] = useState('yes');
 
+  // 신규 등록 모드 - 폼 초기화
+  useEffect(() => {
+    if (!itemId) {
+      setImages([]);
+      setProductName('');
+      setMainCategory('');
+      setSubCategory('');
+      setProductSize('');
+      setTotalLength('');
+      setSleeve('');
+      setShoulder('');
+      setChest('');
+      setDescription('');
+      setPrice('');
+      setDirectTrade('yes');
+    }
+  }, [itemId]);
+
   // 수정 모드 - 기존 상품 데이터 로드
   useEffect(() => {
     if (isEditMode && existingProduct) {
