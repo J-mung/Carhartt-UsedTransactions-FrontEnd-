@@ -1,5 +1,6 @@
 import { useIsLoggedIn } from '@/entities/user/hooks/useIsLoggedIn';
 import { carHarttApi } from '@/shared/api/axios';
+import { useMockToggle } from '@/shared/config/MockToggleProvider';
 import Button from '@/shared/ui/buttons/Button';
 import IconTextButton from '@/shared/ui/buttons/IconTextButton';
 import { useNavigate } from 'react-router-dom';
@@ -13,6 +14,7 @@ import { useModal } from '../modal/ModalProvider';
 export default function Header({ title }) {
   const { openModal } = useModal();
   const { isLoggedIn, isLoading } = useIsLoggedIn();
+  const { useMock } = useMockToggle();
   const navigate = useNavigate();
   const handleHome = () => {
     navigate('/', { replace: true });
@@ -21,6 +23,12 @@ export default function Header({ title }) {
     navigate('/login', { replace: true });
   };
   const handleLogOut = () => {
+    if (useMock) {
+      sessionStorage.removeItem('user_info');
+      sessionStorage.removeItem('is_logged_in');
+      window.location.href = '/';
+    }
+
     const { loginType, provider } = JSON.parse(
       sessionStorage.getItem('user_info') || '{}'
     );
