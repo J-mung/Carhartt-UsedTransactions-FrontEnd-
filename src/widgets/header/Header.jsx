@@ -13,15 +13,34 @@ import { useModal } from '../modal/ModalProvider';
  */
 export default function Header({ title }) {
   const { openModal } = useModal();
+  // 로그인 상태 확인 (Boolean)
   const { isLoggedIn, isLoading } = useIsLoggedIn();
   const { useMock } = useMockToggle();
   const navigate = useNavigate();
+
+  // 홈 화면 바로가기
   const handleHome = () => {
     navigate('/', { replace: true });
   };
+
+  const handleMyPage = () => {
+    isLoggedIn
+      ? navigate('/mypage')
+      : openModal(Modal, {
+          title: '로그인 필요',
+          children: (
+            <span className={'text-regular'}>로그인이 필요합니다.</span>
+          ),
+          onClose: () => navigate('/login', { replace: true }),
+        });
+  };
+
+  // 로그인 핸들러
   const handleLogin = () => {
     navigate('/login', { replace: true });
   };
+
+  // 로그아웃 핸들러
   const handleLogOut = () => {
     if (useMock) {
       sessionStorage.removeItem('user_info');
@@ -81,9 +100,7 @@ export default function Header({ title }) {
         <IconTextButton
           label={'관리'}
           variant={'standard-link'}
-          onClick={() => {
-            navigate('/mypage');
-          }}
+          onClick={handleMyPage}
           disabled={false}
         >
           <span className={'ic-user'}></span>
