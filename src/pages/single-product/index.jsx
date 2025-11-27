@@ -2,12 +2,15 @@ import {
   useCategories,
   useProductDetail,
 } from '@/entities/product/hooks/useProduct';
+import { useIsLoggedIn } from '@/entities/user/hooks/useIsLoggedIn';
+import { useUserStatus } from '@/entities/user/hooks/useUserStatus';
 import {
   useToggleWishlist,
   useWishlistStatus,
 } from '@/entities/user/hooks/useWishList';
 import Modal from '@/widgets/modal/Modal';
 import { useModal } from '@/widgets/modal/ModalProvider';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Breadcrumb from './ui/Breadcrumb';
 import ImageCarousel from './ui/ImageCarousel';
@@ -18,6 +21,14 @@ export default function ProductPage() {
   const { itemId } = useParams();
   const navigate = useNavigate();
   const { openModal } = useModal();
+  // 사용자 로그인 상태
+  const { isLoggedIn, isLoading: loggedInIsLoading } = useIsLoggedIn();
+  // 사용자 정보
+  const {
+    data: userInfo,
+    isLoading: userInfoIsLoading,
+    isError: userInfoIsError,
+  } = useUserStatus();
 
   // 상품 데이터
   const { data: product, isLoading, isError, error } = useProductDetail(itemId);
@@ -31,77 +42,116 @@ export default function ProductPage() {
   const { toggleWishlist, isLoading: isToggling } = useToggleWishlist();
 
   // 임시 유저 데이터 -> Get current user from auth context
-  const currentUserId = 'user123';
-  const isSeller = product?.seller_id === currentUserId;
+  // const currentUserId = 'user123';
+  // const isSeller = product?.seller_id === currentUserId;
+  // seller 확인 상태
+  const [isSeller, setIsSeller] = useState(false);
+  // seller 확인
+  useEffect(() => {
+    if (loggedInIsLoading || isLoading) {
+      return;
+    }
+    if (userInfoIsError || isError) {
+      setIsSeller(false);
+    }
+
+    if (isLoggedIn && userInfo?.memberId) {
+      setIsSeller(product?.seller_id === userInfo.memberId);
+    }
+  }, [
+    isLoggedIn,
+    userInfo,
+    isLoggedIn,
+    userInfoIsLoading,
+    isLoading,
+    userInfoIsError,
+    isError,
+  ]);
 
   // Handlers
   const handleWishlist = async () => {
-    // alert('찜 목록에 추가되었습니다');
-    try {
-      const wasWishlisted = wishlistStatus?.wished;
-      await toggleWishlist(itemId, wasWishlisted);
+    if (!isLoggedIn) {
+      openModal(Modal, {
+        title: '로그인 필요',
+        children: <span className={'text-regular'}>로그인이 필요합니다.</span>,
+        onClose: () => navigate('/login', { replace: true }),
+      });
+    } else {
+      // alert('찜 목록에 추가되었습니다');
+      try {
+        const wasWishlisted = wishlistStatus?.wished;
+        await toggleWishlist(itemId, wasWishlisted);
 
-      if (wasWishlisted) {
+        if (wasWishlisted) {
+          openModal(Modal, {
+            title: '찜 목록에서 제거되었습니다',
+            children: (
+              <div>
+                <p>찜 목록에서 제거되었습니다.</p>
+              </div>
+            ),
+            buttons: [
+              {
+                label: '계속 쇼핑하기',
+                variant: 'standard-secondary',
+                onClick: () => navigate('/'),
+              },
+            ],
+          });
+        } else {
+          openModal(Modal, {
+            title: '찜 목록에 추가되었습니다',
+            children: (
+              <div>
+                <p>찜 목록에 추가되었습니다.</p>
+              </div>
+            ),
+            buttons: [
+              {
+                label: '찜 목록 보기',
+                variant: 'standard-primary',
+                onClick: () => alert('찜 목록 페이지로 이동'),
+                // onClick: () => navigate('/mypage/wishlist'),
+              },
+              {
+                label: '계속 쇼핑하기',
+                variant: 'standard-secondary',
+                onClick: () => {},
+              },
+            ],
+          });
+        }
+      } catch (error) {
         openModal(Modal, {
-          title: '찜 목록에서 제거되었습니다',
+          title: '오류',
           children: (
             <div>
-              <p>찜 목록에서 제거되었습니다.</p>
+              <p>찜하기 처리 중 오류가 발생했습니다.</p>
+              <p>{error?.message || '잠시 후 다시 시도해주세요.'}</p>
             </div>
           ),
           buttons: [
             {
-              label: '계속 쇼핑하기',
-              variant: 'standard-secondary',
-              onClick: () => navigate('/'),
-            },
-          ],
-        });
-      } else {
-        openModal(Modal, {
-          title: '찜 목록에 추가되었습니다',
-          children: (
-            <div>
-              <p>찜 목록에 추가되었습니다.</p>
-            </div>
-          ),
-          buttons: [
-            {
-              label: '찜 목록 보기',
+              label: '확인',
               variant: 'standard-primary',
-              onClick: () => alert('찜 목록 페이지로 이동'),
-              // onClick: () => navigate('/mypage/wishlist'),
-            },
-            {
-              label: '계속 쇼핑하기',
-              variant: 'standard-secondary',
               onClick: () => {},
             },
           ],
         });
       }
-    } catch (error) {
-      openModal(Modal, {
-        title: '오류',
-        children: (
-          <div>
-            <p>찜하기 처리 중 오류가 발생했습니다.</p>
-            <p>{error?.message || '잠시 후 다시 시도해주세요.'}</p>
-          </div>
-        ),
-        buttons: [
-          {
-            label: '확인',
-            variant: 'standard-primary',
-            onClick: () => {},
-          },
-        ],
-      });
     }
   };
 
   const handleBuy = (itemId) => {
-    navigate(`/payment/${itemId}`);
+    isLoggedIn
+      ? navigate(`/payment/${itemId}`)
+      : openModal(Modal, {
+          title: '로그인 필요',
+          children: (
+            <span className={'text-regular'}>로그인이 필요합니다.</span>
+          ),
+          onClose: () => navigate('/login', { replace: true }),
+        });
     // alert('구매 페이지로 이동');
   };
 

@@ -58,9 +58,9 @@ export const productData = {
     },
   ],
 
-  seller_id: 'user123',
+  seller_id: 'mock-user',
   seller: {
-    nickname: '판매자123',
+    nickname: '우직한 감자칩',
     sales_count: 2,
     purchase_count: 5,
   },
