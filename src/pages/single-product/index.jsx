@@ -48,13 +48,15 @@ export default function ProductPage() {
   const [isSeller, setIsSeller] = useState(false);
   // seller 확인
   useEffect(() => {
+    // 로그인 상태 및 상품 데이터 loading
     if (loggedInIsLoading || isLoading) {
       return;
     }
+    // 유저 정보 조회 에러 혹은 상품 데이터 조회 에러
     if (userInfoIsError || isError) {
       setIsSeller(false);
     }
-
+    // 로그인 상태이고, 유저 정보 조회 가능
     if (isLoggedIn && userInfo?.memberId) {
       setIsSeller(product?.seller_id === userInfo.memberId);
     }
