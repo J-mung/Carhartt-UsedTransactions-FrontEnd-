@@ -1,11 +1,17 @@
+import { useMockToggle } from '@/shared/config/MockToggleProvider';
 import { useUserStatus } from './useUserStatus';
 
 export function useIsLoggedIn() {
   const cachedLogin = sessionStorage.getItem('is_logged_in') === 'true';
+  const { useMock } = useMockToggle();
   const { data, status } = useUserStatus();
 
   const isLoading = status === 'pending';
   let isLoggedIn = false;
+
+  if (useMock) {
+    return { isLoggedIn: cachedLogin, isLoading };
+  }
 
   // 서버 검증 결과 기반으로 판단
   if (status === 'success' && data && data.memberId) {
