@@ -39,6 +39,10 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
+      watch: {
+        // Prevent watching these files that keep triggering restarts
+        ignored: ['**/vite.config.js'],
+      },
       ...(useHttps
         ? {
             https: {

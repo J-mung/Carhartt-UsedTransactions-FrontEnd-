@@ -52,7 +52,7 @@ export function useCategories() {
 // GET /v1/items?category_id=1&sort=signedDate&page=1&size=16
 export function useProductsList({
   categoryId,
-  sort = 'signedDate',
+  sort = 'createdAt,desc',
   page = 1,
   size = 16,
 } = {}) {
