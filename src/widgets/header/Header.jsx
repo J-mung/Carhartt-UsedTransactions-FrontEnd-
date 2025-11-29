@@ -23,6 +23,20 @@ export default function Header({ title }) {
     navigate('/', { replace: true });
   };
 
+  // 판매하기 화면 바로가기
+  const handleSellPage = () => {
+    isLoggedIn
+      ? navigate('/product/new', { replace: true })
+      : openModal(Modal, {
+          title: '로그인 필요',
+          children: (
+            <span className={'text-regular'}> 로그인이 필요합니다.</span>
+          ),
+          onClose: handleLogin,
+        });
+  };
+
+  // 관리(마이페이지) 화면 바로가기
   const handleMyPage = () => {
     isLoggedIn
       ? navigate('/mypage')
@@ -31,7 +45,7 @@ export default function Header({ title }) {
           children: (
             <span className={'text-regular'}>로그인이 필요합니다.</span>
           ),
-          onClose: () => navigate('/login', { replace: true }),
+          onClose: handleLogin,
         });
   };
 
@@ -95,7 +109,7 @@ export default function Header({ title }) {
           label={'판매하기'}
           variant={'standard-link'}
           // onClick={() => navigate(isLoggedIn ? '/product/new' : '/login')}
-          onClick={() => navigate('/product/new')}
+          onClick={handleSellPage}
           disabled={false}
         ></Button>
         <IconTextButton
