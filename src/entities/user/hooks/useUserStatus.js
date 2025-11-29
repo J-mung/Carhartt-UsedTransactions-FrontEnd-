@@ -1,3 +1,4 @@
+import ApiError from '@/shared/api/ApiError';
 import { carHarttApi } from '@/shared/api/axios';
 import { useMockToggle } from '@/shared/config/MockToggleProvider';
 import { useQuery } from '@tanstack/react-query';
@@ -35,9 +36,10 @@ export function useUserStatus() {
               }
             };
             // 로그인 성공 및 사용자 정보 반환
-            const normalizedData = parseUserPayload(response.data);
+            const normalizedData =
+              parseUserPayload(response.data) ?? response.data ?? null;
             // 응답에 프로필 이미지 url이 없으면 기본 프로필 이미지 랜덤 생성
-            const userInfoWithAvatar = normalizedData.profileImageUrl
+            const userInfoWithAvatar = normalizedData?.profileImageUrl
               ? {
                   ...normalizedData,
                   avatar: `${BASE_PATH}/${normalizedData.profileImageUrl}`,
@@ -55,20 +57,21 @@ export function useUserStatus() {
         .catch((error) => {
           if (error instanceof ApiError) {
             const code = error.code || '';
+            const fullCode = `${error.domain || ''}${code}`;
 
             // 세션 만료 or 미인증 (C001)
-            if (code === 'C001') {
+            if (fullCode === 'C001') {
               return null;
             }
 
             // CSRF 오류 (C008) 재로그인 필요
-            if (code === 'C008') {
+            if (fullCode === 'C008') {
               console.warn('CSRF 토큰 불일치: 재로그인 필요');
               return null;
             }
 
             // 내부 처리 오류 (C010)
-            if (code === 'C010') {
+            if (fullCode === 'C010') {
               console.error(`서버 내부 오류: ${error.message}`);
               throw error; // 내부 오류는 그대로 상위 throw
             }
@@ -78,7 +81,7 @@ export function useUserStatus() {
           }
 
           // 예기치 못한 네트워크 또는 Axios 에러
-          throw new ApiError('Unexpected error', {
+          throw new ApiError({
             code: 'UNKNOWN',
             message:
               error?.message ||
