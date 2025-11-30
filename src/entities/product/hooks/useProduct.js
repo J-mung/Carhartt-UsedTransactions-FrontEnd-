@@ -49,17 +49,22 @@ export function useCategories() {
 }
 
 // Fetch 상품 목록
-// GET /v1/items?category_id=1&sort=signedDate&page=1&size=16
+// GET /v1/items?category_id=1&sort=createdAt,desc&page=1&size=16
 export function useProductsList({
   categoryId,
-  sort = 'createdAt,desc',
+  sortColumn = 'createdAt',
+  sortDirect = 'desc',
   page = 1,
   size = 16,
 } = {}) {
   const { useMock } = useMockToggle();
 
   return useQuery({
-    queryKey: ['products', 'list', { categoryId, sort, page, size }],
+    queryKey: [
+      'products',
+      'list',
+      { categoryId, sort: `${sortColumn},${sortDirect}`, page, size },
+    ],
     queryFn: async () => {
       // Mock data
       if (useMock) {
@@ -73,20 +78,26 @@ export function useProductsList({
           );
         }
 
-        // Sort products
+        // 정렬 방향에 맞게 정렬 순서 값 반환
+        const calcSortVolume = (direct, x, y) => {
+          return direct === 'asc' ? x - y : y - x;
+        };
+
+        // 정렬 항목에 맞춰 제품 정렬
         const sorted = [...filtered].sort((a, b) => {
-          switch (sort) {
-            case 'recent':
-              return (
-                new Date(b.created_at).getTime() -
-                new Date(a.created_at).getTime()
-              );
-            case 'price_low':
-              return a.item_price - b.item_price;
-            case 'price_high':
-              return b.item_price - a.item_price;
-            default:
+          switch (sortColumn) {
+            case 'createdAt': {
+              return calcSortVolume(sortDirect, a.createdAt, b.createdAt);
+            }
+            case 'price': {
+              return calcSortVolume(sortDirect, a.item_price, b.item_price);
+            }
+            case 'name': {
+              return calcSortVolume(sortDirect, a.item_name, b.item_name);
+            }
+            default: {
               return 0;
+            }
           }
         });
 
@@ -108,14 +119,11 @@ export function useProductsList({
       const params = {
         page: page - 1,
         size,
+        sort: `${sortColumn},${sortDirect}`,
       };
 
       if (categoryId && categoryId !== 'all') {
         params.category_id = categoryId;
-      }
-
-      if (sort) {
-        params.sort = sort;
       }
 
       const response = await carHarttApi({

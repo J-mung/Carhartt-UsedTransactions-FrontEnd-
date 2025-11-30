@@ -33,7 +33,8 @@ function flattenCategories(apiCategories) {
 
 export default function ProductsListPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [sortBy, setSortBy] = useState('createdAt,desc');
+  const [sortColumn, setSortColumn] = useState('createdAt');
+  const [sortDirect, setSortDirect] = useState('desc');
   const [currentPage, setCurrentPage] = useState(1);
 
   // Fetch categories from API
@@ -51,7 +52,8 @@ export default function ProductsListPage() {
     isFetching,
   } = useProductsList({
     categoryId: selectedCategory,
-    sort: sortBy,
+    sortColumn: sortColumn,
+    sortDirect: sortDirect,
     page: currentPage,
     size: ITEMS_PER_PAGE,
   });
@@ -100,7 +102,9 @@ export default function ProductsListPage() {
   };
 
   const handleSortChange = (e) => {
-    setSortBy(e.target.value);
+    const [column, direct] = e.target.value.split(',') ?? '';
+    setSortColumn(column);
+    setSortDirect(direct);
     setCurrentPage(1);
   };
 
@@ -135,7 +139,7 @@ export default function ProductsListPage() {
           <div className="total_number">총 {totalProducts}개의 상품</div>
           <div className="sorting_dropdown">
             <SelectBox
-              value={sortBy}
+              value={`${sortColumn},${sortDirect}`}
               onChange={handleSortChange}
               options={SORT_OPTIONS}
               size="--s"
