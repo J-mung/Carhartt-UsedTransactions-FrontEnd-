@@ -1,8 +1,16 @@
 import React, { useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Tab from './Tab';
 
 export default function TabGroup({ tabGroup, Layout }) {
-  const firstEnabledIndex = tabGroup.findIndex((tab) => !tab.disabled);
+  // 마이페이지 탭 바로 가기 (path parameter)
+  const { search } = useLocation();
+  const urlSearchParams = new URLSearchParams(search);
+  const tabKey = Number.parseInt(urlSearchParams.get('tab'));
+
+  const firstEnabledIndex = !!tabKey
+    ? tabKey
+    : tabGroup.findIndex((tab) => !tab.disabled);
   const [activeIndex, setActiveIndex] = useState(firstEnabledIndex);
   const [focusIndex, setFocusIndex] = useState(firstEnabledIndex); // focus 상태에서 키보드 선택 처리용 state
 

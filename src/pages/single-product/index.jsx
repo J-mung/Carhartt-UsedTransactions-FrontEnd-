@@ -112,8 +112,7 @@ export default function ProductPage() {
               {
                 label: '찜 목록 보기',
                 variant: 'standard-primary',
-                onClick: () => alert('찜 목록 페이지로 이동'),
-                // onClick: () => navigate('/mypage/wishlist'),
+                onClick: () => navigate('/mypage?tab=2'),
               },
               {
                 label: '계속 쇼핑하기',

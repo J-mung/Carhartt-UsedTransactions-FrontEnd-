@@ -70,7 +70,7 @@ export default function MyPage() {
       {
         id: 'sale-1',
         title: '카브카 초어코트',
-        price: '129,000원',
+        price: '129000',
         status: '판매 중',
         statusType: 'ongoing',
         description: '1회 착용 · 택포',
@@ -78,7 +78,7 @@ export default function MyPage() {
       {
         id: 'sale-2',
         title: 'OG Chore Jacket',
-        price: '98,000원',
+        price: '98000',
         status: '판매 완료',
         statusType: 'completed',
         description: '빈티지 워싱 · 실측 103',
@@ -86,7 +86,7 @@ export default function MyPage() {
       {
         id: 'sale-3',
         title: 'Active Jacket',
-        price: '155,000원',
+        price: '155000',
         status: '택배 예약 중',
         statusType: 'ongoing',
         description: '미시즌 · L 사이즈',
@@ -94,7 +94,7 @@ export default function MyPage() {
       {
         id: 'sale-4',
         title: 'Detroit Jacket',
-        price: '178,000원',
+        price: '178000',
         status: '구매자 확인 중',
         statusType: 'ongoing',
         description: '교신 환영 · 상태 A',
@@ -102,7 +102,7 @@ export default function MyPage() {
       {
         id: 'sale-5',
         title: 'Trapper Hat',
-        price: '52,000원',
+        price: '52000',
         status: '판매 완료',
         statusType: 'completed',
         description: '착용감 거의 없음',
@@ -110,7 +110,7 @@ export default function MyPage() {
       {
         id: 'sale-6',
         title: 'Canvas Tote Bag',
-        price: '39,000원',
+        price: '39000',
         status: '판매 중',
         statusType: 'ongoing',
         description: '한정 컬러 · 생활 오염 약간',
@@ -124,7 +124,7 @@ export default function MyPage() {
       {
         id: 'buy-1',
         title: '아크틱 코트',
-        price: '225,000원',
+        price: '225000',
         status: '배송 중',
         statusType: 'ongoing',
         description: '로지스팟 집하 완료',
@@ -132,7 +132,7 @@ export default function MyPage() {
       {
         id: 'buy-2',
         title: '미시간 코트',
-        price: '189,000원',
+        price: '189000',
         status: '구매 완료',
         statusType: 'completed',
         description: '거래 종료 · 리뷰 작성 완료',
@@ -140,7 +140,7 @@ export default function MyPage() {
       {
         id: 'buy-3',
         title: 'OG Santa Fe Jacket',
-        price: '210,000원',
+        price: '210000',
         status: '배송 준비중',
         statusType: 'ongoing',
         description: '판매자 발송 대기',
@@ -148,7 +148,7 @@ export default function MyPage() {
       {
         id: 'buy-4',
         title: 'Ruck Single Knee Pant',
-        price: '119,000원',
+        price: '119000',
         status: '구매 완료',
         statusType: 'completed',
         description: '실착감 만족 · 후기 작성 예정',

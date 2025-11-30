@@ -4,14 +4,33 @@ import { Button } from '@/shared/ui/buttons';
 export default function MyPageProductCard({ item }) {
   const { useMock } = useMockToggle();
 
-  const normalizeItem = useMock
-    ? { ...item }
+  const normalizeItem = !!item.item_id
+    ? {
+        title: item.item_name || '이름 없음',
+        price: Number(Number.parseInt(item.item_price) || 0).toLocaleString(
+          'ko-KR',
+          {
+            style: 'currency',
+            currency: 'KRW',
+          }
+        ),
+        statusType: item.direct_trade ? 'ongoing' : 'completed',
+        status: item.direct_trade ? '판매 중' : '판매 완료',
+        description: item.description || '설명 없음',
+        imageUrl: item.itemImageUrl,
+      }
     : {
-        title: item.itemName || '정보 없음',
+        title: item.title || '정보 없음',
         statusType: item.statusType || 'notice',
         status: item.status || '정보 없음',
-        price: item.itemPrice || '0 ₩',
-        description: item.itemDescription || '정보 없음',
+        price: Number(Number.parseInt(item.price) || 0).toLocaleString(
+          'ko-KR',
+          {
+            style: 'currency',
+            currency: 'KRW',
+          }
+        ),
+        description: item.description || '정보 없음',
         imageUrl: item.itemImageUrl,
       };
   if (useMock) {
