@@ -5,6 +5,7 @@ import RadioGroup from '@/shared/ui/Radio';
 import Modal from '@/widgets/modal/Modal';
 import { useModal } from '@/widgets/modal/ModalProvider';
 import { useEffect, useState } from 'react';
+import AddressAddForm from './AddressAddForm';
 import './paymentForm.scss';
 
 export default function AddressRadioGroup({ userId = '' }) {
@@ -18,6 +19,7 @@ export default function AddressRadioGroup({ userId = '' }) {
     refetch,
   } = useAddressesQuery(memberId);
   const [curAddress, setCurAddress] = useState(undefined);
+  const [openAddressAddForm, setOpenAddressAddForm] = useState(false);
 
   // 주소지 조회
   useEffect(() => {
@@ -140,10 +142,11 @@ export default function AddressRadioGroup({ userId = '' }) {
             label={'배송지 추가 등록'}
             variant={'standard-link'}
             onClick={() => {
-              console.log('배송지 추가 등록 클릭');
+              setOpenAddressAddForm((prev) => !prev);
             }}
           />
         </div>
+        {openAddressAddForm ? <AddressAddForm /> : <div></div>}
       </>
     );
   };
