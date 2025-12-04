@@ -92,7 +92,7 @@ export default function DaumPostcodeModal({
 
           // 주소 선택 완료 후 상위 Caller로 결과 반환
           onComplete?.({
-            postcode: data.zonecode,
+            zip: data.zonecode,
             roadAddress: data.roadAddress,
             jibunAddress: data.jibunAddress,
             buildingName: data.buildingName,

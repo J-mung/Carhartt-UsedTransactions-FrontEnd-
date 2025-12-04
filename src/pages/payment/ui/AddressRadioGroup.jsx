@@ -139,7 +139,7 @@ export default function AddressRadioGroup({ userId = '' }) {
         </div>
         <div className={'ml-auto'}>
           <Button
-            label={'배송지 추가 등록'}
+            label={openAddressAddForm ? '배송지 추가 접기' : '배송지 추가 등록'}
             variant={'standard-link'}
             onClick={() => {
               setOpenAddressAddForm((prev) => !prev);
