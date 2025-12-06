@@ -115,12 +115,12 @@ export default function DaumPostcodeModal({
   }, [wrapRef, onClose, onComplete]);
 
   return (
-    <Modal title={title} width={'480px'} onClose={onClose} centered>
+    <Modal title={title} width={'460px'} onClose={onClose} centered>
       <div
         ref={wrapRef}
         style={{
           width: '100%',
-          height: '500px',
+          height: '460px',
           overflow: 'hidden',
         }}
       />
