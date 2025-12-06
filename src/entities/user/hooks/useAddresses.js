@@ -1,9 +1,15 @@
 import { mockAddresses } from '@/pages/mypage/model/mockAddressData';
 import { carHarttApi } from '@/shared/api/axios';
 import { useMockToggle } from '@/shared/config/MockToggleProvider';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-export function useAddressesQuery(userId) {
+/**
+ * 사용자 배송지 목록 조회 API
+ * @param {*} userId
+ * @returns
+ */
+export function useAddresses(userId) {
+  const queryClient = useQueryClient();
   const { useMock } = useMockToggle();
 
   const convertAddressInfo = (list) => {
@@ -29,22 +35,26 @@ export function useAddressesQuery(userId) {
       }
 
       // API 요청
-      try {
-        const response = await carHarttApi({
-          method: 'GET',
-          url: `/v1/orders/address?member_id=${userId}`,
-        });
+      const response = await carHarttApi({
+        method: 'GET',
+        url: `/v1/orders/address?member_id=${userId}`,
+      });
 
-        const data = response.data;
+      // 응답 fallback
+      const data = response?.data ?? {};
 
-        return {
-          count: data.address_number,
-          list: convertAddressInfo(data.address_item_list),
-        };
-      } catch (error) {
-        console.error(`주소지 목록 조회 API 에러 : ${error}`);
-        throw error;
-      }
+      return {
+        count: data.address_number ?? 0,
+        list: convertAddressInfo(data.address_item_list ?? []),
+      };
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ['addresses', userId],
+      });
+    },
+    onError: (error) => {
+      console.error(`주소지 목록 조회 API 에러 : ${error}`);
     },
   });
 }

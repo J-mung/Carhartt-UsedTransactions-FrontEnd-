@@ -1,4 +1,4 @@
-import { useAddressesQuery } from '@/entities/user/hooks/useAddresses';
+import { useAddresses } from '@/entities/user/hooks/useAddresses';
 import { carHarttApi } from '@/shared/api/axios';
 import { Button } from '@/shared/ui/buttons';
 import RadioGroup from '@/shared/ui/Radio';
@@ -12,12 +12,7 @@ export default function AddressRadioGroup({ userId = '' }) {
   const { openModal } = useModal();
   const memberId =
     JSON.parse(sessionStorage.getItem('user_info') || '{}')?.memberId || '';
-  const {
-    data: addresses,
-    isLoading,
-    error,
-    refetch,
-  } = useAddressesQuery(memberId);
+  const { data: addresses, isLoading, error, refetch } = useAddresses(memberId);
   const [curAddress, setCurAddress] = useState(undefined);
   const [openAddressAddForm, setOpenAddressAddForm] = useState(false);
 
