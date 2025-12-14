@@ -1,10 +1,10 @@
 import { useEnrollAddress } from '@/entities/user/hooks/useAddresses';
 import useDaumPostcodeModal from '@/entities/user/hooks/useDaumPostcodeModal';
 import { Button } from '@/shared/ui/buttons';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import AddressAddFormInputBox from './AddressAddFormInputBox';
 
-export default function AddressAddForm() {
+export default function AddressAddForm({ callback }) {
   const memberId =
     JSON.parse(sessionStorage.getItem('user_info') || '{}')?.memberId || '';
   // 배송지 등록 query mutation
@@ -41,6 +41,12 @@ export default function AddressAddForm() {
       guide: result.roadAddress || result.jibunAddress || '',
     }));
   }, []);
+
+  useEffect(() => {
+    if (enrollAddressMutation.isSuccess) {
+      callback();
+    }
+  }, [enrollAddressMutation.isSuccess]);
 
   // 신청서 값 변경 handler
   const handleChange = (e) => {

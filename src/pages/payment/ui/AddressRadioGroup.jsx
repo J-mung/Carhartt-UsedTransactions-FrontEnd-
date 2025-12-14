@@ -130,7 +130,11 @@ export default function AddressRadioGroup({}) {
             }}
           />
         </div>
-        {openAddressAddForm ? <AddressAddForm /> : <div></div>}
+        {openAddressAddForm ? (
+          <AddressAddForm callback={() => setOpenAddressAddForm(false)} />
+        ) : (
+          <div></div>
+        )}
       </>
     );
   };
