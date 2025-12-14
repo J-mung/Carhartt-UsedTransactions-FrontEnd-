@@ -1,9 +1,14 @@
+import { useEnrollAddress } from '@/entities/user/hooks/useAddresses';
 import useDaumPostcodeModal from '@/entities/user/hooks/useDaumPostcodeModal';
 import { Button } from '@/shared/ui/buttons';
 import { useCallback, useState } from 'react';
 import AddressAddFormInputBox from './AddressAddFormInputBox';
 
 export default function AddressAddForm() {
+  const memberId =
+    JSON.parse(sessionStorage.getItem('user_info') || '{}')?.memberId || '';
+  // 배송지 등록 query mutation
+  const enrollAddressMutation = useEnrollAddress(memberId);
   // 주소 등록 신청서 초기값
   const initialForm = {
     alias: '',
@@ -113,7 +118,11 @@ export default function AddressAddForm() {
       <Button
         label={'등록'}
         variant={'standard-primary'}
-        onClick={() => console.log('todo')}
+        onClick={() => {
+          console.log('todo');
+          const { mutateAsync: enrollAddress } = enrollAddressMutation;
+          enrollAddress(form);
+        }}
       />
     </div>
   );

@@ -278,7 +278,7 @@ export default function PaymentForm() {
         </span>
       )}
       <form ref={formRef} onSubmit={handlePayment}>
-        <AddressRadioGroup userId={''} />
+        <AddressRadioGroup />
         {contentWrapper(
           '요청사항',
           <InputBox

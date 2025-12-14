@@ -1,5 +1,7 @@
-import { useAddresses } from '@/entities/user/hooks/useAddresses';
-import { carHarttApi } from '@/shared/api/axios';
+import {
+  useAddresses,
+  useDeleteAddress,
+} from '@/entities/user/hooks/useAddresses';
 import { Button } from '@/shared/ui/buttons';
 import RadioGroup from '@/shared/ui/Radio';
 import Modal from '@/widgets/modal/Modal';
@@ -8,13 +10,17 @@ import { useEffect, useState } from 'react';
 import AddressAddForm from './AddressAddForm';
 import './paymentForm.scss';
 
-export default function AddressRadioGroup({ userId = '' }) {
+export default function AddressRadioGroup({}) {
   const { openModal } = useModal();
   const memberId =
     JSON.parse(sessionStorage.getItem('user_info') || '{}')?.memberId || '';
+  // 배송지 조회 react query
   const { data: addresses, isLoading, error, refetch } = useAddresses(memberId);
+  // Radio 그룹에서 선택된 현재 배송지
   const [curAddress, setCurAddress] = useState(undefined);
   const [openAddressAddForm, setOpenAddressAddForm] = useState(false);
+  // 배송지 삭제 mutation query
+  const deleteAddressMutation = useDeleteAddress(memberId);
 
   // 주소지 조회
   useEffect(() => {
@@ -24,26 +30,9 @@ export default function AddressRadioGroup({ userId = '' }) {
     }
   }, [addresses]);
 
-  const handleClickDelete = (addr) => {
-    carHarttApi({
-      method: 'DELETE',
-      url: `/v1/orders/address/${addr.key}`,
-    })
-      .then(() => refetch())
-      .catch((err) => {
-        console.error(`배송지 삭제 실패 : ${err}`);
-        openModal(Modal, {
-          title: '배송지 삭제 실패',
-          children: (
-            <span className={'text-regular'}>
-              배송지 삭제에 실패 했습니다. {err}
-            </span>
-          ),
-        });
-      });
-  };
-
   const handleDelete = (addr) => {
+    const { mutateAsync: deleteAddress, isPending } = deleteAddressMutation;
+
     openModal(Modal, {
       title: '배송지 삭제',
       children: (
@@ -53,16 +42,16 @@ export default function AddressRadioGroup({ userId = '' }) {
       ),
       buttons: [
         {
-          label: removeAddress.isPending ? '삭제 중...' : '삭제',
+          label: isPending ? '삭제 중...' : '삭제',
           variant: 'danger-primary',
-          onClick: () => handleClickDelete(addr),
+          onClick: () => deleteAddress(addr.key),
         },
       ],
     });
   };
 
   const normalizeAddress = (addr) => {
-    const { address_id, address_name, zip_code, road_address, detail_address } =
+    const { address_id, address_name, zip, road_address, detail_address } =
       addr;
     return {
       key: address_id ?? '오류',
