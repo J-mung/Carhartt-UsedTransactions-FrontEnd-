@@ -3,18 +3,27 @@
 중고 상품 탐색부터 주문, 결제까지의 커머스 과정을 구현한   
 React 기반 프런트엔드 사이드 프로젝트입니다.
 
-## 개요
+## 🛫 개요
+
+<img width="2560" height="1368" alt="image" src="https://github.com/user-attachments/assets/c25523bd-15a1-48b0-9c07-736709ab7eab" />
 
 Carhartt Used Transactions는   
 중고 상품을 조회하고, 찜하고, 배송지를 등록한 뒤   
 외부 결제 수단을 통해 주문을 완료하는 **End-to-End 커머스 플로우**를 목표로한 프로젝트입니다.
 
 프로젝트를 위해 백엔드 3명, 프런트엔드 2명이 모여 팀이 구성 됐습니다.   
-지금 보시는 Repository는 프런트엔드 코드를 관리하기 위한 Repository로   
-저는(J-mung) **프런트엔드 개발자 및 팀장**으로 참여 했고,   
-팀원(daynaWH)이 **프런트엔드 개발자 및 디자이너**으로 참여 했습니다.
+지금 보시는 Repository는 프런트엔드 코드를 관리하기 위한 Repository입니다.   
+   
+🦑 **J-mung** : 프런트엔드 개발자 및 팀장   
+🕊️ **daynaWH** : 프런트엔드 개발자 및 디자이너
 
-## Tech Stack
+Getting Started
+```
+npm install
+npm run start
+```
+
+## 📚 Tech Stack
 
 ### Frontend
 - **React + Vite** 
@@ -30,7 +39,7 @@ Carhartt Used Transactions는
 - Github (PR 기반 협업)
 - Figma (디자인 공유)
 
-## 역할
+## ⚖️ 역할
    
 ### 🦑 J-mung (프런트엔드 개발자/팀장)
 
@@ -68,7 +77,16 @@ Carhartt Used Transactions는
 - 사용자 정보 관리 화면 및 상태 처리
 - S3 기반 이미지 업로드 플로우 프런트엔드 구현
 
-### 🕊️ daynaWH (프런트엔드 개발자/팀원)
+### 🕊️ daynaWH (프런트엔드 개발자/디자이너)
+
+## Design
+
+### 1️⃣ Web Layout 
+- 담당자의 기획 산출물을 토대로 Web Layout Design 제작 (🕊️ daynaWH)
+<img width="2560" height="1368" alt="image" src="https://github.com/user-attachments/assets/73902a9d-d84d-4775-b4f7-e436a4ebb6f2" />
+
+### 2️⃣ Open Source Design 활용
+- [Ant-Design-Open_source--Community](https://www.figma.com/design/HR4GlAL6hV6l0NeuaglChB/Ant-Design-Open-Source--Community-?node-id=92-0&p=f&t=ZWXDNXnZAyeMKroL-0) (🦑 J-mung / 🕊️ daynaWH)
 
 ## 주요 기능(Features)
 
@@ -80,13 +98,14 @@ Carhartt Used Transactions는
 <img width="2560" height="1368" alt="image" src="https://github.com/user-attachments/assets/1ea9d132-eecf-4fc4-b70f-a35825c5966e" />
 <img width="2560" height="1368" alt="image" src="https://github.com/user-attachments/assets/49fa0d2a-700f-4b9f-aa6f-d4a0becc1c37" />
 
-### 2️⃣ 찜(Wishlist) 기능 (🕊️ daynaWH)
-- 찜 목록 조회, 추가, 삭제 기능 구현
-- 서버 상태를 React Query로 관리하여 UI 즉시 반영
-- Mock 환경과 실서버 환경에서 동일한 UX 유지
+### 2️⃣ 상품 등록 & 수정(🕊️ daynaWH)
+- 판매자 관점의 상품 등록 / 수정 화면 구현
+- 입력값 검증 및 사용자 피드백 처리
+- S3 기반 이미지 업로드 플로우 프런트엔드 대응
+- 기존 상품 정보 로딩 후 수정 가능하도록 설계
 
-<img width="2560" height="1368" alt="image" src="https://github.com/user-attachments/assets/bb9a5634-fab9-4608-bcfd-adccae607d88" />
-
+<img width="2560" height="1368" alt="image" src="https://github.com/user-attachments/assets/2e1ac179-2047-44b7-af1c-9144bd73e2d4" />
+<img width="2560" height="1368" alt="image" src="https://github.com/user-attachments/assets/9e667d87-2b6d-4697-b620-0ef2ecd5f966" />
 
 ### 3️⃣ 카카오 OAuth 로그인 (🦑 J-mung)
 - 카카오 OAuth 2.0 기반 소셜 로그인 플로우 구현
@@ -110,4 +129,29 @@ Carhartt Used Transactions는
 <img width="2560" height="1368" alt="image" src="https://github.com/user-attachments/assets/29fc7244-4adb-4055-bc80-bc44679b82be" />
 <img width="2560" height="1368" alt="image" src="https://github.com/user-attachments/assets/ec9cc46a-a18d-4727-b34b-eea2b723f66b" />
 
+## 그 외 기능(Features)
 
+### 1️⃣ 마이페이 (🦑 J-mung)
+- 사용자 정보 조회
+- 닉네임 수정, S3 기반 프로필 수정 기능 구현
+- 판매, 구매, 찜 목록 등의 Tab UI 구현
+
+<img width="2560" height="1368" alt="image" src="https://github.com/user-attachments/assets/90b4b8d3-1e11-4093-9552-237c5f6415cf" />
+<img width="2560" height="1368" alt="image" src="https://github.com/user-attachments/assets/175d362c-5f92-40ac-9f87-5c166f9c3a52" />
+<img width="2560" height="1368" alt="image" src="https://github.com/user-attachments/assets/b8eb18da-b98b-4365-9186-ed0baef646f2" />
+
+### 2️⃣ 찜(Wishlist) 기능 (🕊️ daynaWH)
+- 찜 목록 조회, 추가, 삭제 기능 구현
+- 서버 상태를 React Query로 관리하여 UI 즉시 반영
+- Mock 환경과 실서버 환경에서 동일한 UX 유지
+
+<img width="2560" height="1368" alt="image" src="https://github.com/user-attachments/assets/bb9a5634-fab9-4608-bcfd-adccae607d88" />
+
+### 3️⃣ 시스템 라이트/다크 모드 테마
+- 시스템 설정을 감지하여 라이트 / 다크 모드 자동 적용
+- 사용자 환경에 따른 테마 일관성 유지
+- SCSS Modules 기반 테마 구조 설계
+- 전역 UI 컴포넌트에 테마 상태 반영
+
+<img width="2560" height="1368" alt="image" src="https://github.com/user-attachments/assets/90b4b8d3-1e11-4093-9552-237c5f6415cf" />
+<img width="2560" height="1368" alt="image" src="https://github.com/user-attachments/assets/801a64d7-1fb2-4ddb-aa63-bfa9645e90f4" />
