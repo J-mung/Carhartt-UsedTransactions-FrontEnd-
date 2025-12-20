@@ -39,6 +39,11 @@ npm run start
 - Github (PR 기반 협업)
 - Figma (디자인 공유)
 
+## 🔖 개발 문서
+작성한 설계 및 API 규격 예시, 의논사항 등은 wiki에 정리 되어 있습니다.
+
+> 🔗 [wiki](https://github.com/J-mung/Carhartt-UsedTransactions-FrontEnd-/wiki)
+
 ## ⚖️ 역할
    
 ### 🦑 J-mung (프런트엔드 개발자/팀장)
@@ -79,7 +84,7 @@ npm run start
 
 ### 🕊️ daynaWH (프런트엔드 개발자/디자이너)
 
-## Design
+## 🎨 Design
 
 ### 1️⃣ Web Layout 
 - 담당자의 기획 산출물을 토대로 Web Layout Design 제작 (🕊️ daynaWH)
@@ -88,7 +93,7 @@ npm run start
 ### 2️⃣ Open Source Design 활용
 - [Ant-Design-Open_source--Community](https://www.figma.com/design/HR4GlAL6hV6l0NeuaglChB/Ant-Design-Open-Source--Community-?node-id=92-0&p=f&t=ZWXDNXnZAyeMKroL-0) (🦑 J-mung / 🕊️ daynaWH)
 
-## 주요 기능(Features)
+## 🕹️ 주요 기능(Features)
 
 ### 1️⃣ 상품 조회 & 상세 페이지 (🕊️ daynaWH)
 - React Query를 활용한 상품 목록 및 상세 데이터 조회
@@ -129,7 +134,7 @@ npm run start
 <img width="2560" height="1368" alt="image" src="https://github.com/user-attachments/assets/29fc7244-4adb-4055-bc80-bc44679b82be" />
 <img width="2560" height="1368" alt="image" src="https://github.com/user-attachments/assets/ec9cc46a-a18d-4727-b34b-eea2b723f66b" />
 
-## 그 외 기능(Features)
+## 💾 그 외 기능(Features)
 
 ### 1️⃣ 마이페이 (🦑 J-mung)
 - 사용자 정보 조회
